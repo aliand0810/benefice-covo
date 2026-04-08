@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COVO Pro — Tableau des Bénéfices</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #13131f;
+  color: #e0e0f0;
+  min-height: 100vh;
+}
+
+/* ─── HEADER ─── */
+.header {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-bottom: 2px solid #8e44ad;
+  padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 62px; gap: 16px; flex-wrap: wrap;
+}
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-text { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 0.5px; }
+.logo-text span { color: #e74c3c; }
+.logo-badge { background: #8e44ad; color: #fff; font-size: 9px; padding: 2px 7px; border-radius: 20px; font-weight: 600; letter-spacing: 0.5px; }
+.header-right { display: flex; align-items: center; gap: 10px; }
+.drive-dot { width: 8px; height: 8px; border-radius: 50%; background: #555; display: inline-block; }
+.drive-dot.on { background: #27ae60; box-shadow: 0 0 6px #27ae60; }
+.drive-dot.off { background: #e74c3c; }
+.drive-label { font-size: 12px; color: #aaa; }
+.btn-hdr {
+  background: rgba(142,68,173,0.2); color: #c39bd3;
+  border: 1px solid #8e44ad; border-radius: 8px;
+  padding: 6px 14px; font-size: 12px; font-weight: 600;
+  cursor: pointer; font-family: 'Poppins', sans-serif;
+  transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+}
+.btn-hdr:hover { background: rgba(142,68,173,0.4); color: #fff; }
+.btn-hdr.red { background: rgba(231,76,60,0.15); border-color: #e74c3c; color: #e74c3c; }
+.btn-hdr.red:hover { background: rgba(231,76,60,0.3); }
+
+/* ─── LAYOUT ─── */
+.page { max-width: 1400px; margin: 0 auto; padding: 24px; }
+
+/* ─── KPI CARDS ─── */
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 24px; }
+.kpi-card {
+  background: #1e1e35;
+  border: 1px solid #2e2e50;
+  border-radius: 12px; padding: 18px 20px;
+  position: relative; overflow: hidden;
+  transition: border-color 0.2s;
+}
+.kpi-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  border-radius: 12px 12px 0 0;
+}
+.kpi-card.purple::before { background: #8e44ad; }
+.kpi-card.red::before    { background: #e74c3c; }
+.kpi-card.green::before  { background: #27ae60; }
+.kpi-card.blue::before   { background: #2980b9; }
+.kpi-card.gold::before   { background: #f39c12; }
+.kpi-label { font-size: 10px; color: #7f8c9a; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; font-weight: 500; }
+.kpi-value { font-size: 22px; font-weight: 700; color: #fff; }
+.kpi-value.green { color: #2ecc71; }
+.kpi-value.red { color: #e74c3c; }
+.kpi-meta { font-size: 11px; color: #666; margin-top: 4px; }
+.kpi-icon { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-size: 28px; opacity: 0.12; }
+
+/* ─── SECTION TITLE ─── */
+.section-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
+.section-title { font-size: 13px; font-weight: 600; color: #c39bd3; text-transform: uppercase; letter-spacing: 0.06em; display: flex; align-items: center; gap: 8px; }
+.section-title::before { content: ''; display: inline-block; width: 3px; height: 14px; background: #8e44ad; border-radius: 2px; }
+
+/* ─── FILTERS ─── */
+.filters-bar { display: flex; gap: 8px; flex-wrap: wrap; }
+.f-btn {
+  background: #1e1e35; border: 1px solid #2e2e50; border-radius: 8px;
+  color: #888; font-size: 12px; padding: 6px 14px; cursor: pointer;
+  font-family: 'Poppins', sans-serif; transition: all 0.2s;
+}
+.f-btn:hover { border-color: #8e44ad; color: #c39bd3; }
+.f-btn.active { background: #8e44ad; border-color: #8e44ad; color: #fff; font-weight: 600; }
+.f-select {
+  background: #1e1e35; border: 1px solid #2e2e50; border-radius: 8px;
+  color: #aaa; font-size: 12px; padding: 6px 10px;
+  font-family: 'Poppins', sans-serif; cursor: pointer;
+}
+.f-select:focus { outline: none; border-color: #8e44ad; }
+.search-box {
+  background: #1e1e35; border: 1px solid #2e2e50; border-radius: 8px;
+  color: #ddd; font-size: 12px; padding: 6px 12px;
+  font-family: 'Poppins', sans-serif; width: 180px;
+}
+.search-box:focus { outline: none; border-color: #8e44ad; }
+.search-box::placeholder { color: #555; }
+
+/* ─── CHART ─── */
+.chart-card {
+  background: #1e1e35; border: 1px solid #2e2e50; border-radius: 12px;
+  padding: 20px; margin-bottom: 24px;
+}
+.chart-wrap { position: relative; height: 200px; }
+
+/* ─── INFO BANNER ─── */
+.info-banner {
+  background: rgba(52,152,219,0.12); border: 1px solid rgba(52,152,219,0.3);
+  border-radius: 10px; padding: 10px 16px; font-size: 12px; color: #7fb3d3;
+  margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+}
+
+/* ─── TABLE CARD ─── */
+.table-card { background: #1e1e35; border: 1px solid #2e2e50; border-radius: 12px; overflow: hidden; margin-bottom: 24px; }
+.table-top { padding: 14px 20px; border-bottom: 1px solid #2e2e50; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+.table-top-title { font-size: 13px; font-weight: 600; color: #ddd; }
+
+/* ─── MONTH GROUP ─── */
+.month-group {}
+.month-header {
+  background: #22203a; padding: 12px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; border-bottom: 1px solid #2e2e50;
+  transition: background 0.15s;
+}
+.month-header:hover { background: #28254a; }
+.month-name-wrap { display: flex; align-items: center; gap: 10px; }
+.month-chev { color: #8e44ad; font-size: 11px; transition: transform 0.2s; }
+.month-chev.open { transform: rotate(90deg); }
+.month-name { font-size: 13px; font-weight: 700; color: #ddd; }
+.badge { font-size: 10px; padding: 2px 8px; border-radius: 20px; font-weight: 600; }
+.badge-purple { background: rgba(142,68,173,0.2); color: #c39bd3; border: 1px solid rgba(142,68,173,0.3); }
+.badge-green  { background: rgba(39,174,96,0.15);  color: #2ecc71;  border: 1px solid rgba(39,174,96,0.3); }
+.badge-red    { background: rgba(231,76,60,0.15);   color: #e74c3c;  border: 1px solid rgba(231,76,60,0.3); }
+.month-right { display: flex; align-items: center; gap: 16px; }
+.month-total { font-size: 15px; font-weight: 700; color: #2ecc71; }
+.month-ca { font-size: 12px; color: #888; }
+
+/* ─── WEEK GROUP ─── */
+.week-group { border-bottom: 1px solid #252540; }
+.week-header {
+  background: #1c1c30; padding: 9px 20px 9px 36px;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; border-top: 1px solid #252540;
+  transition: background 0.15s;
+}
+.week-header:hover { background: #232338; }
+.week-name { font-size: 12px; color: #8e44ad; font-weight: 600; }
+.week-total { font-size: 12px; font-weight: 700; color: #2ecc71; }
+
+/* ─── DAY HEADER ─── */
+.day-header {
+  padding: 7px 20px 7px 52px; background: #19192e;
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px solid #252540;
+}
+.day-label { font-size: 11px; color: #7f8c9a; font-weight: 500; }
+.day-total { font-size: 11px; color: #2ecc71; font-weight: 700; }
+
+/* ─── TICKET ROW ─── */
+.ticket-row {
+  padding: 9px 20px 9px 68px; display: grid;
+  grid-template-columns: auto 1fr auto auto 90px;
+  gap: 12px; align-items: center;
+  border-top: 1px solid #1e1e30;
+  transition: background 0.1s;
+}
+.ticket-row:hover { background: #1f1f38; }
+.ticket-id { font-size: 10px; color: #555; font-family: monospace; }
+.ticket-desc { font-size: 12px; color: #ccc; }
+.ticket-items { font-size: 10px; color: #666; }
+.ticket-benef { font-size: 13px; font-weight: 700; text-align: right; }
+.ticket-benef.pos { color: #2ecc71; }
+.ticket-benef.neg { color: #e74c3c; }
+.ticket-actions { display: flex; gap: 4px; justify-content: flex-end; }
+.t-status { font-size: 10px; padding: 2px 7px; border-radius: 20px; font-weight: 600; }
+.t-status.ok  { background: rgba(39,174,96,0.15);  color: #2ecc71;  border: 1px solid rgba(39,174,96,0.3); }
+.t-status.ko  { background: rgba(231,76,60,0.15);   color: #e74c3c;  border: 1px solid rgba(231,76,60,0.3); }
+
+/* ─── EMPTY ─── */
+.empty { padding: 60px 24px; text-align: center; color: #555; }
+.empty-icon { font-size: 48px; margin-bottom: 12px; }
+.empty-p { font-size: 13px; }
+.empty-sub { font-size: 11px; color: #444; margin-top: 6px; }
+
+/* ─── TOTAUX FOOTER ─── */
+.totaux-card {
+  background: linear-gradient(135deg, #1e1633 0%, #1a1a2e 100%);
+  border: 1px solid #8e44ad; border-radius: 12px;
+  padding: 20px 24px; margin-bottom: 24px;
+}
+.totaux-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; }
+.totaux-item { text-align: center; }
+.totaux-label { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; }
+.totaux-value { font-size: 18px; font-weight: 700; }
+.totaux-value.purple { color: #c39bd3; }
+.totaux-value.green { color: #2ecc71; }
+.totaux-value.red { color: #e74c3c; }
+.totaux-value.gold { color: #f39c12; }
+.totaux-divider { width: 1px; background: #2e2e50; }
+
+/* ─── TOAST ─── */
+.toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: #1e1e35; border: 1px solid #8e44ad;
+  color: #ddd; padding: 12px 20px; border-radius: 10px;
+  font-size: 13px; z-index: 9999; font-family: 'Poppins', sans-serif;
+  transform: translateY(80px); opacity: 0; transition: all 0.3s;
+  border-left: 4px solid #8e44ad;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.ok { border-left-color: #27ae60; border-color: #27ae60; }
+.toast.err { border-left-color: #e74c3c; border-color: #e74c3c; }
+
+@media (max-width: 640px) {
+  .page { padding: 12px; }
+  .ticket-row { grid-template-columns: 1fr auto; }
+  .ticket-id, .ticket-items, .ticket-actions { display: none; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo">
+    <div class="logo-text">COVO <span>Pro</span></div>
+    <div class="logo-badge">BÉNÉFICES</div>
+  </div>
+  <div class="header-right">
+    <span class="drive-dot" id="drive-dot"></span>
+    <span class="drive-label" id="drive-label">Non connecté</span>
+    <button class="btn-hdr" id="btn-connect" onclick="driveAuth()">☁ Connecter Drive</button>
+    <button class="btn-hdr" id="btn-save" onclick="saveDrive()" style="display:none">💾 Sauvegarder</button>
+    <button class="btn-hdr" id="btn-load" onclick="loadDrive()" style="display:none">📂 Charger</button>
+    <button class="btn-hdr red" onclick="location.reload()">↺ Actualiser</button>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- KPI CARDS -->
+  <div class="kpi-grid">
+    <div class="kpi-card purple">
+      <div class="kpi-label">Bénéfice total</div>
+      <div class="kpi-value" id="k-total">—</div>
+      <div class="kpi-meta" id="k-total-meta">—</div>
+      <div class="kpi-icon">💰</div>
+    </div>
+    <div class="kpi-card red">
+      <div class="kpi-label">CA total</div>
+      <div class="kpi-value" id="k-ca">—</div>
+      <div class="kpi-meta" id="k-ca-meta">—</div>
+      <div class="kpi-icon">🧾</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">Mois en cours</div>
+      <div class="kpi-value" id="k-month">—</div>
+      <div class="kpi-meta" id="k-month-meta">—</div>
+      <div class="kpi-icon">📅</div>
+    </div>
+    <div class="kpi-card blue">
+      <div class="kpi-label">Semaine en cours</div>
+      <div class="kpi-value" id="k-week">—</div>
+      <div class="kpi-meta" id="k-week-meta">—</div>
+      <div class="kpi-icon">📊</div>
+    </div>
+    <div class="kpi-card gold">
+      <div class="kpi-label">Aujourd'hui</div>
+      <div class="kpi-value" id="k-today">—</div>
+      <div class="kpi-meta" id="k-today-meta">—</div>
+      <div class="kpi-icon">⚡</div>
+    </div>
+    <div class="kpi-card purple">
+      <div class="kpi-label">Marge globale</div>
+      <div class="kpi-value" id="k-margin">—</div>
+      <div class="kpi-meta" id="k-margin-meta">Bénéfice / CA</div>
+      <div class="kpi-icon">📈</div>
+    </div>
+  </div>
+
+  <!-- TOTAUX RÉCAPITULATIFS -->
+  <div class="totaux-card" id="totaux-card">
+    <div class="section-title" style="margin-bottom:14px">Récapitulatif global</div>
+    <div class="totaux-grid" id="totaux-grid">
+      <div class="totaux-item"><div class="totaux-label">Tickets validés</div><div class="totaux-value purple" id="t-valid">—</div></div>
+      <div class="totaux-item"><div class="totaux-label">Tickets annulés</div><div class="totaux-value red" id="t-cancel">—</div></div>
+      <div class="totaux-item"><div class="totaux-label">Panier moyen</div><div class="totaux-value gold" id="t-basket">—</div></div>
+      <div class="totaux-item"><div class="totaux-label">Bénéfice / ticket</div><div class="totaux-value green" id="t-benef-avg">—</div></div>
+      <div class="totaux-item"><div class="totaux-label">Meilleur mois</div><div class="totaux-value purple" id="t-best-month">—</div></div>
+      <div class="totaux-item"><div class="totaux-label">Moy. journalière</div><div class="totaux-value green" id="t-avg-day">—</div></div>
+    </div>
+  </div>
+
+  <!-- CHART -->
+  <div class="chart-card">
+    <div class="section-row" style="margin-bottom:14px">
+      <div class="section-title">Évolution mensuelle (12 mois)</div>
+      <div style="display:flex;gap:8px">
+        <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:#888"><span style="width:10px;height:10px;background:#8e44ad;border-radius:2px;display:inline-block"></span>Bénéfice</span>
+        <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:#888"><span style="width:10px;height:10px;background:#e74c3c;border-radius:2px;display:inline-block"></span>CA</span>
+      </div>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="mainChart" role="img" aria-label="Bénéfices et CA mensuels sur 12 mois">Évolution des bénéfices.</canvas>
+    </div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="section-row">
+    <div class="section-title">Détail par Mois / Semaine / Jour</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <input type="text" class="search-box" id="search-box" placeholder="🔍 Ticket, article..." oninput="renderTable()">
+    </div>
+  </div>
+  <div class="filters-bar" style="margin-bottom:16px">
+    <button class="f-btn active" onclick="setView('all',this)">Tout</button>
+    <button class="f-btn" onclick="setView('month',this)">Ce mois</button>
+    <button class="f-btn" onclick="setView('week',this)">Cette semaine</button>
+    <button class="f-btn" onclick="setView('today',this)">Aujourd'hui</button>
+    <select class="f-select" id="year-sel" onchange="renderTable()">
+      <option value="">Toutes les années</option>
+    </select>
+    <select class="f-select" id="month-sel" onchange="renderTable()">
+      <option value="">Tous les mois</option>
+    </select>
+    <select class="f-select" id="status-sel" onchange="renderTable()">
+      <option value="">Tous statuts</option>
+      <option value="valid">Validés seulement</option>
+      <option value="cancelled">Annulés seulement</option>
+    </select>
+  </div>
+
+  <!-- INFO BANNER -->
+  <div class="info-banner" id="info-banner" style="display:none">
+    ℹ️ <span id="info-text"></span>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-card">
+    <div class="table-top">
+      <span class="table-top-title">Tickets COVO Pro</span>
+      <span style="font-size:11px;color:#666" id="filtered-count">—</span>
+    </div>
+    <div id="table-body"></div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  COVO PRO DATA READER
+// ═══════════════════════════════════════════════
+let sales = [];
+let articles = {};
+let hasCostData = false;
+let currentView = 'all';
+let driveConnected = false;
+let driveFileId = null;
+let CLIENT_ID = '';
+let chartInstance = null;
+
+function loadCovoData() {
+  // Lecture des ventes COVO Pro
+  try {
+    const raw = localStorage.getItem('covo_sales_history');
+    sales = raw ? JSON.parse(raw) : [];
+  } catch(e) { sales = []; }
+
+  // Lecture des articles pour les coûts
+  try {
+    const rawArt = localStorage.getItem('covo_articles') || localStorage.getItem('covo_products') || '[]';
+    const artArr = JSON.parse(rawArt);
+    artArr.forEach(a => { if (a.id || a.name) articles[a.id || a.name] = a; });
+  } catch(e) {}
+
+  // Détecter si des données de coût existent
+  hasCostData = sales.some(s =>
+    s.items && s.items.some(it => it.cost !== undefined && it.cost !== null && it.cost !== '')
+  ) || Object.values(articles).some(a => a.cost || a.prix_achat || a.prixAchat);
+
+  if (hasCostData) {
+    document.getElementById('info-banner').style.display = '';
+    document.getElementById('info-text').textContent = 'Prix d\'achat détectés — les bénéfices sont calculés : CA − coûts d\'achat.';
+  } else if (sales.length > 0) {
+    document.getElementById('info-banner').style.display = '';
+    document.getElementById('info-text').textContent = 'Aucun prix d\'achat renseigné — le bénéfice affiché correspond au CA (chiffre d\'affaires).';
+  }
+}
+
+// ── BÉNÉFICE PAR TICKET ──────────────────────────
+function getTicketBenef(sale) {
+  if (sale.cancelled) return 0;
+  const ca = parseFloat(sale.total || 0);
+  if (!hasCostData || !sale.items) return ca;
+  let cost = 0;
+  sale.items.forEach(it => {
+    let itemCost = parseFloat(it.cost ?? it.prix_achat ?? it.prixAchat ?? 0);
+    // Fallback: chercher dans articles
+    if (!itemCost && articles[it.id || it.articleId || it.name]) {
+      const art = articles[it.id || it.articleId || it.name];
+      itemCost = parseFloat(art.cost || art.prix_achat || art.prixAchat || 0);
+    }
+    cost += itemCost * parseFloat(it.qty || it.quantity || 1);
+  });
+  return cost > 0 ? ca - cost : ca;
+}
+
+// ── DATE UTILS ────────────────────────────────────
+function saleDate(s) {
+  return new Date(s.date || s.createdAt || s.timestamp || Date.now());
+}
+function toYMD(d) {
+  return d.toISOString().split('T')[0];
+}
+function weekNum(date) {
+  const d = new Date(date);
+  const first = new Date(d.getFullYear(), 0, 1);
+  return Math.ceil(((d - first) / 86400000 + first.getDay() + 1) / 7);
+}
+function fmt(v) {
+  const sign = v < 0 ? '−' : '+';
+  const abs = Math.abs(v);
+  const s = abs.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+  return sign + s;
+}
+function fmtCA(v) {
+  return v.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+}
+
+// ── FILTER ────────────────────────────────────────
+function getFiltered() {
+  const now = new Date();
+  const todayStr = toYMD(now);
+  const ym = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const startWeek = new Date(now);
+  startWeek.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+  startWeek.setHours(0,0,0,0);
+
+  const yearF  = document.getElementById('year-sel')?.value || '';
+  const monthF = document.getElementById('month-sel')?.value || '';
+  const statF  = document.getElementById('status-sel')?.value || '';
+  const search = (document.getElementById('search-box')?.value || '').toLowerCase();
+
+  return sales.filter(s => {
+    const d = saleDate(s);
+    const dStr = toYMD(d);
+    if (currentView === 'month'  && !dStr.startsWith(ym)) return false;
+    if (currentView === 'week'   && d < startWeek) return false;
+    if (currentView === 'today'  && dStr !== todayStr) return false;
+    if (yearF  && !dStr.startsWith(yearF)) return false;
+    if (monthF && String(d.getMonth()+1).padStart(2,'0') !== monthF) return false;
+    if (statF === 'valid'     && s.cancelled) return false;
+    if (statF === 'cancelled' && !s.cancelled) return false;
+    if (search) {
+      const hay = [
+        s.id || '', s.ticketId || '',
+        (s.items || []).map(i => i.name || '').join(' '),
+        s.cashier || s.caissier || ''
+      ].join(' ').toLowerCase();
+      if (!hay.includes(search)) return false;
+    }
+    return true;
+  }).sort((a,b) => saleDate(b) - saleDate(a));
+}
+
+// ═══════════════════════════════════════════════
+//  KPI + TOTAUX
+// ═══════════════════════════════════════════════
+function updateKPIs() {
+  const now = new Date();
+  const todayStr = toYMD(now);
+  const ym = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const startWeek = new Date(now);
+  startWeek.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+  startWeek.setHours(0,0,0,0);
+
+  const valid = sales.filter(s => !s.cancelled);
+  const cancelled = sales.filter(s => s.cancelled);
+  const totalCA    = valid.reduce((a,s) => a + parseFloat(s.total||0), 0);
+  const totalBenef = valid.reduce((a,s) => a + getTicketBenef(s), 0);
+  const monthSales = valid.filter(s => toYMD(saleDate(s)).startsWith(ym));
+  const weekSales  = valid.filter(s => saleDate(s) >= startWeek);
+  const todaySales = valid.filter(s => toYMD(saleDate(s)) === todayStr);
+  const margin = totalCA > 0 ? (totalBenef / totalCA * 100) : 0;
+  const avgDay = (() => {
+    const d30 = new Date(now); d30.setDate(d30.getDate()-30);
+    const last30 = valid.filter(s => saleDate(s) >= d30);
+    return last30.reduce((a,s) => a+getTicketBenef(s),0) / 30;
+  })();
+  const avgBasket = valid.length > 0 ? totalCA / valid.length : 0;
+  const avgBenefTicket = valid.length > 0 ? totalBenef / valid.length : 0;
+
+  // Best month
+  const byMonth = {};
+  valid.forEach(s => {
+    const k = toYMD(saleDate(s)).substring(0,7);
+    byMonth[k] = (byMonth[k] || 0) + getTicketBenef(s);
+  });
+  const bestMonth = Object.entries(byMonth).sort((a,b)=>b[1]-a[1])[0];
+  const mNames = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+
+  set('k-total',     fmt(totalBenef));
+  set('k-total-meta',`${valid.length} ticket${valid.length>1?'s':''} validés`);
+  set('k-ca',        fmtCA(totalCA));
+  set('k-ca-meta',   `${cancelled.length} annulé${cancelled.length>1?'s':''}`);
+  set('k-month',     fmt(monthSales.reduce((a,s)=>a+getTicketBenef(s),0)));
+  set('k-month-meta',`${monthSales.length} ticket${monthSales.length>1?'s':''}`);
+  set('k-week',      fmt(weekSales.reduce((a,s)=>a+getTicketBenef(s),0)));
+  set('k-week-meta', `${weekSales.length} ticket${weekSales.length>1?'s':''}`);
+  set('k-today',     fmt(todaySales.reduce((a,s)=>a+getTicketBenef(s),0)));
+  set('k-today-meta',`${todaySales.length} ticket${todaySales.length>1?'s':''}`);
+  set('k-margin',    margin.toFixed(1)+'%');
+
+  set('t-valid',     valid.length);
+  set('t-cancel',    cancelled.length);
+  set('t-basket',    fmtCA(avgBasket));
+  set('t-benef-avg', fmtCA(avgBenefTicket));
+  set('t-best-month', bestMonth ? `${mNames[parseInt(bestMonth[0].split('-')[1])-1]} ${bestMonth[0].split('-')[0]} (${fmtCA(bestMonth[1])})` : '—');
+  set('t-avg-day',   fmtCA(avgDay));
+
+  // Color the total
+  const kEl = document.getElementById('k-total');
+  if (kEl) { kEl.classList.toggle('green', totalBenef>=0); kEl.classList.toggle('red', totalBenef<0); }
+
+  // Populate filters
+  updateFilterOptions();
+}
+
+function set(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+function updateFilterOptions() {
+  const years = [...new Set(sales.map(s => saleDate(s).getFullYear()))].sort().reverse();
+  const ySel = document.getElementById('year-sel');
+  const curY = ySel.value;
+  ySel.innerHTML = '<option value="">Toutes les années</option>' + years.map(y => `<option value="${y}"${String(y)===curY?'selected':''}>${y}</option>`).join('');
+
+  const mSel = document.getElementById('month-sel');
+  const curM = mSel.value;
+  const mNames2 = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  mSel.innerHTML = '<option value="">Tous les mois</option>' + mNames2.map((n,i)=>`<option value="${String(i+1).padStart(2,'0')}"${String(i+1).padStart(2,'0')===curM?'selected':''}>${n}</option>`).join('');
+}
+
+// ═══════════════════════════════════════════════
+//  RENDER TABLE
+// ═══════════════════════════════════════════════
+function renderTable() {
+  const filtered = getFiltered();
+  document.getElementById('filtered-count').textContent = `${filtered.length} ticket${filtered.length>1?'s':''} affichés`;
+
+  if (filtered.length === 0) {
+    document.getElementById('table-body').innerHTML = `
+      <div class="empty">
+        <div class="empty-icon">📊</div>
+        <div class="empty-p">${sales.length === 0 ? 'Aucune donnée COVO Pro trouvée.' : 'Aucun résultat pour ce filtre.'}</div>
+        <div class="empty-sub">${sales.length === 0 ? 'Ouvrez d\'abord COVO Pro et enregistrez des ventes.' : 'Essayez d\'élargir la période ou le filtre.'}</div>
+      </div>`;
+    return;
+  }
+
+  // Group: month → week → day → tickets
+  const byMonth = {};
+  filtered.forEach(s => {
+    const d = saleDate(s);
+    const mk = toYMD(d).substring(0,7);
+    const wk = `S${weekNum(d)}`;
+    const dk = toYMD(d);
+    if (!byMonth[mk]) byMonth[mk] = {};
+    if (!byMonth[mk][wk]) byMonth[mk][wk] = {};
+    if (!byMonth[mk][wk][dk]) byMonth[mk][wk][dk] = [];
+    byMonth[mk][wk][dk].push(s);
+  });
+
+  const mNames = {
+    '01':'Janvier','02':'Février','03':'Mars','04':'Avril','05':'Mai','06':'Juin',
+    '07':'Juillet','08':'Août','09':'Septembre','10':'Octobre','11':'Novembre','12':'Décembre'
+  };
+
+  let html = '';
+  Object.keys(byMonth).sort().reverse().forEach(mk => {
+    const [yr, mo] = mk.split('-');
+    const mSales = Object.values(byMonth[mk]).flatMap(w => Object.values(w).flat());
+    const mBenef = mSales.reduce((a,s) => a+getTicketBenef(s), 0);
+    const mCA    = mSales.filter(s=>!s.cancelled).reduce((a,s) => a+parseFloat(s.total||0), 0);
+    const mCancelled = mSales.filter(s=>s.cancelled).length;
+    const mId = 'mg' + mk.replace('-','');
+    html += `<div class="month-group">
+      <div class="month-header" onclick="toggle('${mId}','${mId}c')">
+        <div class="month-name-wrap">
+          <span class="month-chev open" id="${mId}c">▶</span>
+          <span class="month-name">${mNames[mo]} ${yr}</span>
+          <span class="badge badge-purple">${mSales.length} tickets</span>
+          ${mCancelled>0?`<span class="badge badge-red">${mCancelled} annulés</span>`:''}
+        </div>
+        <div class="month-right">
+          <span class="month-ca">CA ${fmtCA(mCA)}</span>
+          <span class="month-total">${fmt(mBenef)}</span>
+        </div>
+      </div>
+      <div id="${mId}">`;
+
+    Object.keys(byMonth[mk]).sort().reverse().forEach(wk => {
+      const wSales = Object.values(byMonth[mk][wk]).flat();
+      const wBenef = wSales.reduce((a,s)=>a+getTicketBenef(s),0);
+      const wId = mId + wk;
+      html += `<div class="week-group">
+        <div class="week-header" onclick="toggle('${wId}','')">
+          <span class="week-name">▸ ${wk} — Semaine</span>
+          <span class="week-total">${fmt(wBenef)}</span>
+        </div>
+        <div id="${wId}">`;
+
+      Object.keys(byMonth[mk][wk]).sort().reverse().forEach(dk => {
+        const dSales = byMonth[mk][wk][dk];
+        const dBenef = dSales.reduce((a,s)=>a+getTicketBenef(s),0);
+        const dDate  = new Date(dk+'T12:00:00');
+        const dLabel = dDate.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+        html += `<div class="day-header">
+          <span class="day-label">${dLabel}</span>
+          <span class="day-total">${fmt(dBenef)} · ${dSales.length} ticket${dSales.length>1?'s':''}</span>
+        </div>`;
+        dSales.forEach(s => {
+          const b = getTicketBenef(s);
+          const ca = parseFloat(s.total||0);
+          const n = (s.items||[]).length;
+          const sid = s.id || s.ticketId || '?';
+          const caissier = s.cashier || s.caissier || '';
+          const itemsLabel = n > 0 ? `${n} article${n>1?'s':''}` : '';
+          html += `<div class="ticket-row">
+            <span class="ticket-id">#${String(sid).slice(-6)}</span>
+            <span class="ticket-desc">${caissier ? '👤 '+escH(caissier) : '🧾 Ticket'} ${itemsLabel ? '· '+itemsLabel : ''}</span>
+            <span class="t-status ${s.cancelled?'ko':'ok'}">${s.cancelled?'Annulé':'Validé'}</span>
+            <span class="ticket-ca" style="font-size:11px;color:#888;text-align:right">${fmtCA(ca)}</span>
+            <span class="ticket-benef ${b>=0?'pos':'neg'}">${fmt(b)}</span>
+          </div>`;
+        });
+      });
+      html += `</div></div>`;
+    });
+    html += `</div></div>`;
+  });
+
+  document.getElementById('table-body').innerHTML = html;
+}
+
+function toggle(id, chevId) {
+  const el = document.getElementById(id);
+  const ch = chevId ? document.getElementById(chevId) : null;
+  if (el) el.style.display = el.style.display==='none' ? '' : 'none';
+  if (ch) ch.classList.toggle('open');
+}
+function escH(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+function setView(v, btn) {
+  currentView = v;
+  document.querySelectorAll('.f-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+}
+
+// ═══════════════════════════════════════════════
+//  CHART
+// ═══════════════════════════════════════════════
+function renderChart() {
+  const now = new Date();
+  const mNames = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+  const labels=[], dataB=[], dataCA=[];
+  for (let i=11; i>=0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
+    const ym = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    labels.push(mNames[d.getMonth()]+' '+d.getFullYear().toString().slice(-2));
+    const mValid = sales.filter(s=>!s.cancelled && toYMD(saleDate(s)).startsWith(ym));
+    dataB.push(parseFloat(mValid.reduce((a,s)=>a+getTicketBenef(s),0).toFixed(2)));
+    dataCA.push(parseFloat(mValid.reduce((a,s)=>a+parseFloat(s.total||0),0).toFixed(2)));
+  }
+  if (chartInstance) chartInstance.destroy();
+  chartInstance = new Chart(document.getElementById('mainChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label:'Bénéfice', data:dataB, backgroundColor:'rgba(142,68,173,0.7)', borderColor:'#8e44ad', borderWidth:1, borderRadius:4, order:1 },
+        { label:'CA', data:dataCA, type:'line', borderColor:'#e74c3c', backgroundColor:'rgba(231,76,60,0.05)', borderWidth:2, tension:0.3, pointRadius:3, pointBackgroundColor:'#e74c3c', fill:true, order:0 }
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false} },
+      scales:{
+        x:{ ticks:{color:'#666',font:{size:10}}, grid:{color:'rgba(255,255,255,0.04)'} },
+        y:{ ticks:{color:'#666',font:{size:10},callback:v=>v.toLocaleString('fr-FR')+'€'}, grid:{color:'rgba(255,255,255,0.06)'} }
+      }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════
+//  GOOGLE DRIVE (COVO Pro OAuth flow)
+// ═══════════════════════════════════════════════
+function driveAuth() {
+  const id = prompt('Entrez votre Google OAuth Client ID (même que dans COVO Pro) :');
+  if (!id) return;
+  CLIENT_ID = id.trim();
+  localStorage.setItem('covo_benef_client_id', CLIENT_ID);
+  loadGAPI();
+}
+
+function loadGAPI() {
+  if (!CLIENT_ID) {
+    CLIENT_ID = localStorage.getItem('covo_benef_client_id') || '';
+    if (!CLIENT_ID) return;
+  }
+  const s1 = document.createElement('script');
+  s1.src = 'https://accounts.google.com/gsi/client';
+  s1.onload = initGSI;
+  document.head.appendChild(s1);
+  const s2 = document.createElement('script');
+  s2.src = 'https://apis.google.com/js/api.js';
+  s2.onload = () => gapi.load('client', () => gapi.client.init({ discoveryDocs:['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'] }));
+  document.head.appendChild(s2);
+}
+
+let tokenClient;
+function initGSI() {
+  if (!window.google) return;
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID,
+    scope: 'https://www.googleapis.com/auth/drive.file',
+    callback: resp => {
+      if (resp.error) { toast('Erreur Drive: '+resp.error,'err'); return; }
+      driveConnected = true;
+      document.getElementById('drive-dot').className='drive-dot on';
+      document.getElementById('drive-label').textContent='Drive connecté';
+      document.getElementById('btn-connect').textContent='☁ Déconnecter';
+      document.getElementById('btn-save').style.display='flex';
+      document.getElementById('btn-load').style.display='flex';
+      toast('✓ Drive connecté','ok');
+    }
+  });
+  tokenClient.requestAccessToken({prompt:''});
+}
+
+async function saveDrive() {
+  if (!driveConnected) { toast('Non connecté','err'); return; }
+  try {
+    const q=`name='covo_benefices_data.json' and trashed=false`;
+    const list = await gapi.client.drive.files.list({q,fields:'files(id)',spaces:'drive'});
+    let fid = list.result.files?.[0]?.id;
+    if (!fid) {
+      const cr = await gapi.client.drive.files.create({resource:{name:'covo_benefices_data.json',mimeType:'application/json'},fields:'id'});
+      fid = cr.result.id;
+    }
+    const token = gapi.client.getToken().access_token;
+    const payload = JSON.stringify({ covo_sales_history: sales, savedAt: new Date().toISOString() }, null, 2);
+    await fetch(`https://www.googleapis.com/upload/drive/v3/files/${fid}?uploadType=media`,{
+      method:'PATCH', headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'}, body:payload
+    });
+    toast('✓ Sauvegardé sur Drive','ok');
+  } catch(e) { toast('Erreur sauvegarde','err'); }
+}
+
+async function loadDrive() {
+  if (!driveConnected) { toast('Non connecté','err'); return; }
+  try {
+    const q=`name='covo_benefices_data.json' and trashed=false`;
+    const list = await gapi.client.drive.files.list({q,fields:'files(id)',spaces:'drive'});
+    const fid = list.result.files?.[0]?.id;
+    if (!fid) { toast('Aucun fichier trouvé sur Drive','err'); return; }
+    const token = gapi.client.getToken().access_token;
+    const resp = await fetch(`https://www.googleapis.com/drive/v3/files/${fid}?alt=media`,{headers:{'Authorization':'Bearer '+token}});
+    const data = await resp.json();
+    if (data.covo_sales_history) {
+      sales = data.covo_sales_history;
+      toast(`✓ ${sales.length} tickets chargés depuis Drive`,'ok');
+      init();
+    }
+  } catch(e) { toast('Erreur chargement','err'); }
+}
+
+function toast(msg, type='') {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className=`toast ${type} show`;
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ═══════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════
+function init() {
+  loadCovoData();
+  updateKPIs();
+  renderChart();
+  renderTable();
+  // Auto-reconnect Drive if client ID saved
+  if (localStorage.getItem('covo_benef_client_id')) loadGAPI();
+}
+
+init();
+</script>
+</body>
+</html>
