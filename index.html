@@ -2,8 +2,92 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>COVO Pro — Tableau des Bénéfices</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>COVO Bénéfices</title>
+
+<!-- PWA META -->
+<meta name="theme-color" content="#13131f">
+<meta name="description" content="Tableau de bord des bénéfices COVO Pro">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="COVO Bénéf">
+<link rel="apple-touch-icon" id="apple-icon" href="">
+<link rel="manifest" id="pwa-manifest">
+
+<!-- LOGO SVG INLINE (utilisé partout : manifest, splash, favicon) -->
+<script>
+(function(){
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+    <defs>
+      <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#1a1a2e"/>
+        <stop offset="100%" stop-color="#16213e"/>
+      </linearGradient>
+      <linearGradient id="acc" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#8e44ad"/>
+        <stop offset="100%" stop-color="#e74c3c"/>
+      </linearGradient>
+    </defs>
+    <!-- Fond arrondi -->
+    <rect width="512" height="512" rx="110" fill="url(#bg)"/>
+    <!-- Bordure lumineuse -->
+    <rect x="8" y="8" width="496" height="496" rx="104" fill="none" stroke="url(#acc)" stroke-width="6" opacity="0.6"/>
+    <!-- Histogramme barres -->
+    <rect x="80"  y="310" width="68" height="122" rx="10" fill="url(#acc)" opacity="0.5"/>
+    <rect x="172" y="240" width="68" height="192" rx="10" fill="url(#acc)" opacity="0.7"/>
+    <rect x="264" y="170" width="68" height="262" rx="10" fill="url(#acc)" opacity="0.85"/>
+    <rect x="356" y="100" width="68" height="332" rx="10" fill="url(#acc)"/>
+    <!-- Ligne de tendance -->
+    <polyline points="114,280 206,210 298,140 390,72" fill="none" stroke="#2ecc71" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+    <!-- Points -->
+    <circle cx="114" cy="280" r="10" fill="#2ecc71"/>
+    <circle cx="206" cy="210" r="10" fill="#2ecc71"/>
+    <circle cx="298" cy="140" r="10" fill="#2ecc71"/>
+    <circle cx="390" cy="72"  r="10" fill="#2ecc71"/>
+    <!-- Texte CB -->
+    <text x="256" y="490" font-family="Poppins,sans-serif" font-size="0" fill="transparent">COVO Bénéfices</text>
+  </svg>`;
+  const b64 = btoa(unescape(encodeURIComponent(svg)));
+  const dataUrl = 'data:image/svg+xml;base64,' + b64;
+  const pngSize = 512;
+
+  // Favicon dynamique via canvas
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = 64;
+  const img = new Image();
+  img.onload = () => {
+    canvas.getContext('2d').drawImage(img, 0, 0, 64, 64);
+    const link = document.createElement('link');
+    link.rel = 'icon'; link.type = 'image/png';
+    link.href = canvas.toDataURL('image/png');
+    document.head.appendChild(link);
+    document.getElementById('apple-icon').href = canvas.toDataURL('image/png');
+    window._logoDataUrl = canvas.toDataURL('image/png');
+    window._logoSvgDataUrl = dataUrl;
+  };
+  img.src = dataUrl;
+
+  // Manifest dynamique
+  const manifest = {
+    name: 'COVO Bénéfices',
+    short_name: 'COVO Bénéf',
+    description: 'Tableau de bord bénéfices COVO Pro',
+    start_url: './',
+    display: 'standalone',
+    background_color: '#13131f',
+    theme_color: '#8e44ad',
+    orientation: 'any',
+    icons: [
+      { src: dataUrl, sizes: '192x192', type: 'image/svg+xml', purpose: 'any maskable' },
+      { src: dataUrl, sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable' }
+    ]
+  };
+  const blob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
+  document.getElementById('pwa-manifest').href = URL.createObjectURL(blob);
+})();
+</script>
+
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
@@ -272,9 +356,172 @@ body {
   .ticket-id, .ticket-items, .ticket-actions { display: none; }
   .kpi-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ─── PWA SPLASH SCREEN ─── */
+#pwa-splash {
+  position: fixed; inset: 0; z-index: 99999;
+  background: #0e0e1a;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 0;
+  transition: opacity 0.5s ease;
+}
+#pwa-splash.fade-out { opacity: 0; pointer-events: none; }
+
+.splash-logo-wrap {
+  position: relative; width: 110px; height: 110px; margin-bottom: 28px;
+}
+.splash-ring {
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  animation: ring-spin 1.4s linear infinite;
+}
+.splash-ring.r1 {
+  border-top-color: #8e44ad;
+  border-right-color: rgba(142,68,173,0.3);
+}
+.splash-ring.r2 {
+  inset: 12px;
+  border-bottom-color: #e74c3c;
+  border-left-color: rgba(231,76,60,0.2);
+  animation-duration: 1.9s;
+  animation-direction: reverse;
+}
+.splash-ring.r3 {
+  inset: 24px;
+  border-top-color: #2ecc71;
+  border-right-color: rgba(46,204,113,0.2);
+  animation-duration: 2.5s;
+}
+@keyframes ring-spin { to { transform: rotate(360deg); } }
+
+.splash-logo-img {
+  position: absolute; inset: 18px;
+  border-radius: 20px;
+  background: #1a1a2e;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.splash-logo-img img { width: 100%; height: 100%; object-fit: contain; border-radius: 16px; }
+
+.splash-app-name {
+  font-size: 22px; font-weight: 700; color: #fff; letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.splash-app-name span { color: #8e44ad; }
+
+.splash-tagline {
+  font-size: 12px; color: #555; margin-bottom: 32px; letter-spacing: 0.04em;
+}
+
+.splash-steps {
+  display: flex; flex-direction: column; gap: 10px;
+  min-width: 240px; margin-bottom: 20px;
+}
+.splash-step {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 12px; color: #666; transition: color 0.3s;
+}
+.splash-step.done { color: #2ecc71; }
+.splash-step.active { color: #c39bd3; }
+.splash-step-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #333; flex-shrink: 0; transition: background 0.3s;
+}
+.splash-step.done .splash-step-dot { background: #2ecc71; }
+.splash-step.active .splash-step-dot { background: #8e44ad; animation: dot-pulse 0.8s ease infinite; }
+@keyframes dot-pulse { 0%,100%{transform:scale(1)}50%{transform:scale(1.5)} }
+
+.splash-progress-bar {
+  width: 240px; height: 3px; background: #1e1e35; border-radius: 2px; overflow: hidden;
+}
+.splash-progress-fill {
+  height: 100%; background: linear-gradient(90deg, #8e44ad, #e74c3c);
+  border-radius: 2px; width: 0%; transition: width 0.4s ease;
+}
+
+.splash-version {
+  position: absolute; bottom: 24px;
+  font-size: 10px; color: #333; letter-spacing: 0.06em;
+}
+
+/* ─── INSTALL BANNER ─── */
+#install-banner {
+  display: none;
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 9000;
+  background: linear-gradient(135deg, #1e1e35, #16213e);
+  border-top: 2px solid #8e44ad;
+  padding: 14px 20px; align-items: center; gap: 14px;
+  animation: slide-up 0.4s ease;
+}
+@keyframes slide-up { from{transform:translateY(100%)} to{transform:translateY(0)} }
+#install-banner.visible { display: flex; }
+.install-logo { width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0; }
+.install-text { flex: 1; }
+.install-title { font-size: 13px; font-weight: 700; color: #fff; }
+.install-sub { font-size: 11px; color: #777; }
+.install-btn {
+  background: #8e44ad; color: #fff; border: none; border-radius: 8px;
+  padding: 9px 18px; font-size: 12px; font-weight: 700;
+  cursor: pointer; font-family: 'Poppins', sans-serif; white-space: nowrap;
+  flex-shrink: 0;
+}
+.install-dismiss {
+  background: none; border: none; color: #555; cursor: pointer;
+  font-size: 18px; padding: 4px; flex-shrink: 0;
+}
+
+/* ─── PWA STATUS BAR ─── */
+.pwa-bar {
+  background: rgba(142,68,173,0.15); border-bottom: 1px solid rgba(142,68,173,0.3);
+  padding: 6px 24px; font-size: 11px; color: #8e44ad; display: none;
+  align-items: center; gap: 8px;
+}
+.pwa-bar.visible { display: flex; }
+.pwa-bar-dot { width: 6px; height: 6px; border-radius: 50%; background: #8e44ad; animation: dot-pulse 1.5s ease infinite; }
 </style>
 </head>
 <body>
+
+<!-- PWA SPLASH SCREEN -->
+<div id="pwa-splash">
+  <div class="splash-logo-wrap">
+    <div class="splash-ring r1"></div>
+    <div class="splash-ring r2"></div>
+    <div class="splash-ring r3"></div>
+    <div class="splash-logo-img">
+      <img id="splash-img" src="" alt="COVO">
+    </div>
+  </div>
+  <div class="splash-app-name">COVO <span>Bénéfices</span></div>
+  <div class="splash-tagline">Tableau de bord · COVO Pro</div>
+  <div class="splash-steps" id="splash-steps">
+    <div class="splash-step active" id="step-1"><div class="splash-step-dot"></div>Chargement des données…</div>
+    <div class="splash-step"        id="step-2"><div class="splash-step-dot"></div>Calcul des bénéfices…</div>
+    <div class="splash-step"        id="step-3"><div class="splash-step-dot"></div>Préparation du tableau…</div>
+  </div>
+  <div class="splash-progress-bar">
+    <div class="splash-progress-fill" id="splash-progress"></div>
+  </div>
+  <div class="splash-version">COVO Pro · Bénéfices v2.0</div>
+</div>
+
+<!-- PWA STATUS BAR -->
+<div class="pwa-bar" id="pwa-bar">
+  <span class="pwa-bar-dot"></span>
+  <span id="pwa-bar-text">Application installée</span>
+</div>
+
+<!-- INSTALL BANNER -->
+<div id="install-banner">
+  <img class="install-logo" id="install-logo" src="" alt="COVO">
+  <div class="install-text">
+    <div class="install-title">Installer COVO Bénéfices</div>
+    <div class="install-sub">Accès rapide depuis l'écran d'accueil</div>
+  </div>
+  <button class="install-btn" onclick="installPWA()">Installer</button>
+  <button class="install-dismiss" onclick="dismissInstall()" title="Fermer">✕</button>
+</div>
 
 <!-- HEADER -->
 <div class="header">
@@ -1009,6 +1256,134 @@ function toast(msg, type='') {
 }
 
 // ═══════════════════════════════════════════════
+//  PWA — SERVICE WORKER + SPLASH + INSTALL
+// ═══════════════════════════════════════════════
+
+// ── Service Worker (inline via Blob) ──
+function registerSW() {
+  if (!('serviceWorker' in navigator)) return;
+  const swCode = `
+const CACHE = 'covo-benef-v2';
+const ASSETS = ['./', location.href];
+self.addEventListener('install', e => {
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).catch(()=>{}));
+  self.skipWaiting();
+});
+self.addEventListener('activate', e => {
+  e.waitUntil(caches.keys().then(keys =>
+    Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))
+  ));
+  self.clients.claim();
+});
+self.addEventListener('fetch', e => {
+  if (e.request.method !== 'GET') return;
+  e.respondWith(
+    fetch(e.request).then(r => {
+      const clone = r.clone();
+      caches.open(CACHE).then(c => c.put(e.request, clone));
+      return r;
+    }).catch(() => caches.match(e.request))
+  );
+});
+`;
+  const blob = new Blob([swCode], { type: 'application/javascript' });
+  const url  = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(url, { scope: './' })
+    .then(reg => {
+      console.log('[COVO PWA] SW enregistré', reg.scope);
+      if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone) {
+        document.getElementById('pwa-bar').classList.add('visible');
+        document.getElementById('pwa-bar-text').textContent = '✓ Application installée — mode hors-ligne actif';
+      }
+    })
+    .catch(e => console.warn('[COVO PWA] SW non supporté:', e));
+}
+
+// ── Install prompt ──
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // Afficher le banner après 3s si pas déjà installé et pas déjà refusé
+  if (!localStorage.getItem('covo_install_dismissed')) {
+    setTimeout(() => {
+      const banner = document.getElementById('install-banner');
+      if (banner && window._logoDataUrl) {
+        document.getElementById('install-logo').src = window._logoDataUrl;
+      }
+      banner.classList.add('visible');
+    }, 3000);
+  }
+});
+
+function installPWA() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(r => {
+    if (r.outcome === 'accepted') {
+      toast('✓ Application installée !', 'ok');
+      document.getElementById('install-banner').classList.remove('visible');
+    }
+    deferredPrompt = null;
+  });
+}
+
+function dismissInstall() {
+  document.getElementById('install-banner').classList.remove('visible');
+  localStorage.setItem('covo_install_dismissed', '1');
+}
+
+window.addEventListener('appinstalled', () => {
+  toast('✓ COVO Bénéfices installé sur l\'écran d\'accueil', 'ok');
+  document.getElementById('install-banner').classList.remove('visible');
+  document.getElementById('pwa-bar').classList.add('visible');
+});
+
+// ── Splash screen séquencé ──
+function runSplash(onDone) {
+  // Logo sur le splash
+  const setLogo = () => {
+    if (window._logoSvgDataUrl) {
+      document.getElementById('splash-img').src = window._logoSvgDataUrl;
+    }
+  };
+  setLogo();
+  // Polling si logo pas encore prêt
+  if (!window._logoSvgDataUrl) {
+    const t = setInterval(() => {
+      if (window._logoSvgDataUrl) { setLogo(); clearInterval(t); }
+    }, 50);
+  }
+
+  const setStep = (n, prog) => {
+    [1,2,3].forEach(i => {
+      const el = document.getElementById('step-' + i);
+      if (!el) return;
+      el.classList.remove('active','done');
+      if (i < n) el.classList.add('done');
+      else if (i === n) el.classList.add('active');
+    });
+    document.getElementById('splash-progress').style.width = prog + '%';
+  };
+
+  setStep(1, 15);
+  setTimeout(() => setStep(2, 50), 500);
+  setTimeout(() => setStep(3, 85), 900);
+  setTimeout(() => {
+    setStep(3, 100);
+    [1,2,3].forEach(i => {
+      const el = document.getElementById('step-' + i);
+      if (el) { el.classList.remove('active'); el.classList.add('done'); }
+    });
+    setTimeout(() => {
+      const splash = document.getElementById('pwa-splash');
+      splash.classList.add('fade-out');
+      setTimeout(() => { splash.style.display = 'none'; if (onDone) onDone(); }, 500);
+    }, 300);
+  }, 1300);
+}
+
+// ═══════════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════════
 function init() {
@@ -1016,13 +1391,14 @@ function init() {
   updateKPIs();
   renderChart();
   renderTable();
-  // Auto-reconnect silencieux si Client ID déjà mémorisé
   if (localStorage.getItem('covo_benef_client_id')) {
     loadGAPI();
   }
 }
 
-init();
+// Lancer le splash puis l'app
+runSplash(() => init());
+registerSW();
 </script>
 </body>
 </html>
