@@ -215,6 +215,57 @@ body {
 .toast.ok { border-left-color: #27ae60; border-color: #27ae60; }
 .toast.err { border-left-color: #e74c3c; border-color: #e74c3c; }
 
+/* ─── CLIENT ID MODAL ─── */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7); z-index: 8000;
+  align-items: center; justify-content: center; padding: 16px;
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  background: #1e1e35; border: 1px solid #8e44ad;
+  border-radius: 16px; padding: 28px; max-width: 500px; width: 100%;
+}
+.modal-title { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+.modal-sub { font-size: 11px; color: #777; margin-bottom: 20px; line-height: 1.6; }
+.modal-label { font-size: 11px; color: #888; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; display: block; }
+.modal-input {
+  width: 100%; background: #13131f; border: 1px solid #3a3a5c;
+  border-radius: 8px; color: #ddd; font-size: 12px;
+  padding: 10px 14px; font-family: 'Poppins', sans-serif;
+  margin-bottom: 16px; transition: border-color 0.2s;
+}
+.modal-input:focus { outline: none; border-color: #8e44ad; }
+.modal-input.saved { border-color: #27ae60; }
+.modal-saved-tag { font-size: 10px; color: #27ae60; margin-top: -12px; margin-bottom: 14px; display: block; }
+.modal-btns { display: flex; gap: 10px; }
+.modal-btn {
+  flex: 1; padding: 10px; border-radius: 8px; font-size: 13px;
+  font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif;
+  transition: all 0.2s;
+}
+.modal-btn.primary { background: #8e44ad; color: #fff; border: none; }
+.modal-btn.primary:hover { background: #7d3c98; }
+.modal-btn.cancel { background: none; color: #888; border: 1px solid #3a3a5c; }
+.modal-btn.cancel:hover { border-color: #8e44ad; color: #c39bd3; }
+.modal-btn.danger { background: rgba(231,76,60,0.15); color: #e74c3c; border: 1px solid rgba(231,76,60,0.3); }
+.modal-btn.danger:hover { background: rgba(231,76,60,0.3); }
+
+/* ─── BACKUP PICKER ─── */
+.backup-list { display: flex; flex-direction: column; gap: 8px; max-height: 260px; overflow-y: auto; margin-bottom: 16px; }
+.backup-item {
+  background: #13131f; border: 1px solid #2e2e50; border-radius: 8px;
+  padding: 10px 14px; cursor: pointer; transition: all 0.15s;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.backup-item:hover { border-color: #8e44ad; }
+.backup-item.selected { border-color: #8e44ad; background: rgba(142,68,173,0.1); }
+.backup-name { font-size: 12px; color: #ccc; font-weight: 500; }
+.backup-meta { font-size: 10px; color: #666; }
+.backup-badge { font-size: 9px; background: #8e44ad; color: #fff; padding: 2px 7px; border-radius: 20px; font-weight: 600; }
+.loading-spin { display: inline-block; width: 14px; height: 14px; border: 2px solid #3a3a5c; border-top-color: #8e44ad; border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
 @media (max-width: 640px) {
   .page { padding: 12px; }
   .ticket-row { grid-template-columns: 1fr auto; }
@@ -234,9 +285,9 @@ body {
   <div class="header-right">
     <span class="drive-dot" id="drive-dot"></span>
     <span class="drive-label" id="drive-label">Non connecté</span>
-    <button class="btn-hdr" id="btn-connect" onclick="driveAuth()">☁ Connecter Drive</button>
+    <button class="btn-hdr" id="btn-connect" onclick="openClientIdModal()">☁ Connecter Drive</button>
     <button class="btn-hdr" id="btn-save" onclick="saveDrive()" style="display:none">💾 Sauvegarder</button>
-    <button class="btn-hdr" id="btn-load" onclick="loadDrive()" style="display:none">📂 Charger</button>
+    <button class="btn-hdr" id="btn-load" onclick="autoSearchCovoBackups()" style="display:none">📂 Sauvegardes Drive</button>
     <button class="btn-hdr red" onclick="location.reload()">↺ Actualiser</button>
   </div>
 </div>
@@ -351,6 +402,36 @@ body {
 
 </div>
 
+<!-- CLIENT ID MODAL -->
+<div class="modal-overlay" id="clientid-modal">
+  <div class="modal-box">
+    <div class="modal-title">☁️ Connexion Google Drive</div>
+    <div class="modal-sub">Entrez le même Client ID OAuth 2.0 utilisé dans COVO Pro. Il sera mémorisé automatiquement pour les prochaines ouvertures.</div>
+    <label class="modal-label">Google OAuth Client ID</label>
+    <input type="text" class="modal-input" id="cid-input" placeholder="xxxx.apps.googleusercontent.com">
+    <span class="modal-saved-tag" id="cid-saved-tag" style="display:none">✓ Client ID mémorisé</span>
+    <div style="font-size:11px;color:#555;margin-bottom:16px;line-height:1.5">🔗 <a href="https://console.cloud.google.com/apis/credentials" target="_blank" style="color:#8e44ad">console.cloud.google.com</a> → Identifiants → ID client OAuth 2.0</div>
+    <div class="modal-btns">
+      <button class="modal-btn cancel" onclick="closeModal('clientid-modal')">Annuler</button>
+      <button class="modal-btn danger" id="btn-forget" onclick="forgetClientId()" style="display:none">🗑 Oublier</button>
+      <button class="modal-btn primary" onclick="saveAndConnect()">Se connecter →</button>
+    </div>
+  </div>
+</div>
+
+<!-- BACKUP PICKER MODAL -->
+<div class="modal-overlay" id="backup-modal">
+  <div class="modal-box">
+    <div class="modal-title">📂 Sauvegardes COVO Pro sur Drive</div>
+    <div class="modal-sub" id="backup-modal-sub">Sélectionnez la sauvegarde à charger.</div>
+    <div class="backup-list" id="backup-list"></div>
+    <div class="modal-btns">
+      <button class="modal-btn cancel" onclick="closeModal('backup-modal')">Fermer</button>
+      <button class="modal-btn primary" id="btn-load-selected" onclick="loadSelectedBackup()">📥 Charger la sélection</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -361,9 +442,6 @@ let sales = [];
 let articles = {};
 let hasCostData = false;
 let currentView = 'all';
-let driveConnected = false;
-let driveFileId = null;
-let CLIENT_ID = '';
 let chartInstance = null;
 
 function loadCovoData() {
@@ -703,92 +781,231 @@ function renderChart() {
 }
 
 // ═══════════════════════════════════════════════
-//  GOOGLE DRIVE (COVO Pro OAuth flow)
+//  GOOGLE DRIVE — Client ID persistant + recherche auto
 // ═══════════════════════════════════════════════
-function driveAuth() {
-  const id = prompt('Entrez votre Google OAuth Client ID (même que dans COVO Pro) :');
-  if (!id) return;
-  CLIENT_ID = id.trim();
+let driveConnected = false;
+let tokenClient;
+let selectedBackupId = null;
+let CLIENT_ID = localStorage.getItem('covo_benef_client_id') || '';
+
+function openClientIdModal() {
+  const input = document.getElementById('cid-input');
+  const savedTag = document.getElementById('cid-saved-tag');
+  const btnForget = document.getElementById('btn-forget');
+  if (CLIENT_ID) {
+    input.value = CLIENT_ID;
+    input.classList.add('saved');
+    savedTag.style.display = 'block';
+    btnForget.style.display = 'flex';
+  } else {
+    input.value = '';
+    input.classList.remove('saved');
+    savedTag.style.display = 'none';
+    btnForget.style.display = 'none';
+  }
+  document.getElementById('clientid-modal').classList.add('open');
+}
+
+function forgetClientId() {
+  localStorage.removeItem('covo_benef_client_id');
+  CLIENT_ID = '';
+  document.getElementById('cid-input').value = '';
+  document.getElementById('cid-input').classList.remove('saved');
+  document.getElementById('cid-saved-tag').style.display = 'none';
+  document.getElementById('btn-forget').style.display = 'none';
+  toast('Client ID supprimé', '');
+}
+
+function saveAndConnect() {
+  const val = document.getElementById('cid-input').value.trim();
+  if (!val) { toast('Entrez un Client ID', 'err'); return; }
+  CLIENT_ID = val;
   localStorage.setItem('covo_benef_client_id', CLIENT_ID);
+  document.getElementById('cid-saved-tag').style.display = 'block';
+  document.getElementById('cid-input').classList.add('saved');
+  closeModal('clientid-modal');
   loadGAPI();
 }
 
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
 function loadGAPI() {
-  if (!CLIENT_ID) {
-    CLIENT_ID = localStorage.getItem('covo_benef_client_id') || '';
-    if (!CLIENT_ID) return;
-  }
+  if (!CLIENT_ID) { openClientIdModal(); return; }
+  // Éviter double-chargement
+  if (document.getElementById('gsi-script')) { initGSI(); return; }
   const s1 = document.createElement('script');
+  s1.id = 'gsi-script';
   s1.src = 'https://accounts.google.com/gsi/client';
   s1.onload = initGSI;
   document.head.appendChild(s1);
   const s2 = document.createElement('script');
   s2.src = 'https://apis.google.com/js/api.js';
-  s2.onload = () => gapi.load('client', () => gapi.client.init({ discoveryDocs:['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'] }));
+  s2.onload = () => gapi.load('client', () => gapi.client.init({
+    discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']
+  }));
   document.head.appendChild(s2);
 }
 
-let tokenClient;
 function initGSI() {
-  if (!window.google) return;
+  if (!window.google) { setTimeout(initGSI, 300); return; }
   tokenClient = google.accounts.oauth2.initTokenClient({
     client_id: CLIENT_ID,
-    scope: 'https://www.googleapis.com/auth/drive.file',
-    callback: resp => {
-      if (resp.error) { toast('Erreur Drive: '+resp.error,'err'); return; }
+    // drive pour accéder aux fichiers COVO Pro existants
+    scope: 'https://www.googleapis.com/auth/drive',
+    callback: async resp => {
+      if (resp.error) { toast('Erreur Drive : ' + resp.error, 'err'); return; }
       driveConnected = true;
-      document.getElementById('drive-dot').className='drive-dot on';
-      document.getElementById('drive-label').textContent='Drive connecté';
-      document.getElementById('btn-connect').textContent='☁ Déconnecter';
-      document.getElementById('btn-save').style.display='flex';
-      document.getElementById('btn-load').style.display='flex';
-      toast('✓ Drive connecté','ok');
+      updateDriveUI(true);
+      toast('✓ Drive connecté — recherche des sauvegardes…', 'ok');
+      await autoSearchCovoBackups();
     }
   });
-  tokenClient.requestAccessToken({prompt:''});
+  tokenClient.requestAccessToken({ prompt: '' });
+}
+
+function updateDriveUI(connected) {
+  document.getElementById('drive-dot').className = 'drive-dot ' + (connected ? 'on' : 'off');
+  document.getElementById('drive-label').textContent = connected ? 'Drive connecté' : 'Non connecté';
+  document.getElementById('btn-connect').textContent = connected ? '☁ Paramètres Drive' : '☁ Connecter Drive';
+  document.getElementById('btn-save').style.display = connected ? 'flex' : 'none';
+  document.getElementById('btn-load').style.display = connected ? 'flex' : 'none';
+}
+
+// ── RECHERCHE AUTOMATIQUE DES SAUVEGARDES COVO PRO ──
+async function autoSearchCovoBackups() {
+  const modal = document.getElementById('backup-modal');
+  const listEl = document.getElementById('backup-list');
+  const subEl  = document.getElementById('backup-modal-sub');
+  listEl.innerHTML = '<div style="text-align:center;padding:20px"><span class="loading-spin"></span><span style="font-size:12px;color:#666;margin-left:10px">Recherche en cours…</span></div>';
+  modal.classList.add('open');
+  selectedBackupId = null;
+
+  try {
+    const token = gapi.client.getToken().access_token;
+    // Cherche tous les fichiers JSON qui ressemblent aux backups COVO Pro
+    const queries = [
+      `name contains 'covo' and mimeType='application/json' and trashed=false`,
+      `name contains 'backup' and mimeType='application/json' and trashed=false`,
+    ];
+    const foundFiles = [];
+    const seenIds = new Set();
+
+    for (const q of queries) {
+      const r = await gapi.client.drive.files.list({
+        q, fields: 'files(id,name,modifiedTime,size)', spaces: 'drive',
+        orderBy: 'modifiedTime desc', pageSize: 20
+      });
+      (r.result.files || []).forEach(f => {
+        if (!seenIds.has(f.id)) { seenIds.add(f.id); foundFiles.push(f); }
+      });
+    }
+
+    // Trier par date décroissante
+    foundFiles.sort((a, b) => new Date(b.modifiedTime) - new Date(a.modifiedTime));
+
+    if (foundFiles.length === 0) {
+      subEl.textContent = 'Aucune sauvegarde COVO Pro trouvée sur votre Drive.';
+      listEl.innerHTML = '<div class="empty" style="padding:30px"><div class="empty-icon" style="font-size:32px">🔍</div><div class="empty-p">Aucun fichier JSON COVO trouvé.</div></div>';
+      return;
+    }
+
+    subEl.textContent = `${foundFiles.length} fichier${foundFiles.length>1?'s':''} trouvé${foundFiles.length>1?'s':''} — sélectionnez la sauvegarde à charger.`;
+
+    listEl.innerHTML = foundFiles.map((f, i) => {
+      const d = new Date(f.modifiedTime);
+      const dateStr = d.toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'}) + ' ' + d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+      const sizeKb = f.size ? Math.round(parseInt(f.size)/1024) : '?';
+      return `<div class="backup-item${i===0?' selected':''}" id="bk-${f.id}" onclick="selectBackup('${f.id}')">
+        <div>
+          <div class="backup-name">${escH(f.name)}</div>
+          <div class="backup-meta">Modifié le ${dateStr} · ${sizeKb} Ko</div>
+        </div>
+        ${i===0?'<span class="backup-badge">DERNIÈRE</span>':''}
+      </div>`;
+    }).join('');
+
+    // Présélectionner le plus récent
+    selectedBackupId = foundFiles[0].id;
+
+  } catch(e) {
+    listEl.innerHTML = `<div class="empty" style="padding:30px"><div class="empty-p" style="color:#e74c3c">Erreur : ${e.message}</div></div>`;
+  }
+}
+
+function selectBackup(id) {
+  selectedBackupId = id;
+  document.querySelectorAll('.backup-item').forEach(el => el.classList.remove('selected'));
+  const el = document.getElementById('bk-' + id);
+  if (el) el.classList.add('selected');
+}
+
+async function loadSelectedBackup() {
+  if (!selectedBackupId) { toast('Sélectionnez un fichier', 'err'); return; }
+  const btn = document.getElementById('btn-load-selected');
+  btn.textContent = '⏳ Chargement…';
+  btn.disabled = true;
+  try {
+    const token = gapi.client.getToken().access_token;
+    const resp = await fetch(`https://www.googleapis.com/drive/v3/files/${selectedBackupId}?alt=media`, {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    const data = await resp.json();
+
+    // Détecte la clé contenant l'historique des ventes (plusieurs formats COVO)
+    const loaded =
+      data.covo_sales_history ||
+      data.salesHistory ||
+      data.sales_history ||
+      (data.data && data.data.covo_sales_history) ||
+      null;
+
+    if (loaded && Array.isArray(loaded)) {
+      // Fusion avec les données locales (déduplication par ID)
+      const localIds = new Set(sales.map(s => s.id || s.ticketId || JSON.stringify(s)));
+      let added = 0;
+      loaded.forEach(s => {
+        const key = s.id || s.ticketId || JSON.stringify(s);
+        if (!localIds.has(key)) { sales.push(s); localIds.add(key); added++; }
+      });
+      localStorage.setItem('covo_sales_history', JSON.stringify(sales));
+      closeModal('backup-modal');
+      toast(`✓ ${loaded.length} tickets chargés (${added} nouveaux ajoutés)`, 'ok');
+      init();
+    } else {
+      toast('Format non reconnu — données COVO Pro introuvables dans ce fichier', 'err');
+    }
+  } catch(e) {
+    toast('Erreur lors du chargement : ' + e.message, 'err');
+  } finally {
+    btn.textContent = '📥 Charger la sélection';
+    btn.disabled = false;
+  }
 }
 
 async function saveDrive() {
-  if (!driveConnected) { toast('Non connecté','err'); return; }
+  if (!driveConnected) { toast('Non connecté', 'err'); return; }
   try {
-    const q=`name='covo_benefices_data.json' and trashed=false`;
-    const list = await gapi.client.drive.files.list({q,fields:'files(id)',spaces:'drive'});
+    const q = `name='covo_benefices_data.json' and trashed=false`;
+    const list = await gapi.client.drive.files.list({ q, fields: 'files(id)', spaces: 'drive' });
     let fid = list.result.files?.[0]?.id;
     if (!fid) {
-      const cr = await gapi.client.drive.files.create({resource:{name:'covo_benefices_data.json',mimeType:'application/json'},fields:'id'});
+      const cr = await gapi.client.drive.files.create({ resource: { name: 'covo_benefices_data.json', mimeType: 'application/json' }, fields: 'id' });
       fid = cr.result.id;
     }
     const token = gapi.client.getToken().access_token;
-    const payload = JSON.stringify({ covo_sales_history: sales, savedAt: new Date().toISOString() }, null, 2);
-    await fetch(`https://www.googleapis.com/upload/drive/v3/files/${fid}?uploadType=media`,{
-      method:'PATCH', headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'}, body:payload
+    const payload = JSON.stringify({ covo_sales_history: sales, savedAt: new Date().toISOString(), version: '2.0' }, null, 2);
+    await fetch(`https://www.googleapis.com/upload/drive/v3/files/${fid}?uploadType=media`, {
+      method: 'PATCH', headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }, body: payload
     });
-    toast('✓ Sauvegardé sur Drive','ok');
-  } catch(e) { toast('Erreur sauvegarde','err'); }
-}
-
-async function loadDrive() {
-  if (!driveConnected) { toast('Non connecté','err'); return; }
-  try {
-    const q=`name='covo_benefices_data.json' and trashed=false`;
-    const list = await gapi.client.drive.files.list({q,fields:'files(id)',spaces:'drive'});
-    const fid = list.result.files?.[0]?.id;
-    if (!fid) { toast('Aucun fichier trouvé sur Drive','err'); return; }
-    const token = gapi.client.getToken().access_token;
-    const resp = await fetch(`https://www.googleapis.com/drive/v3/files/${fid}?alt=media`,{headers:{'Authorization':'Bearer '+token}});
-    const data = await resp.json();
-    if (data.covo_sales_history) {
-      sales = data.covo_sales_history;
-      toast(`✓ ${sales.length} tickets chargés depuis Drive`,'ok');
-      init();
-    }
-  } catch(e) { toast('Erreur chargement','err'); }
+    toast('✓ Données sauvegardées sur Drive', 'ok');
+  } catch(e) { toast('Erreur sauvegarde Drive', 'err'); }
 }
 
 function toast(msg, type='') {
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.className=`toast ${type} show`;
-  setTimeout(()=>t.classList.remove('show'),3000);
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + type + ' show';
+  setTimeout(() => t.classList.remove('show'), 3500);
 }
 
 // ═══════════════════════════════════════════════
@@ -799,8 +1016,10 @@ function init() {
   updateKPIs();
   renderChart();
   renderTable();
-  // Auto-reconnect Drive if client ID saved
-  if (localStorage.getItem('covo_benef_client_id')) loadGAPI();
+  // Auto-reconnect silencieux si Client ID déjà mémorisé
+  if (localStorage.getItem('covo_benef_client_id')) {
+    loadGAPI();
+  }
 }
 
 init();
