@@ -15,6 +15,43 @@
 <link rel="apple-touch-icon" id="apple-icon" href="">
 <link rel="manifest" id="pwa-manifest">
 
+<!-- PWA install prompt capturé le plus tôt possible -->
+<script>
+window._pwaPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  window._pwaPrompt = e;
+  // Activer le bouton natif si le modal est déjà ouvert
+  const btn = document.getElementById('im-native-btn');
+  if (btn) { btn.disabled = false; btn.textContent = '⬇ Installer automatiquement'; }
+  // Pulse renforcé sur le FAB
+  const fab = document.getElementById('fab-install');
+  if (fab) {
+    fab.classList.add('pwa-ready');
+    fab.title = 'Installation disponible — cliquez pour installer';
+  }
+  // Montrer la proposition flottante après 2s
+  setTimeout(() => {
+    if (!localStorage.getItem('covo_install_seen')) showInstallToast();
+  }, 2000);
+});
+window.addEventListener('appinstalled', () => {
+  window._pwaPrompt = null;
+  localStorage.setItem('covo_installed', '1');
+  const fab = document.getElementById('fab-install');
+  if (fab) {
+    fab.classList.add('installed');
+    fab.classList.remove('pwa-ready');
+    fab.innerHTML = '<span class="fab-icon">✓</span><span class="fab-label">Installé</span>';
+    fab.onclick = null;
+  }
+  document.getElementById('install-modal')?.classList.remove('open');
+  document.getElementById('install-toast')?.remove();
+  document.getElementById('pwa-bar').classList.add('visible');
+  if (typeof toast !== 'undefined') toast("✓ Application installée avec succès !", 'ok');
+});
+</script>
+
 <!-- LOGO SVG INLINE (utilisé partout : manifest, splash, favicon) -->
 <script>
 (function(){
@@ -477,6 +514,34 @@ body {
 }
 #install-modal.open { display: block; }
 @keyframes modal-pop { from{transform:scale(0.85) translateY(20px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
+@keyframes ring-spin-cw { to { transform: rotate(360deg); } }
+
+/* ─── FAB READY STATE ─── */
+#fab-install.pwa-ready {
+  background: linear-gradient(135deg,#27ae60,#1e8449);
+  box-shadow: 0 4px 24px rgba(39,174,96,0.6);
+  animation: fab-ready-pulse 1.5s ease-in-out infinite;
+}
+@keyframes fab-ready-pulse {
+  0%,100%{box-shadow:0 4px 24px rgba(39,174,96,0.6);}
+  50%{box-shadow:0 4px 36px rgba(39,174,96,0.9),0 0 0 10px rgba(39,174,96,0.12);}
+}
+
+/* ─── INSTALL TOAST ─── */
+#install-toast {
+  position:fixed; bottom:100px; right:20px; z-index:9300;
+  background:#1e1e35; border:1px solid #27ae60; border-radius:14px;
+  padding:14px 16px; width:290px; display:flex; align-items:center; gap:12px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+  animation:modal-pop 0.3s cubic-bezier(.34,1.56,.64,1);
+}
+.it-logo { width:40px;height:40px;border-radius:10px;flex-shrink:0;overflow:hidden;background:#13131f; }
+.it-logo img { width:100%;height:100%;object-fit:contain; }
+.it-text { flex:1;min-width:0; }
+.it-title { font-size:13px;font-weight:700;color:#fff; }
+.it-sub { font-size:10px;color:#555;margin-top:2px; }
+.it-install { background:#27ae60;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;white-space:nowrap;flex-shrink:0; }
+.it-close { background:none;border:none;color:#555;cursor:pointer;font-size:14px;padding:2px 5px;flex-shrink:0; }
 .im-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
 .im-logo { width: 42px; height: 42px; border-radius: 10px; background: #13131f; flex-shrink: 0; overflow: hidden; }
 .im-logo img { width: 100%; height: 100%; object-fit: contain; }
@@ -615,10 +680,30 @@ body {
       </div>
     </div>
     <span class="drive-label" id="drive-label" style="display:block">Non connecté</span>
-    <span id="sync-indicator" style="display:none;font-size:10px;color:#555;background:#1a1a2e;border:1px solid #2e2e50;border-radius:6px;padding:3px 8px;line-height:1.4;text-align:center">
-      <span id="sync-last" style="display:block;color:#666">—</span>
-      <span id="sync-countdown" style="color:#8e44ad"></span>
-    </span>
+    <!-- SYNC RING INDICATOR -->
+    <div id="sync-indicator" style="display:none;align-items:center;gap:10px">
+      <!-- Anneau SVG animé -->
+      <div style="position:relative;width:38px;height:38px;flex-shrink:0" title="Synchro Drive">
+        <svg width="38" height="38" viewBox="0 0 38 38" style="transform:rotate(-90deg)">
+          <!-- Fond -->
+          <circle cx="19" cy="19" r="15" fill="none" stroke="#1e1e35" stroke-width="3"/>
+          <!-- Anneau de progression -->
+          <circle id="sync-ring" cx="19" cy="19" r="15" fill="none"
+            stroke="#8e44ad" stroke-width="3" stroke-linecap="round"
+            stroke-dasharray="94.25" stroke-dashoffset="0"
+            style="transition:stroke-dashoffset 1s linear,stroke 0.4s"/>
+          <!-- Fond intérieur -->
+          <circle cx="19" cy="19" r="12" fill="#13131f"/>
+        </svg>
+        <!-- Icône centrale -->
+        <div id="sync-icon" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px">↻</div>
+      </div>
+      <!-- Texte -->
+      <div style="line-height:1.4;min-width:0">
+        <div id="sync-last" style="font-size:10px;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px">—</div>
+        <div id="sync-countdown" style="font-size:10px;color:#8e44ad;font-weight:600">—</div>
+      </div>
+    </div>
     <button class="btn-hdr" id="btn-connect" onclick="openClientIdModal()">☁ Connecter Drive</button>
     <button class="btn-hdr" id="btn-save" onclick="saveDrive()" style="display:none">💾 Sauvegarder</button>
     <button class="btn-hdr" id="btn-load" onclick="autoSearchCovoBackups()" style="display:none">📂 Sauvegardes Drive</button>
@@ -1335,7 +1420,7 @@ function updateDriveUI(connected) {
   document.getElementById('btn-save').style.display = connected ? 'flex' : 'none';
   document.getElementById('btn-load').style.display = connected ? 'flex' : 'none';
   const si = document.getElementById('sync-indicator');
-  if (si) si.style.display = connected ? 'block' : 'none';
+  if (si) si.style.display = connected ? 'flex' : 'none';
 }
 
 // ── Récupère les fichiers Drive COVO (dédupliqués, triés par date) ──
@@ -1374,23 +1459,23 @@ function extractSales(data) {
 
 // ── RESTAURATION AUTOMATIQUE de la dernière sauvegarde ──
 async function autoLoadLatestBackup(isInitial) {
-  setSyncLabel('🔄 Recherche…', '');
+  setSyncLabel('Vérification…', '', 'checking');
   try {
     const files = await fetchDriveFiles();
     if (!files.length) {
-      setSyncLabel('Aucune sauvegarde', '');
+      setSyncLabel('Aucune sauvegarde', '', 'error');
       if (isInitial) toast('Aucune sauvegarde COVO trouvée sur Drive', 'err');
       return;
     }
     const latest = files[0];
     // Si même fichier et même date → rien de nouveau
     if (!isInitial && _lastFileId === latest.id && _lastModified === latest.modifiedTime) {
-      setSyncLabel('✓ À jour', nowTime());
+      setSyncLabel('À jour', nowTime(), 'ok');
       return;
     }
     const data   = await fetchFileData(latest.id);
     const loaded = extractSales(data);
-    if (!loaded || !Array.isArray(loaded)) { setSyncLabel('Format inconnu', ''); return; }
+    if (!loaded || !Array.isArray(loaded)) { setSyncLabel('Format inconnu', '', 'error'); return; }
     // Fusion (déduplication)
     const localIds = new Set(sales.map(s => s.id || s.ticketId || JSON.stringify(s)));
     let added = 0;
@@ -1404,44 +1489,66 @@ async function autoLoadLatestBackup(isInitial) {
     // Rafraîchir l'affichage
     loadCovoData(); updateKPIs(); renderChart(); renderTable();
     const dStr = new Date(latest.modifiedTime).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-    setSyncLabel('✓ ' + latest.name.slice(0,22) + (latest.name.length>22?'…':''), dStr);
+    setSyncLabel(latest.name.slice(0,22) + (latest.name.length>22?'…':''), dStr, 'ok');
     if (isInitial)      toast('✓ ' + loaded.length + ' tickets restaurés depuis Drive', 'ok');
     else if (added > 0) toast('🔄 ' + added + ' nouveau' + (added>1?'x':'') + ' ticket' + (added>1?'s':'') + ' synchronisé' + (added>1?'s':''), 'ok');
   } catch(e) {
-    setSyncLabel('⚠ Erreur synchro', '');
+    setSyncLabel('Erreur synchro', '', 'error');
     console.warn('[COVO Sync]', e.message);
   }
 }
 
-function setSyncLabel(main, sub) {
-  const el1 = document.getElementById('sync-last');
-  const el2 = document.getElementById('sync-countdown');
+function setSyncLabel(main, sub, state) {
+  const el1  = document.getElementById('sync-last');
+  const el2  = document.getElementById('sync-countdown');
+  const ring = document.getElementById('sync-ring');
+  const icon = document.getElementById('sync-icon');
   if (el1) el1.textContent = main;
   if (el2 && sub !== '') el2.textContent = sub;
+  // Couleur de l'anneau selon l'état
+  if (ring) {
+    if (state === 'checking') { ring.style.stroke = '#f39c12'; if (icon) icon.style.animation = 'ring-spin-cw 1s linear infinite'; }
+    else if (state === 'error') { ring.style.stroke = '#e74c3c'; if (icon) { icon.style.animation = ''; icon.textContent = '⚠'; } }
+    else if (state === 'ok')   { ring.style.stroke = '#2ecc71'; if (icon) { icon.style.animation = ''; icon.textContent = '✓'; } }
+    else                       { ring.style.stroke = '#8e44ad'; if (icon) { icon.style.animation = ''; icon.textContent = '↻'; } }
+  }
 }
 
 function nowTime() {
   return new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
 }
 
+const POLL_S = 5; // secondes entre chaque vérification
+function updateRing(secondsLeft) {
+  const ring = document.getElementById('sync-ring');
+  const el2  = document.getElementById('sync-countdown');
+  if (!ring) return;
+  const circumference = 2 * Math.PI * 15; // r=15 → ~94.25
+  const fraction = secondsLeft / POLL_S;
+  ring.style.strokeDashoffset = circumference * (1 - fraction);
+  if (el2) el2.textContent = secondsLeft > 0 ? 'dans ' + secondsLeft + 's' : 'Vérif…';
+}
+
 // ── POLLING TOUTES LES 5 SECONDES ──────────────
 function startPolling() {
   if (_countdownTimer) clearInterval(_countdownTimer);
-  _nextCheckIn = 5;
-  updateCountdown();
+  _nextCheckIn = POLL_S;
+  updateRing(_nextCheckIn);
   _countdownTimer = setInterval(() => {
     _nextCheckIn--;
     if (_nextCheckIn <= 0) {
-      _nextCheckIn = 5;
+      _nextCheckIn = POLL_S;
+      setSyncLabel(document.getElementById('sync-last')?.textContent || '—', '', 'checking');
+      updateRing(0);
       autoLoadLatestBackup(false);
+    } else {
+      updateRing(_nextCheckIn);
     }
-    updateCountdown();
   }, 1000);
 }
 
 function updateCountdown() {
-  const el = document.getElementById('sync-countdown');
-  if (el) el.textContent = '↻ dans ' + _nextCheckIn + 's';
+  updateRing(_nextCheckIn);
 }
 
 // ── RECHERCHE AUTOMATIQUE DES SAUVEGARDES COVO PRO ──
@@ -1603,16 +1710,29 @@ self.addEventListener('fetch', e => {
 }
 
 // ── FAB Install + Modal ──────────────────────────
-let deferredPrompt = null;
+// Note: beforeinstallprompt est capturé tôt dans <head> → window._pwaPrompt
+let deferredPrompt = null; // alias pour compat
 
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  deferredPrompt = e;
-  const btn = document.getElementById('im-native-btn');
-  if (btn) btn.disabled = false;
-  const fab = document.getElementById('fab-install');
-  if (fab) fab.style.animation = 'fab-pulse 1.2s ease-in-out infinite';
-});
+// Sync avec le prompt capturé dans <head>
+function getPwaPrompt() { return window._pwaPrompt || deferredPrompt; }
+
+function showInstallToast() {
+  if (localStorage.getItem('covo_installed') || document.getElementById('install-toast')) return;
+  const toast_el = document.createElement('div');
+  toast_el.id = 'install-toast';
+  toast_el.innerHTML = `
+    <div class="it-logo"><img src="${window._logoSvgDataUrl||''}" alt="COVO"></div>
+    <div class="it-text">
+      <div class="it-title">COVO Bénéfices</div>
+      <div class="it-sub">Installer pour un accès rapide</div>
+    </div>
+    <button class="it-install" onclick="installPWA();this.closest('#install-toast').remove()">Installer</button>
+    <button class="it-close" onclick="this.closest('#install-toast').remove();localStorage.setItem('covo_install_seen','1')" title="Fermer">✕</button>
+  `;
+  document.body.appendChild(toast_el);
+  // Auto-fermer après 12s
+  setTimeout(() => toast_el.remove(), 12000);
+}
 
 function toggleInstallModal() {
   const modal = document.getElementById('install-modal');
@@ -1621,7 +1741,7 @@ function toggleInstallModal() {
   const logoImg = document.getElementById('im-logo-img');
   if (logoImg && window._logoSvgDataUrl) logoImg.src = window._logoSvgDataUrl;
   const btn = document.getElementById('im-native-btn');
-  if (btn) btn.disabled = !deferredPrompt;
+  if (btn) btn.disabled = !getPwaPrompt();
   autoDetectPlatform();
   modal.classList.add('open');
 }
@@ -1643,11 +1763,12 @@ function showPlatform(platform, btn) {
 }
 
 function installPWA() {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  deferredPrompt.userChoice.then(r => {
+  const prompt = getPwaPrompt();
+  if (!prompt) { toast("Hébergez le fichier en HTTPS pour l'installation auto", "err"); return; }
+  prompt.prompt();
+  prompt.userChoice.then(r => {
     if (r.outcome === 'accepted') toast('✓ Application installée !', 'ok');
-    deferredPrompt = null;
+    window._pwaPrompt = null; deferredPrompt = null;
     const btn = document.getElementById('im-native-btn');
     if (btn) btn.disabled = true;
     document.getElementById('install-modal').classList.remove('open');
