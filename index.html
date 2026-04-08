@@ -446,39 +446,70 @@ body {
 }
 
 /* ─── INSTALL BANNER ─── */
-#install-banner {
-  display: none;
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 9000;
-  background: linear-gradient(135deg, #1e1e35, #16213e);
-  border-top: 2px solid #8e44ad;
-  padding: 14px 20px; align-items: center; gap: 14px;
-  animation: slide-up 0.4s ease;
+/* ─── FAB INSTALL ─── */
+#fab-install {
+  position: fixed; bottom: 28px; right: 28px; z-index: 9500;
+  width: 58px; height: 58px; border-radius: 50%;
+  background: linear-gradient(135deg, #8e44ad, #6c3483);
+  border: 3px solid rgba(255,255,255,0.15);
+  box-shadow: 0 4px 20px rgba(142,68,173,0.55);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 2px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: fab-pulse 2.5s ease-in-out infinite;
 }
-@keyframes slide-up { from{transform:translateY(100%)} to{transform:translateY(0)} }
-#install-banner.visible { display: flex; }
-.install-logo { width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0; }
-.install-text { flex: 1; }
-.install-title { font-size: 13px; font-weight: 700; color: #fff; }
-.install-sub { font-size: 11px; color: #777; }
-.install-btn {
-  background: #8e44ad; color: #fff; border: none; border-radius: 8px;
-  padding: 9px 18px; font-size: 12px; font-weight: 700;
-  cursor: pointer; font-family: 'Poppins', sans-serif; white-space: nowrap;
-  flex-shrink: 0;
+#fab-install:hover { transform: scale(1.12); box-shadow: 0 6px 28px rgba(142,68,173,0.75); }
+#fab-install.installed { background: linear-gradient(135deg,#27ae60,#1e8449); animation: none; box-shadow: 0 4px 16px rgba(39,174,96,0.4); }
+@keyframes fab-pulse {
+  0%,100% { box-shadow: 0 4px 20px rgba(142,68,173,0.55); }
+  50%      { box-shadow: 0 4px 30px rgba(142,68,173,0.9), 0 0 0 8px rgba(142,68,173,0.12); }
 }
-.install-dismiss {
-  background: none; border: none; color: #555; cursor: pointer;
-  font-size: 18px; padding: 4px; flex-shrink: 0;
+.fab-icon { font-size: 22px; line-height: 1; }
+.fab-label { font-size: 7px; font-weight: 700; color: rgba(255,255,255,0.85); letter-spacing: 0.04em; text-transform: uppercase; }
+
+/* ─── INSTALL MODAL (flottant, bas de page) ─── */
+#install-modal {
+  display: none; position: fixed; bottom: 100px; right: 20px; z-index: 9400;
+  background: #1e1e35; border: 1px solid #8e44ad; border-radius: 16px;
+  padding: 20px; width: 310px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(142,68,173,0.2);
+  animation: modal-pop 0.25s cubic-bezier(.34,1.56,.64,1);
 }
+#install-modal.open { display: block; }
+@keyframes modal-pop { from{transform:scale(0.85) translateY(20px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
+.im-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.im-logo { width: 42px; height: 42px; border-radius: 10px; background: #13131f; flex-shrink: 0; overflow: hidden; }
+.im-logo img { width: 100%; height: 100%; object-fit: contain; }
+.im-title { font-size: 14px; font-weight: 700; color: #fff; }
+.im-sub   { font-size: 11px; color: #666; }
+.im-close { margin-left: auto; background: none; border: none; color: #555; cursor: pointer; font-size: 16px; padding: 2px 6px; }
+.im-close:hover { color: #aaa; }
+.im-native-btn {
+  width: 100%; padding: 11px; border-radius: 10px; border: none;
+  background: linear-gradient(135deg,#8e44ad,#6c3483); color: #fff;
+  font-size: 13px; font-weight: 700; cursor: pointer; margin-bottom: 14px;
+  font-family: 'Poppins',sans-serif; transition: opacity 0.2s;
+}
+.im-native-btn:hover { opacity: 0.88; }
+.im-native-btn:disabled { opacity: 0.4; cursor: default; }
+.im-divider { text-align: center; font-size: 11px; color: #444; margin-bottom: 12px; position: relative; }
+.im-divider::before,.im-divider::after { content:''; position:absolute; top:50%; width:38%; height:1px; background:#2e2e50; }
+.im-divider::before { left:0; } .im-divider::after { right:0; }
+.im-steps { display: flex; flex-direction: column; gap: 8px; }
+.im-step { display: flex; align-items: flex-start; gap: 10px; font-size: 11px; color: #999; }
+.im-step-num { width: 20px; height: 20px; border-radius: 50%; background: #2e2e50; color: #8e44ad; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.im-tabs { display: flex; gap: 6px; margin-bottom: 12px; }
+.im-tab { flex: 1; padding: 6px; border-radius: 7px; border: 1px solid #2e2e50; background: none; color: #666; font-size: 11px; cursor: pointer; font-family: 'Poppins',sans-serif; transition: all 0.15s; }
+.im-tab.active { background: #2e2e50; color: #c39bd3; border-color: #8e44ad; font-weight: 600; }
 
 /* ─── PWA STATUS BAR ─── */
 .pwa-bar {
-  background: rgba(142,68,173,0.15); border-bottom: 1px solid rgba(142,68,173,0.3);
-  padding: 6px 24px; font-size: 11px; color: #8e44ad; display: none;
+  background: rgba(39,174,96,0.1); border-bottom: 1px solid rgba(39,174,96,0.25);
+  padding: 5px 24px; font-size: 11px; color: #2ecc71; display: none;
   align-items: center; gap: 8px;
 }
 .pwa-bar.visible { display: flex; }
-.pwa-bar-dot { width: 6px; height: 6px; border-radius: 50%; background: #8e44ad; animation: dot-pulse 1.5s ease infinite; }
+.pwa-bar-dot { width: 6px; height: 6px; border-radius: 50%; background: #2ecc71; }
 </style>
 </head>
 <body>
@@ -512,15 +543,60 @@ body {
   <span id="pwa-bar-text">Application installée</span>
 </div>
 
-<!-- INSTALL BANNER -->
-<div id="install-banner">
-  <img class="install-logo" id="install-logo" src="" alt="COVO">
-  <div class="install-text">
-    <div class="install-title">Installer COVO Bénéfices</div>
-    <div class="install-sub">Accès rapide depuis l'écran d'accueil</div>
+<!-- FAB INSTALLATION -->
+<div id="fab-install" onclick="toggleInstallModal()" title="Installer l'application">
+  <span class="fab-icon">⬇</span>
+  <span class="fab-label">Installer</span>
+</div>
+
+<!-- MODAL D'INSTALLATION FLOTTANTE -->
+<div id="install-modal">
+  <div class="im-header">
+    <div class="im-logo"><img id="im-logo-img" src="" alt="COVO"></div>
+    <div>
+      <div class="im-title">COVO Bénéfices</div>
+      <div class="im-sub">Installer l'application PWA</div>
+    </div>
+    <button class="im-close" onclick="toggleInstallModal()">✕</button>
   </div>
-  <button class="install-btn" onclick="installPWA()">Installer</button>
-  <button class="install-dismiss" onclick="dismissInstall()" title="Fermer">✕</button>
+
+  <!-- Bouton natif si disponible -->
+  <button class="im-native-btn" id="im-native-btn" onclick="installPWA()" disabled>
+    ⬇ Installer automatiquement
+  </button>
+
+  <div class="im-divider">ou suivez ces étapes</div>
+
+  <!-- Sélecteur de plateforme -->
+  <div class="im-tabs">
+    <button class="im-tab active" onclick="showPlatform('chrome',this)">🖥 Chrome</button>
+    <button class="im-tab" onclick="showPlatform('android',this)">🤖 Android</button>
+    <button class="im-tab" onclick="showPlatform('ios',this)">🍎 iOS</button>
+  </div>
+
+  <!-- Instructions Chrome -->
+  <div class="im-steps" id="steps-chrome">
+    <div class="im-step"><div class="im-step-num">1</div><span>Ouvrez le fichier dans <strong>Chrome</strong> ou <strong>Edge</strong></span></div>
+    <div class="im-step"><div class="im-step-num">2</div><span>Cliquez sur <strong>⋮</strong> (menu en haut à droite)</span></div>
+    <div class="im-step"><div class="im-step-num">3</div><span>Sélectionnez <strong>"Installer COVO Bénéfices…"</strong></span></div>
+    <div class="im-step"><div class="im-step-num">4</div><span>Confirmez → l'app apparaît sur le bureau</span></div>
+  </div>
+
+  <!-- Instructions Android -->
+  <div class="im-steps" id="steps-android" style="display:none">
+    <div class="im-step"><div class="im-step-num">1</div><span>Ouvrez dans <strong>Chrome Android</strong></span></div>
+    <div class="im-step"><div class="im-step-num">2</div><span>Appuyez sur <strong>⋮</strong> → <strong>"Ajouter à l'écran d'accueil"</strong></span></div>
+    <div class="im-step"><div class="im-step-num">3</div><span>Appuyez sur <strong>Ajouter</strong></span></div>
+    <div class="im-step"><div class="im-step-num">4</div><span>L'icône COVO apparaît sur votre écran</span></div>
+  </div>
+
+  <!-- Instructions iOS -->
+  <div class="im-steps" id="steps-ios" style="display:none">
+    <div class="im-step"><div class="im-step-num">1</div><span>Ouvrez dans <strong>Safari</strong> sur iPhone/iPad</span></div>
+    <div class="im-step"><div class="im-step-num">2</div><span>Appuyez sur <strong>□↑</strong> (Partager) en bas</span></div>
+    <div class="im-step"><div class="im-step-num">3</div><span>Faites défiler → <strong>"Sur l'écran d'accueil"</strong></span></div>
+    <div class="im-step"><div class="im-step-num">4</div><span>Appuyez sur <strong>Ajouter</strong> en haut à droite</span></div>
+  </div>
 </div>
 
 <!-- HEADER -->
@@ -1526,43 +1602,75 @@ self.addEventListener('fetch', e => {
     .catch(e => console.warn('[COVO PWA] SW non supporté:', e));
 }
 
-// ── Install prompt ──
+// ── FAB Install + Modal ──────────────────────────
 let deferredPrompt = null;
+
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   deferredPrompt = e;
-  // Afficher le banner après 3s si pas déjà installé et pas déjà refusé
-  if (!localStorage.getItem('covo_install_dismissed')) {
-    setTimeout(() => {
-      const banner = document.getElementById('install-banner');
-      if (banner && window._logoDataUrl) {
-        document.getElementById('install-logo').src = window._logoDataUrl;
-      }
-      banner.classList.add('visible');
-    }, 3000);
-  }
+  const btn = document.getElementById('im-native-btn');
+  if (btn) btn.disabled = false;
+  const fab = document.getElementById('fab-install');
+  if (fab) fab.style.animation = 'fab-pulse 1.2s ease-in-out infinite';
 });
+
+function toggleInstallModal() {
+  const modal = document.getElementById('install-modal');
+  if (!modal) return;
+  if (modal.classList.contains('open')) { modal.classList.remove('open'); return; }
+  const logoImg = document.getElementById('im-logo-img');
+  if (logoImg && window._logoSvgDataUrl) logoImg.src = window._logoSvgDataUrl;
+  const btn = document.getElementById('im-native-btn');
+  if (btn) btn.disabled = !deferredPrompt;
+  autoDetectPlatform();
+  modal.classList.add('open');
+}
+
+function autoDetectPlatform() {
+  const ua = navigator.userAgent;
+  let p = 'chrome';
+  if (/iPhone|iPad|iPod/i.test(ua)) p = 'ios';
+  else if (/Android/i.test(ua)) p = 'android';
+  showPlatform(p, document.querySelector('.im-tab[onclick*="' + p + '"]'));
+}
+
+function showPlatform(platform, btn) {
+  ['chrome','android','ios'].forEach(p => {
+    document.getElementById('steps-' + p).style.display = p === platform ? '' : 'none';
+  });
+  document.querySelectorAll('.im-tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
 
 function installPWA() {
   if (!deferredPrompt) return;
   deferredPrompt.prompt();
   deferredPrompt.userChoice.then(r => {
-    if (r.outcome === 'accepted') {
-      toast('✓ Application installée !', 'ok');
-      document.getElementById('install-banner').classList.remove('visible');
-    }
+    if (r.outcome === 'accepted') toast('✓ Application installée !', 'ok');
     deferredPrompt = null;
+    const btn = document.getElementById('im-native-btn');
+    if (btn) btn.disabled = true;
+    document.getElementById('install-modal').classList.remove('open');
   });
 }
 
-function dismissInstall() {
-  document.getElementById('install-banner').classList.remove('visible');
-  localStorage.setItem('covo_install_dismissed', '1');
-}
+document.addEventListener('click', e => {
+  const modal = document.getElementById('install-modal');
+  const fab   = document.getElementById('fab-install');
+  if (modal && modal.classList.contains('open') && fab && !modal.contains(e.target) && !fab.contains(e.target)) {
+    modal.classList.remove('open');
+  }
+});
 
 window.addEventListener('appinstalled', () => {
-  toast('✓ COVO Bénéfices installé sur l\'écran d\'accueil', 'ok');
-  document.getElementById('install-banner').classList.remove('visible');
+  toast("✓ COVO Bénéfices installé sur l'écran d'accueil", 'ok');
+  document.getElementById('install-modal').classList.remove('open');
+  const fab = document.getElementById('fab-install');
+  if (fab) {
+    fab.classList.add('installed');
+    fab.innerHTML = '<span class="fab-icon">✓</span><span class="fab-label">Installé</span>';
+    fab.onclick = null;
+  }
   document.getElementById('pwa-bar').classList.add('visible');
 });
 
