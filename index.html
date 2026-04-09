@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -6,6 +7,7 @@
 <title>COVO Bénéfices</title>
 
 <!-- PWA META -->
+
 <meta name="theme-color" content="#13131f">
 <meta name="description" content="Tableau de bord des bénéfices COVO Pro">
 <meta name="mobile-web-app-capable" content="yes">
@@ -16,6 +18,7 @@
 <link rel="manifest" id="pwa-manifest">
 
 <!-- PWA install prompt capturé le plus tôt possible -->
+
 <script>
 window._pwaPrompt = null;
 window.addEventListener('beforeinstallprompt', e => {
@@ -53,6 +56,7 @@ window.addEventListener('appinstalled', () => {
 </script>
 
 <!-- LOGO SVG INLINE (utilisé partout : manifest, splash, favicon) -->
+
 <script>
 (function(){
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -138,11 +142,11 @@ body {
 
 /* ─── HEADER ─── */
 .header {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-  border-bottom: 2px solid #8e44ad;
-  padding: 0 24px;
-  display: flex; align-items: center; justify-content: space-between;
-  height: 62px; gap: 16px; flex-wrap: wrap;
+background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+border-bottom: 2px solid #8e44ad;
+padding: 0 24px;
+display: flex; align-items: center; justify-content: space-between;
+height: 62px; gap: 16px; flex-wrap: wrap;
 }
 .logo { display: flex; align-items: center; gap: 10px; }
 .logo-text { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 0.5px; }
@@ -154,11 +158,11 @@ body {
 .drive-dot.off { background: #e74c3c; }
 .drive-label { font-size: 12px; color: #aaa; }
 .btn-hdr {
-  background: rgba(142,68,173,0.2); color: #c39bd3;
-  border: 1px solid #8e44ad; border-radius: 8px;
-  padding: 6px 14px; font-size: 12px; font-weight: 600;
-  cursor: pointer; font-family: 'Poppins', sans-serif;
-  transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+background: rgba(142,68,173,0.2); color: #c39bd3;
+border: 1px solid #8e44ad; border-radius: 8px;
+padding: 6px 14px; font-size: 12px; font-weight: 600;
+cursor: pointer; font-family: ‘Poppins’, sans-serif;
+transition: all 0.2s; display: flex; align-items: center; gap: 6px;
 }
 .btn-hdr:hover { background: rgba(142,68,173,0.4); color: #fff; }
 .btn-hdr.red { background: rgba(231,76,60,0.15); border-color: #e74c3c; color: #e74c3c; }
@@ -170,15 +174,15 @@ body {
 /* ─── KPI CARDS ─── */
 .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 24px; }
 .kpi-card {
-  background: #1e1e35;
-  border: 1px solid #2e2e50;
-  border-radius: 12px; padding: 18px 20px;
-  position: relative; overflow: hidden;
-  transition: border-color 0.2s;
+background: #1e1e35;
+border: 1px solid #2e2e50;
+border-radius: 12px; padding: 18px 20px;
+position: relative; overflow: hidden;
+transition: border-color 0.2s;
 }
 .kpi-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-  border-radius: 12px 12px 0 0;
+content: ‘’; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+border-radius: 12px 12px 0 0;
 }
 .kpi-card.purple::before { background: #8e44ad; }
 .kpi-card.red::before    { background: #e74c3c; }
@@ -195,43 +199,43 @@ body {
 /* ─── SECTION TITLE ─── */
 .section-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
 .section-title { font-size: 13px; font-weight: 600; color: #c39bd3; text-transform: uppercase; letter-spacing: 0.06em; display: flex; align-items: center; gap: 8px; }
-.section-title::before { content: ''; display: inline-block; width: 3px; height: 14px; background: #8e44ad; border-radius: 2px; }
+.section-title::before { content: ‘’; display: inline-block; width: 3px; height: 14px; background: #8e44ad; border-radius: 2px; }
 
 /* ─── FILTERS ─── */
 .filters-bar { display: flex; gap: 8px; flex-wrap: wrap; }
 .f-btn {
-  background: #1e1e35; border: 1px solid #2e2e50; border-radius: 8px;
-  color: #888; font-size: 12px; padding: 6px 14px; cursor: pointer;
-  font-family: 'Poppins', sans-serif; transition: all 0.2s;
+background: #1e1e35; border: 1px solid #2e2e50; border-radius: 8px;
+color: #888; font-size: 12px; padding: 6px 14px; cursor: pointer;
+font-family: ‘Poppins’, sans-serif; transition: all 0.2s;
 }
 .f-btn:hover { border-color: #8e44ad; color: #c39bd3; }
 .f-btn.active { background: #8e44ad; border-color: #8e44ad; color: #fff; font-weight: 600; }
 .f-select {
-  background: #1e1e35; border: 1px solid #2e2e50; border-radius: 8px;
-  color: #aaa; font-size: 12px; padding: 6px 10px;
-  font-family: 'Poppins', sans-serif; cursor: pointer;
+background: #1e1e35; border: 1px solid #2e2e50; border-radius: 8px;
+color: #aaa; font-size: 12px; padding: 6px 10px;
+font-family: ‘Poppins’, sans-serif; cursor: pointer;
 }
 .f-select:focus { outline: none; border-color: #8e44ad; }
 .search-box {
-  background: #1e1e35; border: 1px solid #2e2e50; border-radius: 8px;
-  color: #ddd; font-size: 12px; padding: 6px 12px;
-  font-family: 'Poppins', sans-serif; width: 180px;
+background: #1e1e35; border: 1px solid #2e2e50; border-radius: 8px;
+color: #ddd; font-size: 12px; padding: 6px 12px;
+font-family: ‘Poppins’, sans-serif; width: 180px;
 }
 .search-box:focus { outline: none; border-color: #8e44ad; }
 .search-box::placeholder { color: #555; }
 
 /* ─── CHART ─── */
 .chart-card {
-  background: #1e1e35; border: 1px solid #2e2e50; border-radius: 12px;
-  padding: 20px; margin-bottom: 24px;
+background: #1e1e35; border: 1px solid #2e2e50; border-radius: 12px;
+padding: 20px; margin-bottom: 24px;
 }
 .chart-wrap { position: relative; height: 200px; }
 
 /* ─── INFO BANNER ─── */
 .info-banner {
-  background: rgba(52,152,219,0.12); border: 1px solid rgba(52,152,219,0.3);
-  border-radius: 10px; padding: 10px 16px; font-size: 12px; color: #7fb3d3;
-  margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+background: rgba(52,152,219,0.12); border: 1px solid rgba(52,152,219,0.3);
+border-radius: 10px; padding: 10px 16px; font-size: 12px; color: #7fb3d3;
+margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
 }
 
 /* ─── TABLE CARD ─── */
@@ -242,10 +246,10 @@ body {
 /* ─── MONTH GROUP ─── */
 .month-group {}
 .month-header {
-  background: #22203a; padding: 12px 20px;
-  display: flex; align-items: center; justify-content: space-between;
-  cursor: pointer; border-bottom: 1px solid #2e2e50;
-  transition: background 0.15s;
+background: #22203a; padding: 12px 20px;
+display: flex; align-items: center; justify-content: space-between;
+cursor: pointer; border-bottom: 1px solid #2e2e50;
+transition: background 0.15s;
 }
 .month-header:hover { background: #28254a; }
 .month-name-wrap { display: flex; align-items: center; gap: 10px; }
@@ -263,10 +267,10 @@ body {
 /* ─── WEEK GROUP ─── */
 .week-group { border-bottom: 1px solid #252540; }
 .week-header {
-  background: #1c1c30; padding: 9px 20px 9px 36px;
-  display: flex; align-items: center; justify-content: space-between;
-  cursor: pointer; border-top: 1px solid #252540;
-  transition: background 0.15s;
+background: #1c1c30; padding: 9px 20px 9px 36px;
+display: flex; align-items: center; justify-content: space-between;
+cursor: pointer; border-top: 1px solid #252540;
+transition: background 0.15s;
 }
 .week-header:hover { background: #232338; }
 .week-name { font-size: 12px; color: #8e44ad; font-weight: 600; }
@@ -274,20 +278,20 @@ body {
 
 /* ─── DAY HEADER ─── */
 .day-header {
-  padding: 7px 20px 7px 52px; background: #19192e;
-  display: flex; align-items: center; justify-content: space-between;
-  border-top: 1px solid #252540;
+padding: 7px 20px 7px 52px; background: #19192e;
+display: flex; align-items: center; justify-content: space-between;
+border-top: 1px solid #252540;
 }
 .day-label { font-size: 11px; color: #7f8c9a; font-weight: 500; }
 .day-total { font-size: 11px; color: #2ecc71; font-weight: 700; }
 
 /* ─── TICKET ROW ─── */
 .ticket-row {
-  padding: 9px 20px 9px 68px; display: grid;
-  grid-template-columns: auto 1fr auto auto 90px;
-  gap: 12px; align-items: center;
-  border-top: 1px solid #1e1e30;
-  transition: background 0.1s;
+padding: 9px 20px 9px 68px; display: grid;
+grid-template-columns: 42px auto 1fr auto auto 80px;
+gap: 12px; align-items: center;
+border-top: 1px solid #1e1e30;
+transition: background 0.1s;
 }
 .ticket-row:hover { background: #1f1f38; }
 .ticket-id { font-size: 10px; color: #555; font-family: monospace; }
@@ -301,6 +305,64 @@ body {
 .t-status.ok  { background: rgba(39,174,96,0.15);  color: #2ecc71;  border: 1px solid rgba(39,174,96,0.3); }
 .t-status.ko  { background: rgba(231,76,60,0.15);   color: #e74c3c;  border: 1px solid rgba(231,76,60,0.3); }
 
+/* ─── TICKET ROW ENRICHI ─── */
+.ticket-row { cursor: pointer; }
+.ticket-row:hover { background: #242440 !important; }
+.ticket-time { font-size: 10px; color: #8e44ad; font-weight: 600; min-width: 42px; }
+
+/* ─── MODAL DÉTAIL TICKET ─── */
+#ticket-modal-overlay {
+display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65);
+z-index:9800; align-items:center; justify-content:center; padding:16px;
+}
+#ticket-modal-overlay.open { display:flex; }
+#ticket-modal {
+background:#1e1e35; border:1px solid #8e44ad; border-radius:16px;
+width:100%; max-width:480px; max-height:90vh; display:flex; flex-direction:column;
+box-shadow:0 16px 60px rgba(0,0,0,0.6);
+animation:modal-pop 0.25s cubic-bezier(.34,1.56,.64,1);
+}
+.tm-header {
+padding:16px 20px; border-bottom:1px solid #2e2e50;
+display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+}
+.tm-title { font-size:15px; font-weight:700; color:#fff; }
+.tm-sub { font-size:11px; color:#666; margin-top:2px; }
+.tm-close {
+background:none; border:none; color:#555; cursor:pointer;
+font-size:20px; line-height:1; padding:2px 6px; flex-shrink:0;
+}
+.tm-close:hover { color:#ddd; }
+.tm-body { padding:16px 20px; overflow-y:auto; flex:1; }
+.tm-kpis { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:16px; }
+.tm-kpi { background:#13131f; border-radius:8px; padding:10px 12px; }
+.tm-kpi-label { font-size:9px; color:#555; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px; }
+.tm-kpi-val { font-size:16px; font-weight:700; color:#fff; }
+.tm-kpi-val.green { color:#2ecc71; }
+.tm-kpi-val.red { color:#e74c3c; }
+.tm-kpi-val.purple { color:#c39bd3; }
+.tm-items-title { font-size:10px; font-weight:600; color:#666; text-transform:uppercase; letter-spacing:0.07em; margin-bottom:10px; }
+.tm-item {
+display:grid; grid-template-columns:1fr auto auto auto; gap:10px;
+align-items:center; padding:9px 12px; border-radius:8px;
+background:#13131f; margin-bottom:6px; font-size:12px;
+}
+.tm-item-name { color:#ddd; font-weight:500; }
+.tm-item-qty  { color:#888; font-size:11px; text-align:right; }
+.tm-item-price{ color:#c39bd3; font-weight:600; text-align:right; }
+.tm-item-benef{ font-size:11px; font-weight:700; text-align:right; }
+.tm-item-benef.pos { color:#2ecc71; }
+.tm-item-benef.neg { color:#e74c3c; }
+.tm-item-benef.na  { color:#444; }
+.tm-footer {
+padding:14px 20px; border-top:1px solid #2e2e50;
+display:flex; align-items:center; justify-content:space-between;
+}
+.tm-total { font-size:14px; font-weight:700; color:#fff; }
+.tm-benef-total { font-size:14px; font-weight:700; }
+.tm-benef-total.pos { color:#2ecc71; }
+.tm-benef-total.neg { color:#e74c3c; }
+
 /* ─── EMPTY ─── */
 .empty { padding: 60px 24px; text-align: center; color: #555; }
 .empty-icon { font-size: 48px; margin-bottom: 12px; }
@@ -309,9 +371,9 @@ body {
 
 /* ─── TOTAUX FOOTER ─── */
 .totaux-card {
-  background: linear-gradient(135deg, #1e1633 0%, #1a1a2e 100%);
-  border: 1px solid #8e44ad; border-radius: 12px;
-  padding: 20px 24px; margin-bottom: 24px;
+background: linear-gradient(135deg, #1e1633 0%, #1a1a2e 100%);
+border: 1px solid #8e44ad; border-radius: 12px;
+padding: 20px 24px; margin-bottom: 24px;
 }
 .totaux-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; }
 .totaux-item { text-align: center; }
@@ -325,12 +387,12 @@ body {
 
 /* ─── TOAST ─── */
 .toast {
-  position: fixed; bottom: 24px; right: 24px;
-  background: #1e1e35; border: 1px solid #8e44ad;
-  color: #ddd; padding: 12px 20px; border-radius: 10px;
-  font-size: 13px; z-index: 9999; font-family: 'Poppins', sans-serif;
-  transform: translateY(80px); opacity: 0; transition: all 0.3s;
-  border-left: 4px solid #8e44ad;
+position: fixed; bottom: 24px; right: 24px;
+background: #1e1e35; border: 1px solid #8e44ad;
+color: #ddd; padding: 12px 20px; border-radius: 10px;
+font-size: 13px; z-index: 9999; font-family: ‘Poppins’, sans-serif;
+transform: translateY(80px); opacity: 0; transition: all 0.3s;
+border-left: 4px solid #8e44ad;
 }
 .toast.show { transform: translateY(0); opacity: 1; }
 .toast.ok { border-left-color: #27ae60; border-color: #27ae60; }
@@ -338,32 +400,32 @@ body {
 
 /* ─── CLIENT ID MODAL ─── */
 .modal-overlay {
-  display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,0.7); z-index: 8000;
-  align-items: center; justify-content: center; padding: 16px;
+display: none; position: fixed; inset: 0;
+background: rgba(0,0,0,0.7); z-index: 8000;
+align-items: center; justify-content: center; padding: 16px;
 }
 .modal-overlay.open { display: flex; }
 .modal-box {
-  background: #1e1e35; border: 1px solid #8e44ad;
-  border-radius: 16px; padding: 28px; max-width: 500px; width: 100%;
+background: #1e1e35; border: 1px solid #8e44ad;
+border-radius: 16px; padding: 28px; max-width: 500px; width: 100%;
 }
 .modal-title { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 6px; }
 .modal-sub { font-size: 11px; color: #777; margin-bottom: 20px; line-height: 1.6; }
 .modal-label { font-size: 11px; color: #888; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; display: block; }
 .modal-input {
-  width: 100%; background: #13131f; border: 1px solid #3a3a5c;
-  border-radius: 8px; color: #ddd; font-size: 12px;
-  padding: 10px 14px; font-family: 'Poppins', sans-serif;
-  margin-bottom: 16px; transition: border-color 0.2s;
+width: 100%; background: #13131f; border: 1px solid #3a3a5c;
+border-radius: 8px; color: #ddd; font-size: 12px;
+padding: 10px 14px; font-family: ‘Poppins’, sans-serif;
+margin-bottom: 16px; transition: border-color 0.2s;
 }
 .modal-input:focus { outline: none; border-color: #8e44ad; }
 .modal-input.saved { border-color: #27ae60; }
 .modal-saved-tag { font-size: 10px; color: #27ae60; margin-top: -12px; margin-bottom: 14px; display: block; }
 .modal-btns { display: flex; gap: 10px; }
 .modal-btn {
-  flex: 1; padding: 10px; border-radius: 8px; font-size: 13px;
-  font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif;
-  transition: all 0.2s;
+flex: 1; padding: 10px; border-radius: 8px; font-size: 13px;
+font-weight: 600; cursor: pointer; font-family: ‘Poppins’, sans-serif;
+transition: all 0.2s;
 }
 .modal-btn.primary { background: #8e44ad; color: #fff; border: none; }
 .modal-btn.primary:hover { background: #7d3c98; }
@@ -375,9 +437,9 @@ body {
 /* ─── BACKUP PICKER ─── */
 .backup-list { display: flex; flex-direction: column; gap: 8px; max-height: 260px; overflow-y: auto; margin-bottom: 16px; }
 .backup-item {
-  background: #13131f; border: 1px solid #2e2e50; border-radius: 8px;
-  padding: 10px 14px; cursor: pointer; transition: all 0.15s;
-  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+background: #13131f; border: 1px solid #2e2e50; border-radius: 8px;
+padding: 10px 14px; cursor: pointer; transition: all 0.15s;
+display: flex; align-items: center; justify-content: space-between; gap: 10px;
 }
 .backup-item:hover { border-color: #8e44ad; }
 .backup-item.selected { border-color: #8e44ad; background: rgba(142,68,173,0.1); }
@@ -388,129 +450,129 @@ body {
 @keyframes spin { to { transform: rotate(360deg); } }
 
 @media (max-width: 640px) {
-  .page { padding: 12px; }
-  .ticket-row { grid-template-columns: 1fr auto; }
-  .ticket-id, .ticket-items, .ticket-actions { display: none; }
-  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+.page { padding: 12px; }
+.ticket-row { grid-template-columns: 1fr auto; }
+.ticket-id, .ticket-items, .ticket-actions { display: none; }
+.kpi-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 /* ─── PWA SPLASH SCREEN ─── */
 #pwa-splash {
-  position: fixed; inset: 0; z-index: 99999;
-  background: #0e0e1a;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 0;
-  transition: opacity 0.5s ease;
+position: fixed; inset: 0; z-index: 99999;
+background: #0e0e1a;
+display: flex; flex-direction: column;
+align-items: center; justify-content: center; gap: 0;
+transition: opacity 0.5s ease;
 }
 #pwa-splash.fade-out { opacity: 0; pointer-events: none; }
 
 .splash-logo-wrap {
-  position: relative; width: 110px; height: 110px; margin-bottom: 28px;
+position: relative; width: 110px; height: 110px; margin-bottom: 28px;
 }
 .splash-ring {
-  position: absolute; inset: 0;
-  border-radius: 50%;
-  border: 3px solid transparent;
-  animation: ring-spin 1.4s linear infinite;
+position: absolute; inset: 0;
+border-radius: 50%;
+border: 3px solid transparent;
+animation: ring-spin 1.4s linear infinite;
 }
 .splash-ring.r1 {
-  border-top-color: #8e44ad;
-  border-right-color: rgba(142,68,173,0.3);
+border-top-color: #8e44ad;
+border-right-color: rgba(142,68,173,0.3);
 }
 .splash-ring.r2 {
-  inset: 12px;
-  border-bottom-color: #e74c3c;
-  border-left-color: rgba(231,76,60,0.2);
-  animation-duration: 1.9s;
-  animation-direction: reverse;
+inset: 12px;
+border-bottom-color: #e74c3c;
+border-left-color: rgba(231,76,60,0.2);
+animation-duration: 1.9s;
+animation-direction: reverse;
 }
 .splash-ring.r3 {
-  inset: 24px;
-  border-top-color: #2ecc71;
-  border-right-color: rgba(46,204,113,0.2);
-  animation-duration: 2.5s;
+inset: 24px;
+border-top-color: #2ecc71;
+border-right-color: rgba(46,204,113,0.2);
+animation-duration: 2.5s;
 }
 @keyframes ring-spin { to { transform: rotate(360deg); } }
 
 .splash-logo-img {
-  position: absolute; inset: 18px;
-  border-radius: 20px;
-  background: #1a1a2e;
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
+position: absolute; inset: 18px;
+border-radius: 20px;
+background: #1a1a2e;
+display: flex; align-items: center; justify-content: center;
+overflow: hidden;
 }
 .splash-logo-img img { width: 100%; height: 100%; object-fit: contain; border-radius: 16px; }
 
 .splash-app-name {
-  font-size: 22px; font-weight: 700; color: #fff; letter-spacing: 0.5px;
-  margin-bottom: 4px;
+font-size: 22px; font-weight: 700; color: #fff; letter-spacing: 0.5px;
+margin-bottom: 4px;
 }
 .splash-app-name span { color: #8e44ad; }
 
 .splash-tagline {
-  font-size: 12px; color: #555; margin-bottom: 32px; letter-spacing: 0.04em;
+font-size: 12px; color: #555; margin-bottom: 32px; letter-spacing: 0.04em;
 }
 
 .splash-steps {
-  display: flex; flex-direction: column; gap: 10px;
-  min-width: 240px; margin-bottom: 20px;
+display: flex; flex-direction: column; gap: 10px;
+min-width: 240px; margin-bottom: 20px;
 }
 .splash-step {
-  display: flex; align-items: center; gap: 10px;
-  font-size: 12px; color: #666; transition: color 0.3s;
+display: flex; align-items: center; gap: 10px;
+font-size: 12px; color: #666; transition: color 0.3s;
 }
 .splash-step.done { color: #2ecc71; }
 .splash-step.active { color: #c39bd3; }
 .splash-step-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: #333; flex-shrink: 0; transition: background 0.3s;
+width: 8px; height: 8px; border-radius: 50%;
+background: #333; flex-shrink: 0; transition: background 0.3s;
 }
 .splash-step.done .splash-step-dot { background: #2ecc71; }
 .splash-step.active .splash-step-dot { background: #8e44ad; animation: dot-pulse 0.8s ease infinite; }
 @keyframes dot-pulse { 0%,100%{transform:scale(1)}50%{transform:scale(1.5)} }
 
 .splash-progress-bar {
-  width: 240px; height: 3px; background: #1e1e35; border-radius: 2px; overflow: hidden;
+width: 240px; height: 3px; background: #1e1e35; border-radius: 2px; overflow: hidden;
 }
 .splash-progress-fill {
-  height: 100%; background: linear-gradient(90deg, #8e44ad, #e74c3c);
-  border-radius: 2px; width: 0%; transition: width 0.4s ease;
+height: 100%; background: linear-gradient(90deg, #8e44ad, #e74c3c);
+border-radius: 2px; width: 0%; transition: width 0.4s ease;
 }
 
 .splash-version {
-  position: absolute; bottom: 24px;
-  font-size: 10px; color: #333; letter-spacing: 0.06em;
+position: absolute; bottom: 24px;
+font-size: 10px; color: #333; letter-spacing: 0.06em;
 }
 
 /* ─── INSTALL BANNER ─── */
 /* ─── FAB INSTALL ─── */
 #fab-install {
-  position: fixed; bottom: 28px; right: 28px; z-index: 9500;
-  width: 58px; height: 58px; border-radius: 50%;
-  background: linear-gradient(135deg, #8e44ad, #6c3483);
-  border: 3px solid rgba(255,255,255,0.15);
-  box-shadow: 0 4px 20px rgba(142,68,173,0.55);
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  flex-direction: column; gap: 2px;
-  transition: transform 0.2s, box-shadow 0.2s;
-  animation: fab-pulse 2.5s ease-in-out infinite;
+position: fixed; bottom: 28px; right: 28px; z-index: 9500;
+width: 58px; height: 58px; border-radius: 50%;
+background: linear-gradient(135deg, #8e44ad, #6c3483);
+border: 3px solid rgba(255,255,255,0.15);
+box-shadow: 0 4px 20px rgba(142,68,173,0.55);
+cursor: pointer; display: flex; align-items: center; justify-content: center;
+flex-direction: column; gap: 2px;
+transition: transform 0.2s, box-shadow 0.2s;
+animation: fab-pulse 2.5s ease-in-out infinite;
 }
 #fab-install:hover { transform: scale(1.12); box-shadow: 0 6px 28px rgba(142,68,173,0.75); }
 #fab-install.installed { background: linear-gradient(135deg,#27ae60,#1e8449); animation: none; box-shadow: 0 4px 16px rgba(39,174,96,0.4); }
 @keyframes fab-pulse {
-  0%,100% { box-shadow: 0 4px 20px rgba(142,68,173,0.55); }
-  50%      { box-shadow: 0 4px 30px rgba(142,68,173,0.9), 0 0 0 8px rgba(142,68,173,0.12); }
+0%,100% { box-shadow: 0 4px 20px rgba(142,68,173,0.55); }
+50%      { box-shadow: 0 4px 30px rgba(142,68,173,0.9), 0 0 0 8px rgba(142,68,173,0.12); }
 }
 .fab-icon { font-size: 22px; line-height: 1; }
 .fab-label { font-size: 7px; font-weight: 700; color: rgba(255,255,255,0.85); letter-spacing: 0.04em; text-transform: uppercase; }
 
 /* ─── INSTALL MODAL (flottant, bas de page) ─── */
 #install-modal {
-  display: none; position: fixed; bottom: 100px; right: 20px; z-index: 9400;
-  background: #1e1e35; border: 1px solid #8e44ad; border-radius: 16px;
-  padding: 20px; width: 310px;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(142,68,173,0.2);
-  animation: modal-pop 0.25s cubic-bezier(.34,1.56,.64,1);
+display: none; position: fixed; bottom: 100px; right: 20px; z-index: 9400;
+background: #1e1e35; border: 1px solid #8e44ad; border-radius: 16px;
+padding: 20px; width: 310px;
+box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(142,68,173,0.2);
+animation: modal-pop 0.25s cubic-bezier(.34,1.56,.64,1);
 }
 #install-modal.open { display: block; }
 @keyframes modal-pop { from{transform:scale(0.85) translateY(20px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
@@ -518,29 +580,29 @@ body {
 
 /* ─── FAB READY STATE ─── */
 #fab-install.pwa-ready {
-  background: linear-gradient(135deg,#27ae60,#1e8449);
-  box-shadow: 0 4px 24px rgba(39,174,96,0.6);
-  animation: fab-ready-pulse 1.5s ease-in-out infinite;
+background: linear-gradient(135deg,#27ae60,#1e8449);
+box-shadow: 0 4px 24px rgba(39,174,96,0.6);
+animation: fab-ready-pulse 1.5s ease-in-out infinite;
 }
 @keyframes fab-ready-pulse {
-  0%,100%{box-shadow:0 4px 24px rgba(39,174,96,0.6);}
-  50%{box-shadow:0 4px 36px rgba(39,174,96,0.9),0 0 0 10px rgba(39,174,96,0.12);}
+0%,100%{box-shadow:0 4px 24px rgba(39,174,96,0.6);}
+50%{box-shadow:0 4px 36px rgba(39,174,96,0.9),0 0 0 10px rgba(39,174,96,0.12);}
 }
 
 /* ─── INSTALL TOAST ─── */
 #install-toast {
-  position:fixed; bottom:100px; right:20px; z-index:9300;
-  background:#1e1e35; border:1px solid #27ae60; border-radius:14px;
-  padding:14px 16px; width:290px; display:flex; align-items:center; gap:12px;
-  box-shadow:0 8px 32px rgba(0,0,0,0.4);
-  animation:modal-pop 0.3s cubic-bezier(.34,1.56,.64,1);
+position:fixed; bottom:100px; right:20px; z-index:9300;
+background:#1e1e35; border:1px solid #27ae60; border-radius:14px;
+padding:14px 16px; width:290px; display:flex; align-items:center; gap:12px;
+box-shadow:0 8px 32px rgba(0,0,0,0.4);
+animation:modal-pop 0.3s cubic-bezier(.34,1.56,.64,1);
 }
 .it-logo { width:40px;height:40px;border-radius:10px;flex-shrink:0;overflow:hidden;background:#13131f; }
 .it-logo img { width:100%;height:100%;object-fit:contain; }
 .it-text { flex:1;min-width:0; }
 .it-title { font-size:13px;font-weight:700;color:#fff; }
 .it-sub { font-size:10px;color:#555;margin-top:2px; }
-.it-install { background:#27ae60;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;white-space:nowrap;flex-shrink:0; }
+.it-install { background:#27ae60;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:‘Poppins’,sans-serif;white-space:nowrap;flex-shrink:0; }
 .it-close { background:none;border:none;color:#555;cursor:pointer;font-size:14px;padding:2px 5px;flex-shrink:0; }
 .im-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
 .im-logo { width: 42px; height: 42px; border-radius: 10px; background: #13131f; flex-shrink: 0; overflow: hidden; }
@@ -550,35 +612,35 @@ body {
 .im-close { margin-left: auto; background: none; border: none; color: #555; cursor: pointer; font-size: 16px; padding: 2px 6px; }
 .im-close:hover { color: #aaa; }
 .im-native-btn {
-  width: 100%; padding: 11px; border-radius: 10px; border: none;
-  background: linear-gradient(135deg,#8e44ad,#6c3483); color: #fff;
-  font-size: 13px; font-weight: 700; cursor: pointer; margin-bottom: 14px;
-  font-family: 'Poppins',sans-serif; transition: opacity 0.2s;
+width: 100%; padding: 11px; border-radius: 10px; border: none;
+background: linear-gradient(135deg,#8e44ad,#6c3483); color: #fff;
+font-size: 13px; font-weight: 700; cursor: pointer; margin-bottom: 14px;
+font-family: ‘Poppins’,sans-serif; transition: opacity 0.2s;
 }
 .im-native-btn:hover { opacity: 0.88; }
 .im-native-btn:disabled { opacity: 0.4; cursor: default; }
 .im-divider { text-align: center; font-size: 11px; color: #444; margin-bottom: 12px; position: relative; }
-.im-divider::before,.im-divider::after { content:''; position:absolute; top:50%; width:38%; height:1px; background:#2e2e50; }
+.im-divider::before,.im-divider::after { content:’’; position:absolute; top:50%; width:38%; height:1px; background:#2e2e50; }
 .im-divider::before { left:0; } .im-divider::after { right:0; }
 .im-steps { display: flex; flex-direction: column; gap: 8px; }
 .im-step { display: flex; align-items: flex-start; gap: 10px; font-size: 11px; color: #999; }
 .im-step-num { width: 20px; height: 20px; border-radius: 50%; background: #2e2e50; color: #8e44ad; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
 .im-tabs { display: flex; gap: 6px; margin-bottom: 12px; }
-.im-tab { flex: 1; padding: 6px; border-radius: 7px; border: 1px solid #2e2e50; background: none; color: #666; font-size: 11px; cursor: pointer; font-family: 'Poppins',sans-serif; transition: all 0.15s; }
+.im-tab { flex: 1; padding: 6px; border-radius: 7px; border: 1px solid #2e2e50; background: none; color: #666; font-size: 11px; cursor: pointer; font-family: ‘Poppins’,sans-serif; transition: all 0.15s; }
 .im-tab.active { background: #2e2e50; color: #c39bd3; border-color: #8e44ad; font-weight: 600; }
 
 /* ─── PWA STATUS BAR ─── */
 .pwa-bar {
-  background: rgba(39,174,96,0.1); border-bottom: 1px solid rgba(39,174,96,0.25);
-  padding: 5px 24px; font-size: 11px; color: #2ecc71; display: none;
-  align-items: center; gap: 8px;
+background: rgba(39,174,96,0.1); border-bottom: 1px solid rgba(39,174,96,0.25);
+padding: 5px 24px; font-size: 11px; color: #2ecc71; display: none;
+align-items: center; gap: 8px;
 }
 .pwa-bar.visible { display: flex; }
 .pwa-bar-dot { width: 6px; height: 6px; border-radius: 50%; background: #2ecc71; }
 
 /* ─── ONGLETS PRINCIPAUX ─── */
 .main-tabs { display:flex; gap:4px; padding:12px 24px 0; background:#1a1a2e; border-bottom:2px solid #2e2e50; overflow-x:auto; }
-.main-tab { background:none; border:none; color:#666; font-size:13px; font-weight:600; padding:10px 20px; cursor:pointer; font-family:'Poppins',sans-serif; border-radius:8px 8px 0 0; transition:all 0.2s; white-space:nowrap; border-bottom:3px solid transparent; }
+.main-tab { background:none; border:none; color:#666; font-size:13px; font-weight:600; padding:10px 20px; cursor:pointer; font-family:‘Poppins’,sans-serif; border-radius:8px 8px 0 0; transition:all 0.2s; white-space:nowrap; border-bottom:3px solid transparent; }
 .main-tab:hover { color:#c39bd3; background:rgba(142,68,173,0.1); }
 .main-tab.active { color:#c39bd3; border-bottom-color:#8e44ad; background:rgba(142,68,173,0.15); }
 .tab-content { display:none; }
@@ -601,7 +663,7 @@ body {
 
 /* ─── CATALOGUE ─── */
 .cat-controls { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:16px; }
-.cat-search { background:#1e1e35; border:1px solid #2e2e50; border-radius:8px; color:#ddd; font-size:12px; padding:7px 12px; font-family:'Poppins',sans-serif; flex:1; min-width:160px; }
+.cat-search { background:#1e1e35; border:1px solid #2e2e50; border-radius:8px; color:#ddd; font-size:12px; padding:7px 12px; font-family:‘Poppins’,sans-serif; flex:1; min-width:160px; }
 .cat-search:focus { outline:none; border-color:#8e44ad; }
 .cat-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; }
 .cat-card { background:#1e1e35; border:1px solid #2e2e50; border-radius:12px; overflow:hidden; transition:border-color 0.2s,transform 0.15s; }
@@ -616,13 +678,15 @@ body {
 .cat-benef.pos { background:rgba(39,174,96,0.15); color:#2ecc71; }
 .cat-benef.neg { background:rgba(231,76,60,0.15); color:#e74c3c; }
 .cat-stock { font-size:10px; color:#555; margin-top:4px; }
-.cat-filter-btn { background:#1e1e35; border:1px solid #2e2e50; border-radius:8px; color:#666; font-size:12px; padding:7px 14px; cursor:pointer; font-family:'Poppins',sans-serif; transition:all 0.2s; }
+.cat-filter-btn { background:#1e1e35; border:1px solid #2e2e50; border-radius:8px; color:#666; font-size:12px; padding:7px 14px; cursor:pointer; font-family:‘Poppins’,sans-serif; transition:all 0.2s; }
 .cat-filter-btn.active { background:#8e44ad; border-color:#8e44ad; color:#fff; font-weight:600; }
 </style>
+
 </head>
 <body>
 
 <!-- PWA SPLASH SCREEN -->
+
 <div id="pwa-splash">
   <div class="splash-logo-wrap">
     <div class="splash-ring r1"></div>
@@ -646,15 +710,18 @@ body {
 </div>
 
 <!-- PWA STATUS BAR -->
+
 <!-- pwa-bar masquée --><div id="pwa-bar" style="display:none"></div>
 
 <!-- FAB INSTALLATION -->
+
 <div id="fab-install" onclick="toggleInstallModal()" title="Installer l'application">
   <span class="fab-icon">⬇</span>
   <span class="fab-label">Installer</span>
 </div>
 
 <!-- MODAL D'INSTALLATION FLOTTANTE -->
+
 <div id="install-modal">
   <div class="im-header">
     <div class="im-logo"><img id="im-logo-img" src="" alt="COVO"></div>
@@ -666,6 +733,7 @@ body {
   </div>
 
   <!-- Bouton natif si disponible -->
+
   <button class="im-native-btn" id="im-native-btn" onclick="installPWA()" disabled>
     ⬇ Installer automatiquement
   </button>
@@ -673,6 +741,7 @@ body {
   <div class="im-divider">ou suivez ces étapes</div>
 
   <!-- Sélecteur de plateforme -->
+
   <div class="im-tabs">
     <button class="im-tab active" onclick="showPlatform('chrome',this)">🖥 Chrome</button>
     <button class="im-tab" onclick="showPlatform('android',this)">🤖 Android</button>
@@ -680,6 +749,7 @@ body {
   </div>
 
   <!-- Instructions Chrome -->
+
   <div class="im-steps" id="steps-chrome">
     <div class="im-step"><div class="im-step-num">1</div><span>Ouvrez le fichier dans <strong>Chrome</strong> ou <strong>Edge</strong></span></div>
     <div class="im-step"><div class="im-step-num">2</div><span>Cliquez sur <strong>⋮</strong> (menu en haut à droite)</span></div>
@@ -688,6 +758,7 @@ body {
   </div>
 
   <!-- Instructions Android -->
+
   <div class="im-steps" id="steps-android" style="display:none">
     <div class="im-step"><div class="im-step-num">1</div><span>Ouvrez dans <strong>Chrome Android</strong></span></div>
     <div class="im-step"><div class="im-step-num">2</div><span>Appuyez sur <strong>⋮</strong> → <strong>"Ajouter à l'écran d'accueil"</strong></span></div>
@@ -696,6 +767,7 @@ body {
   </div>
 
   <!-- Instructions iOS -->
+
   <div class="im-steps" id="steps-ios" style="display:none">
     <div class="im-step"><div class="im-step-num">1</div><span>Ouvrez dans <strong>Safari</strong> sur iPhone/iPad</span></div>
     <div class="im-step"><div class="im-step-num">2</div><span>Appuyez sur <strong>□↑</strong> (Partager) en bas</span></div>
@@ -705,6 +777,7 @@ body {
 </div>
 
 <!-- HEADER -->
+
 <div class="header">
   <div class="logo">
     <div class="logo-text">COVO <span>Pro</span></div>
@@ -752,6 +825,7 @@ body {
 </div>
 
 <!-- NAVIGATION PRINCIPALE -->
+
 <div class="main-tabs">
   <button class="main-tab active" id="tab-btn-dashboard" onclick="switchMainTab('dashboard',this)">📊 Bénéfices</button>
   <button class="main-tab" id="tab-btn-workhours" onclick="switchMainTab('workhours',this)">⏱ Horaires</button>
@@ -759,10 +833,12 @@ body {
 </div>
 
 <!-- TAB: DASHBOARD -->
+
 <div class="tab-content active" id="tc-dashboard">
 <div class="page">
 
   <!-- KPI CARDS -->
+
   <div class="kpi-grid">
     <div class="kpi-card purple">
       <div class="kpi-label">Bénéfice total</div>
@@ -803,6 +879,7 @@ body {
   </div>
 
   <!-- TOTAUX RÉCAPITULATIFS -->
+
   <div class="totaux-card" id="totaux-card">
     <div class="section-title" style="margin-bottom:14px">Récapitulatif global</div>
     <div class="totaux-grid" id="totaux-grid">
@@ -816,6 +893,7 @@ body {
   </div>
 
   <!-- CHART -->
+
   <div class="chart-card">
     <div class="section-row" style="margin-bottom:14px">
       <div class="section-title">Évolution mensuelle (12 mois)</div>
@@ -830,6 +908,7 @@ body {
   </div>
 
   <!-- FILTERS -->
+
   <div class="section-row">
     <div class="section-title">Détail par Mois / Semaine / Jour</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
@@ -855,11 +934,13 @@ body {
   </div>
 
   <!-- INFO BANNER -->
+
   <div class="info-banner" id="info-banner" style="display:none">
     ℹ️ <span id="info-text"></span>
   </div>
 
   <!-- TABLE -->
+
   <div class="table-card">
     <div class="table-top">
       <span class="table-top-title">Tickets COVO Pro</span>
@@ -872,10 +953,12 @@ body {
 </div><!-- /#tc-dashboard -->
 
 <!-- TAB: HORAIRES DE TRAVAIL -->
+
 <div class="tab-content" id="tc-workhours">
 <div class="page">
 
   <!-- Filtres -->
+
   <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:20px">
     <select id="wh-year" onchange="renderWorkHours()" class="f-select"><option>2026</option></select>
     <select id="wh-month" onchange="renderWorkHours()" class="f-select">
@@ -894,9 +977,11 @@ body {
   </div>
 
   <!-- KPIs horaires -->
+
   <div class="wh-grid" id="wh-kpis" style="margin-bottom:20px"></div>
 
   <!-- SECTION RÉSUMÉ HEBDOMADAIRE -->
+
   <div class="chart-card" style="margin-bottom:20px">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
       <div class="chart-title" style="margin-bottom:0">📈 Durée d'activité moyenne par semaine</div>
@@ -909,6 +994,7 @@ body {
   </div>
 
   <!-- SECTION DISTRIBUTION HORAIRE -->
+
   <div class="chart-card" style="margin-bottom:20px">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
       <div class="chart-title" style="margin-bottom:0">🕐 Distribution des tickets par heure</div>
@@ -922,6 +1008,7 @@ body {
   </div>
 
   <!-- TABLEAU DÉTAIL OUVERTURE / FERMETURE -->
+
   <div class="table-card">
     <div class="table-top">
       <span class="table-top-title">⏱ Détail journalier — ouverture · fermeture · durée</span>
@@ -942,6 +1029,7 @@ body {
 </div><!-- /#tc-workhours -->
 
 <!-- TAB: CATALOGUE ARTICLES -->
+
 <div class="tab-content" id="tc-catalogue">
 <div class="page">
 
@@ -958,6 +1046,7 @@ body {
   </div>
 
   <!-- Résumé bénéfices catalogue -->
+
   <div class="kpi-grid" style="margin-bottom:20px" id="cat-kpis"></div>
 
   <div class="cat-grid" id="cat-grid"></div>
@@ -966,39 +1055,44 @@ body {
 </div><!-- /#tc-catalogue -->
 
 <!-- CLIENT ID MODAL -->
+
 <div class="modal-overlay" id="clientid-modal">
   <div class="modal-box">
     <div class="modal-title">☁️ Connexion Google Drive</div>
     <div class="modal-sub">Configurez une fois — la connexion se fera automatiquement à chaque ouverture.</div>
 
-    <!-- Compte préféré -->
-    <div id="account-card" style="display:none;background:#0e0e1a;border:1px solid #27ae60;border-radius:10px;padding:12px 14px;margin-bottom:16px;display:none;align-items:center;gap:12px">
-      <div id="account-avatar" style="width:38px;height:38px;border-radius:50%;background:#8e44ad;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;flex-shrink:0">?</div>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:13px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="account-name-display">—</div>
-        <div style="font-size:11px;color:#27ae60">✓ Compte préféré mémorisé</div>
-      </div>
-      <button onclick="clearPreferredAccount()" style="background:none;border:none;color:#555;cursor:pointer;font-size:18px;padding:2px 6px" title="Supprimer ce compte">✕</button>
-    </div>
+```
+<!-- Compte préféré -->
+<div id="account-card" style="display:none;background:#0e0e1a;border:1px solid #27ae60;border-radius:10px;padding:12px 14px;margin-bottom:16px;display:none;align-items:center;gap:12px">
+  <div id="account-avatar" style="width:38px;height:38px;border-radius:50%;background:#8e44ad;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;flex-shrink:0">?</div>
+  <div style="flex:1;min-width:0">
+    <div style="font-size:13px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="account-name-display">—</div>
+    <div style="font-size:11px;color:#27ae60">✓ Compte préféré mémorisé</div>
+  </div>
+  <button onclick="clearPreferredAccount()" style="background:none;border:none;color:#555;cursor:pointer;font-size:18px;padding:2px 6px" title="Supprimer ce compte">✕</button>
+</div>
 
-    <label class="modal-label">Compte Google préféré</label>
-    <input type="email" class="modal-input" id="email-input" placeholder="votre@gmail.com" autocomplete="email">
-    <div style="font-size:11px;color:#555;margin-bottom:14px">Connexion Drive automatique à chaque ouverture via ce compte.</div>
+<label class="modal-label">Compte Google préféré</label>
+<input type="email" class="modal-input" id="email-input" placeholder="votre@gmail.com" autocomplete="email">
+<div style="font-size:11px;color:#555;margin-bottom:14px">Connexion Drive automatique à chaque ouverture via ce compte.</div>
 
-    <label class="modal-label">Google OAuth Client ID</label>
-    <input type="text" class="modal-input" id="cid-input" placeholder="xxxx.apps.googleusercontent.com">
-    <span class="modal-saved-tag" id="cid-saved-tag" style="display:none">✓ Client ID mémorisé</span>
-    <div style="font-size:11px;color:#444;margin-bottom:16px;line-height:1.5">🔗 <a href="https://console.cloud.google.com/apis/credentials" target="_blank" style="color:#8e44ad">console.cloud.google.com</a> → Identifiants → ID client OAuth 2.0</div>
+<label class="modal-label">Google OAuth Client ID</label>
+<input type="text" class="modal-input" id="cid-input" placeholder="xxxx.apps.googleusercontent.com">
+<span class="modal-saved-tag" id="cid-saved-tag" style="display:none">✓ Client ID mémorisé</span>
+<div style="font-size:11px;color:#444;margin-bottom:16px;line-height:1.5">🔗 <a href="https://console.cloud.google.com/apis/credentials" target="_blank" style="color:#8e44ad">console.cloud.google.com</a> → Identifiants → ID client OAuth 2.0</div>
 
-    <div class="modal-btns">
-      <button class="modal-btn cancel" onclick="closeModal('clientid-modal')">Annuler</button>
-      <button class="modal-btn danger" id="btn-forget" onclick="forgetClientId()" style="display:none">🗑 Tout effacer</button>
-      <button class="modal-btn primary" onclick="saveAndConnect()">🔗 Connecter →</button>
-    </div>
+<div class="modal-btns">
+  <button class="modal-btn cancel" onclick="closeModal('clientid-modal')">Annuler</button>
+  <button class="modal-btn danger" id="btn-forget" onclick="forgetClientId()" style="display:none">🗑 Tout effacer</button>
+  <button class="modal-btn primary" onclick="saveAndConnect()">🔗 Connecter →</button>
+</div>
+```
+
   </div>
 </div>
 
 <!-- BACKUP PICKER MODAL -->
+
 <div class="modal-overlay" id="backup-modal">
   <div class="modal-box">
     <div class="modal-title">📂 Sauvegardes COVO Pro sur Drive</div>
@@ -1007,6 +1101,35 @@ body {
     <div class="modal-btns">
       <button class="modal-btn cancel" onclick="closeModal('backup-modal')">Fermer</button>
       <button class="modal-btn primary" id="btn-load-selected" onclick="loadSelectedBackup()">📥 Charger la sélection</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DÉTAIL TICKET -->
+
+<div id="ticket-modal-overlay" onclick="closeTicketModal(event)">
+  <div id="ticket-modal">
+    <div class="tm-header">
+      <div>
+        <div class="tm-title" id="tm-title">Ticket #000000</div>
+        <div class="tm-sub" id="tm-sub">—</div>
+      </div>
+      <button class="tm-close" onclick="closeTicketModal()">✕</button>
+    </div>
+    <div class="tm-body">
+      <div class="tm-kpis" id="tm-kpis"></div>
+      <div class="tm-items-title" id="tm-items-title">Articles</div>
+      <div id="tm-items"></div>
+    </div>
+    <div class="tm-footer">
+      <div>
+        <div style="font-size:10px;color:#666;margin-bottom:2px">Total encaissé</div>
+        <div class="tm-total" id="tm-total">—</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:10px;color:#666;margin-bottom:2px">Bénéfice estimé</div>
+        <div class="tm-benef-total" id="tm-benef-total">—</div>
+      </div>
     </div>
   </div>
 </div>
@@ -1308,15 +1431,20 @@ function renderTable() {
           <span class="day-total">${fmt(dBenef)} · ${dSales.length} ticket${dSales.length>1?'s':''}</span>
         </div>`;
         dSales.forEach(s => {
-          const b = getTicketBenef(s);
-          const ca = parseFloat(s.total||0);
-          const n = (s.items||[]).length;
-          const sid = s.id || s.ticketId || '?';
-          const caissier = s.cashier || s.caissier || '';
-          const itemsLabel = n > 0 ? `${n} article${n>1?'s':''}` : '';
-          html += `<div class="ticket-row">
+          const b        = getTicketBenef(s);
+          const ca       = parseFloat(s.total||0);
+          const n        = (s.items||[]).length;
+          const sid      = s.id || s.ticketId || '?';
+          const caissier = s.cashier || s.caissier || s.user || '';
+          const sDate    = saleDate(s);
+          const timeStr  = sDate.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+          const itemsLabel = n > 0 ? `${n} art.` : '';
+          const sidx = window._salesIndex ? window._salesIndex.get(s) : null;
+          const skey = encodeURIComponent(JSON.stringify({id:sid,ts:sDate.getTime()}));
+          html += `<div class="ticket-row" onclick="openTicketDetail('${escH(String(sid))}',${sDate.getTime()})" title="Cliquer pour voir le détail">
+            <span class="ticket-time">${timeStr}</span>
             <span class="ticket-id">#${String(sid).slice(-6)}</span>
-            <span class="ticket-desc">${caissier ? '👤 '+escH(caissier) : '🧾 Ticket'} ${itemsLabel ? '· '+itemsLabel : ''}</span>
+            <span class="ticket-desc">${caissier ? '👤 '+escH(caissier) : '🧾 Ticket'}${itemsLabel ? ' · '+itemsLabel : ''}</span>
             <span class="t-status ${s.cancelled?'ko':'ok'}">${s.cancelled?'Annulé':'Validé'}</span>
             <span class="ticket-ca" style="font-size:11px;color:#888;text-align:right">${fmtCA(ca)}</span>
             <span class="ticket-benef ${b>=0?'pos':'neg'}">${fmt(b)}</span>
@@ -2040,6 +2168,101 @@ function init() {
 }
 
 
+
+// ═══════════════════════════════════════════════
+//  MODAL DÉTAIL TICKET
+// ═══════════════════════════════════════════════
+function openTicketDetail(sid, ts) {
+  // Trouver le ticket par ID puis timestamp comme fallback
+  let s = sales.find(x => String(x.id||x.ticketId) === String(sid) && saleDate(x).getTime() === ts);
+  if (!s) s = sales.find(x => String(x.id||x.ticketId) === String(sid));
+  if (!s) s = sales.find(x => saleDate(x).getTime() === ts);
+  if (!s) { toast('Ticket introuvable', 'err'); return; }
+
+  const sDate  = saleDate(s);
+  const ca     = parseFloat(s.total||0);
+  const b      = getTicketBenef(s);
+  const items  = s.items || [];
+  const cashier= s.cashier || s.caissier || s.user || '';
+  const sid6   = String(s.id||s.ticketId||'?').slice(-6).toUpperCase();
+  const modeP  = s.paymentMode || s.payment || s.mode || '';
+
+  // En-tête
+  document.getElementById('tm-title').textContent = 'Ticket #' + sid6;
+  document.getElementById('tm-sub').innerHTML =
+    sDate.toLocaleDateString('fr-FR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'}) +
+    ' — <strong style="color:#8e44ad">' + sDate.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}) + '</strong>' +
+    (cashier ? ' · 👤 ' + escH(cashier) : '') +
+    (modeP   ? ' · 💳 ' + escH(modeP)   : '');
+
+  // KPIs
+  const nItems   = items.length;
+  const totalQty = items.reduce((a,it) => a + parseFloat(it.qty||it.quantity||1), 0);
+  const margin   = ca > 0 && b !== ca ? Math.round(b/ca*100) : null;
+  document.getElementById('tm-kpis').innerHTML =
+    tmkpi('CA encaissé', fmtCA(ca), 'purple') +
+    tmkpi('Articles', nItems + ' réf.', '') +
+    tmkpi('Quantité', Math.round(totalQty*100)/100 + ' u.', '') +
+    tmkpi('Bénéfice', fmt(b), b>=0?'green':'red') +
+    tmkpi('Marge', margin!==null ? margin+'%' : '—', '') +
+    tmkpi('Statut', s.cancelled?'Annulé':'Validé', s.cancelled?'red':'green');
+
+  // Titre items
+  document.getElementById('tm-items-title').textContent =
+    nItems ? nItems + ' article' + (nItems>1?'s':'') + ' vendus' : 'Aucun article enregistré';
+
+  // Liste des articles
+  if (!items.length) {
+    document.getElementById('tm-items').innerHTML =
+      '<div style="padding:20px;text-align:center;color:#555;font-size:12px">Détail des articles non disponible<br><span style="font-size:10px;color:#444">Les anciens tickets COVO Pro peuvent ne pas contenir le détail</span></div>';
+  } else {
+    document.getElementById('tm-items').innerHTML = items.map(it => {
+      const iName  = it.name || it.article || it.label || 'Article';
+      const iQty   = parseFloat(it.qty || it.quantity || 1);
+      const iUnit  = it.unitType || it.unit || '';
+      const iPrice = parseFloat(it.price || it.unitPrice || it.prixUnitaire || 0);
+      const iCost  = parseFloat(it.cost || it.costPrice || it.prixAchat ||
+                     (articles[it.id||it.name] ? (articles[it.id||it.name].costPrice||articles[it.id||it.name].cost||0) : 0) || 0);
+      const iTotal = iPrice * iQty;
+      const iBenef = iCost > 0 ? (iPrice - iCost) * iQty : null;
+      const qtyLabel = iUnit === 'kg' ? Math.round(iQty*1000)/1000 + ' kg' : Math.round(iQty*100)/100 + ' u.';
+
+      return '<div class="tm-item">' +
+        '<span class="tm-item-name">' + escH(iName) + '</span>' +
+        '<span class="tm-item-qty">' + qtyLabel + '</span>' +
+        '<span class="tm-item-price">' + fmtCA(iTotal) + '</span>' +
+        '<span class="tm-item-benef ' + (iBenef===null?'na':iBenef>=0?'pos':'neg') + '">' +
+          (iBenef===null ? '—' : (iBenef>=0?'+':'')+fmtCA(iBenef)) +
+        '</span>' +
+      '</div>';
+    }).join('');
+  }
+
+  // Footer
+  document.getElementById('tm-total').textContent = fmtCA(ca);
+  const bEl = document.getElementById('tm-benef-total');
+  bEl.textContent = fmt(b);
+  bEl.className   = 'tm-benef-total ' + (b>=0?'pos':'neg');
+
+  // Afficher
+  document.getElementById('ticket-modal-overlay').classList.add('open');
+}
+
+function tmkpi(label, value, color) {
+  return '<div class="tm-kpi"><div class="tm-kpi-label">' + label + '</div>' +
+    '<div class="tm-kpi-val ' + color + '">' + value + '</div></div>';
+}
+
+function closeTicketModal(e) {
+  if (e && e.target !== document.getElementById('ticket-modal-overlay')) return;
+  document.getElementById('ticket-modal-overlay').classList.remove('open');
+}
+
+// Fermer avec Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeTicketModal();
+});
+
 // ═══════════════════════════════════════════════
 //  NAVIGATION ONGLETS
 // ═══════════════════════════════════════════════
@@ -2506,5 +2729,6 @@ window._reloadWorkHours  = function() { if (document.getElementById('tc-workhour
 runSplash(() => init());
 registerSW();
 </script>
+
 </body>
 </html>
