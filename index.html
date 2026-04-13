@@ -676,6 +676,130 @@ body {
 .cat-stock { font-size:10px; color:#555; margin-top:4px; }
 .cat-filter-btn { background:#1e1e35; border:1px solid #2e2e50; border-radius:8px; color:#666; font-size:12px; padding:7px 14px; cursor:pointer; font-family:'Poppins',sans-serif; transition:all 0.2s; }
 .cat-filter-btn.active { background:#8e44ad; border-color:#8e44ad; color:#fff; font-weight:600; }
+
+/* ─── BOUTON RÉGLAGES ─── */
+.btn-settings {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(142,68,173,0.15); border: 1px solid #8e44ad;
+  color: #c39bd3; cursor: pointer; display: flex; align-items: center;
+  justify-content: center; font-size: 17px; transition: all 0.2s;
+  flex-shrink: 0; position: relative;
+}
+.btn-settings:hover { background: rgba(142,68,173,0.35); color: #fff; transform: rotate(45deg); }
+.btn-settings-badge {
+  position: absolute; top: -3px; right: -3px;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: #27ae60; border: 2px solid #13131f;
+  display: none;
+}
+.btn-settings-badge.on { display: block; }
+
+/* ─── PANNEAU RÉGLAGES ─── */
+#settings-panel {
+  position: fixed; top: 0; right: -400px; width: 360px; height: 100vh;
+  background: #1a1a2e; border-left: 1px solid #2e2e50;
+  z-index: 9700; display: flex; flex-direction: column;
+  transition: right 0.3s cubic-bezier(.4,0,.2,1);
+  box-shadow: -8px 0 40px rgba(0,0,0,0.5);
+}
+#settings-panel.open { right: 0; }
+#settings-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+  z-index: 9699; backdrop-filter: blur(2px);
+}
+#settings-overlay.open { display: block; }
+
+.sp-header {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid #2e2e50;
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(135deg,#1e1e35,#16213e);
+  flex-shrink: 0;
+}
+.sp-logo { display: flex; align-items: center; gap: 10px; }
+.sp-logo-icon { width: 34px; height: 34px; border-radius: 8px; background: #8e44ad; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.sp-title { font-size: 15px; font-weight: 700; color: #fff; }
+.sp-sub { font-size: 10px; color: #555; }
+.sp-close { background: none; border: none; color: #555; cursor: pointer; font-size: 20px; padding: 4px 8px; border-radius: 6px; transition: all 0.15s; }
+.sp-close:hover { background: #2e2e50; color: #ddd; }
+
+.sp-body { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+
+/* Sections */
+.sp-section { background: #1e1e35; border: 1px solid #2e2e50; border-radius: 12px; overflow: hidden; }
+.sp-section-header {
+  padding: 12px 16px; display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid #2e2e50; cursor: pointer; transition: background 0.15s;
+}
+.sp-section-header:hover { background: #252550; }
+.sp-section-icon { font-size: 16px; }
+.sp-section-title { font-size: 13px; font-weight: 600; color: #ddd; flex: 1; }
+.sp-section-badge { font-size: 10px; padding: 2px 8px; border-radius: 20px; font-weight: 600; }
+.sp-badge-on  { background: rgba(39,174,96,0.15); color: #2ecc71; border: 1px solid rgba(39,174,96,0.3); }
+.sp-badge-off { background: rgba(231,76,60,0.1);  color: #666;    border: 1px solid #2e2e50; }
+.sp-section-chevron { font-size: 10px; color: #444; transition: transform 0.2s; }
+.sp-section-chevron.open { transform: rotate(90deg); }
+.sp-section-body { padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; }
+
+/* Rows dans section */
+.sp-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.sp-row-label { font-size: 12px; color: #aaa; }
+.sp-row-sub   { font-size: 10px; color: #555; margin-top: 1px; }
+.sp-row-val   { font-size: 12px; color: #c39bd3; font-weight: 600; text-align: right; }
+.sp-row-val.green { color: #2ecc71; }
+
+/* Boutons action */
+.sp-action {
+  width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid #2e2e50;
+  background: #13131f; color: #aaa; font-size: 12px; font-weight: 600;
+  cursor: pointer; font-family: 'Poppins',sans-serif; text-align: left;
+  display: flex; align-items: center; gap: 10px; transition: all 0.2s;
+}
+.sp-action:hover { background: #252540; border-color: #8e44ad; color: #c39bd3; }
+.sp-action.danger:hover { border-color: #e74c3c; color: #e74c3c; background: rgba(231,76,60,0.08); }
+.sp-action.success:hover { border-color: #27ae60; color: #2ecc71; background: rgba(39,174,96,0.08); }
+.sp-action-icon { font-size: 16px; width: 24px; text-align: center; flex-shrink: 0; }
+.sp-action-text { flex: 1; }
+.sp-action-sub  { font-size: 10px; color: #555; margin-top: 1px; font-weight: 400; }
+
+/* Divider */
+.sp-divider { border: none; border-top: 1px solid #2e2e50; margin: 2px 0; }
+
+/* Drive status card */
+.sp-drive-card { background: #13131f; border-radius: 10px; padding: 12px 14px; }
+.sp-drive-status { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.sp-drive-avatar { width: 36px; height: 36px; border-radius: 50%; background: #8e44ad; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0; overflow: hidden; }
+.sp-drive-info { flex: 1; min-width: 0; }
+.sp-drive-email { font-size: 12px; font-weight: 600; color: #ddd; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sp-drive-sub { font-size: 10px; color: #555; }
+
+/* Sync en temps réel dans le panneau */
+.sp-sync-live { background: #13131f; border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; gap: 12px; }
+.sp-sync-ring-wrap { position: relative; width: 34px; height: 34px; flex-shrink: 0; }
+
+/* Stats */
+.sp-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.sp-stat { background: #13131f; border-radius: 8px; padding: 10px 12px; }
+.sp-stat-val { font-size: 16px; font-weight: 700; color: #fff; }
+.sp-stat-label { font-size: 10px; color: #555; margin-top: 2px; }
+
+/* Polling toggle */
+.sp-toggle { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.sp-toggle input { display: none; }
+.sp-toggle-track {
+  width: 36px; height: 20px; border-radius: 20px; background: #2e2e50;
+  position: relative; transition: background 0.2s; flex-shrink: 0;
+}
+.sp-toggle input:checked + .sp-toggle-track { background: #8e44ad; }
+.sp-toggle-thumb {
+  position: absolute; top: 2px; left: 2px; width: 16px; height: 16px;
+  border-radius: 50%; background: white; transition: left 0.2s;
+}
+.sp-toggle input:checked ~ .sp-toggle-track .sp-toggle-thumb { left: 18px; }
+
+@media (max-width: 480px) {
+  #settings-panel { width: 100%; }
+}
 </style>
 </head>
 <body>
@@ -769,45 +893,208 @@ body {
     <div class="logo-badge">BÉNÉFICES</div>
   </div>
   <div class="header-right">
-    <span class="drive-dot" id="drive-dot"></span>
-    <div id="account-hdr" style="display:none;align-items:center;gap:8px">
-      <div id="account-hdr-avatar" style="width:28px;height:28px;border-radius:50%;background:#8e44ad;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0">?</div>
-      <div style="line-height:1.3">
-        <div style="font-size:11px;font-weight:600;color:#ddd;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="account-hdr-email">—</div>
-        <div style="font-size:10px;color:#27ae60">● Drive connecté</div>
-      </div>
-    </div>
-    <span class="drive-label" id="drive-label" style="display:block">Non connecté</span>
-    <!-- SYNC RING INDICATOR -->
-    <div id="sync-indicator" style="display:none;align-items:center;gap:10px">
-      <!-- Anneau SVG animé -->
-      <div style="position:relative;width:38px;height:38px;flex-shrink:0" title="Synchro Drive">
-        <svg width="38" height="38" viewBox="0 0 38 38" style="transform:rotate(-90deg)">
-          <!-- Fond -->
+    <!-- Indicateur synchro compact dans le header -->
+    <div id="sync-indicator" style="display:none;align-items:center;gap:6px" title="Synchro Drive">
+      <div style="position:relative;width:28px;height:28px;flex-shrink:0">
+        <svg width="28" height="28" viewBox="0 0 38 38" style="transform:rotate(-90deg)">
           <circle cx="19" cy="19" r="15" fill="none" stroke="#1e1e35" stroke-width="3"/>
-          <!-- Anneau de progression -->
           <circle id="sync-ring" cx="19" cy="19" r="15" fill="none"
             stroke="#8e44ad" stroke-width="3" stroke-linecap="round"
             stroke-dasharray="94.25" stroke-dashoffset="0"
             style="transition:stroke-dashoffset 1s linear,stroke 0.4s"/>
-          <!-- Fond intérieur -->
           <circle cx="19" cy="19" r="12" fill="#13131f"/>
         </svg>
-        <!-- Icône centrale -->
-        <div id="sync-icon" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px">↻</div>
+        <div id="sync-icon" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px">↻</div>
       </div>
-      <!-- Texte -->
-      <div style="line-height:1.4;min-width:0">
-        <div id="sync-last" style="font-size:10px;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px">—</div>
-        <div id="sync-countdown" style="font-size:10px;color:#8e44ad;font-weight:600">—</div>
+      <div style="line-height:1.3">
+        <div id="sync-last" style="font-size:10px;color:#888;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">—</div>
+        <div id="sync-countdown" style="font-size:9px;color:#8e44ad;font-weight:600">—</div>
       </div>
     </div>
-    <button class="btn-hdr" id="btn-connect" onclick="openClientIdModal()">☁ Connecter Drive</button>
-    <button class="btn-hdr" id="btn-save" onclick="saveDrive()" style="display:none">💾 Sauvegarder</button>
-    <button class="btn-hdr" id="btn-load" onclick="autoSearchCovoBackups()" style="display:none">📂 Sauvegardes Drive</button>
-    <button class="btn-hdr red" onclick="location.reload()">↺ Actualiser</button>
+    <!-- Bouton réglages unique -->
+    <button class="btn-settings" id="btn-settings" onclick="openSettings()" title="Réglages">
+      ⚙
+      <span class="btn-settings-badge" id="settings-badge"></span>
+    </button>
   </div>
 </div>
+
+<!-- OVERLAY RÉGLAGES -->
+<div id="settings-overlay" onclick="closeSettings()"></div>
+
+<!-- PANNEAU RÉGLAGES -->
+<div id="settings-panel">
+  <!-- En-tête -->
+  <div class="sp-header">
+    <div class="sp-logo">
+      <div class="sp-logo-icon">⚙</div>
+      <div>
+        <div class="sp-title">Réglages</div>
+        <div class="sp-sub">COVO Bénéfices Pro</div>
+      </div>
+    </div>
+    <button class="sp-close" onclick="closeSettings()">✕</button>
+  </div>
+
+  <div class="sp-body">
+
+    <!-- ── SECTION GOOGLE DRIVE ── -->
+    <div class="sp-section">
+      <div class="sp-section-header" onclick="toggleSection('sp-drive-body','sp-drive-chev')">
+        <span class="sp-section-icon">☁</span>
+        <span class="sp-section-title">Google Drive</span>
+        <span class="sp-section-badge sp-badge-off" id="sp-drive-badge">Non connecté</span>
+        <span class="sp-section-chevron open" id="sp-drive-chev">▶</span>
+      </div>
+      <div class="sp-section-body" id="sp-drive-body">
+        <!-- Compte connecté -->
+        <div class="sp-drive-card" id="sp-drive-card">
+          <div class="sp-drive-status">
+            <div class="sp-drive-avatar" id="sp-drive-avatar">?</div>
+            <div class="sp-drive-info">
+              <div class="sp-drive-email" id="sp-drive-email-sp">Non connecté</div>
+              <div class="sp-drive-sub" id="sp-drive-sub-sp">Cliquez sur Connecter pour accéder à Drive</div>
+            </div>
+            <span class="drive-dot" id="drive-dot"></span>
+          </div>
+        </div>
+        <button class="sp-action success" id="btn-connect" onclick="openClientIdModal()">
+          <span class="sp-action-icon">🔗</span>
+          <div class="sp-action-text">
+            <div>Connecter Drive</div>
+            <div class="sp-action-sub" id="sp-connect-sub">Client ID OAuth 2.0</div>
+          </div>
+        </button>
+        <button class="sp-action" id="btn-save" onclick="saveDrive()" style="display:none">
+          <span class="sp-action-icon">💾</span>
+          <div class="sp-action-text">
+            <div>Sauvegarder maintenant</div>
+            <div class="sp-action-sub">Enregistrer les tickets sur Drive</div>
+          </div>
+        </button>
+        <button class="sp-action" id="btn-load" onclick="autoSearchCovoBackups()" style="display:none">
+          <span class="sp-action-icon">📂</span>
+          <div class="sp-action-text">
+            <div>Parcourir les sauvegardes</div>
+            <div class="sp-action-sub">Choisir une sauvegarde COVO Pro</div>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── SECTION SYNCHRO ── -->
+    <div class="sp-section">
+      <div class="sp-section-header" onclick="toggleSection('sp-sync-body','sp-sync-chev')">
+        <span class="sp-section-icon">↻</span>
+        <span class="sp-section-title">Synchronisation auto</span>
+        <span class="sp-section-badge sp-badge-on" id="sp-sync-badge">Toutes les 5s</span>
+        <span class="sp-section-chevron" id="sp-sync-chev">▶</span>
+      </div>
+      <div class="sp-section-body" id="sp-sync-body" style="display:none">
+        <!-- Live sync status -->
+        <div class="sp-sync-live">
+          <div class="sp-sync-ring-wrap">
+            <svg width="34" height="34" viewBox="0 0 38 38" style="transform:rotate(-90deg)">
+              <circle cx="19" cy="19" r="15" fill="none" stroke="#1e1e35" stroke-width="3"/>
+              <circle id="sync-ring-sp" cx="19" cy="19" r="15" fill="none"
+                stroke="#8e44ad" stroke-width="3" stroke-linecap="round"
+                stroke-dasharray="94.25" stroke-dashoffset="0"
+                style="transition:stroke-dashoffset 1s linear,stroke 0.4s"/>
+              <circle cx="19" cy="19" r="12" fill="#1e1e35"/>
+            </svg>
+            <div id="sync-icon-sp" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px">↻</div>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:12px;font-weight:600;color:#ddd" id="sp-sync-label">En attente…</div>
+            <div style="font-size:10px;color:#555" id="sp-sync-file">—</div>
+          </div>
+          <div style="font-size:13px;font-weight:700;color:#8e44ad" id="sp-sync-timer">—</div>
+        </div>
+        <button class="sp-action success" onclick="manualSync()">
+          <span class="sp-action-icon">⟳</span>
+          <div class="sp-action-text">
+            <div>Synchroniser maintenant</div>
+            <div class="sp-action-sub">Forcer une vérification immédiate</div>
+          </div>
+        </button>
+        <div class="sp-row">
+          <div><div class="sp-row-label">Synchronisation auto</div><div class="sp-row-sub">Vérifie Drive toutes les 5 secondes</div></div>
+          <label class="sp-toggle">
+            <input type="checkbox" id="sp-sync-toggle" checked onchange="toggleAutoSync(this.checked)">
+            <div class="sp-toggle-track"><div class="sp-toggle-thumb"></div></div>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION DONNÉES ── -->
+    <div class="sp-section">
+      <div class="sp-section-header" onclick="toggleSection('sp-data-body','sp-data-chev')">
+        <span class="sp-section-icon">📊</span>
+        <span class="sp-section-title">Données locales</span>
+        <span class="sp-section-badge sp-badge-off" id="sp-data-badge">0 tickets</span>
+        <span class="sp-section-chevron" id="sp-data-chev">▶</span>
+      </div>
+      <div class="sp-section-body" id="sp-data-body" style="display:none">
+        <div class="sp-stat-grid" id="sp-stats-grid"></div>
+        <hr class="sp-divider">
+        <button class="sp-action" onclick="exportData()">
+          <span class="sp-action-icon">📤</span>
+          <div class="sp-action-text">
+            <div>Exporter les données</div>
+            <div class="sp-action-sub">Télécharger un fichier JSON local</div>
+          </div>
+        </button>
+        <button class="sp-action danger" onclick="confirmClearData()">
+          <span class="sp-action-icon">🗑</span>
+          <div class="sp-action-text">
+            <div>Vider les données locales</div>
+            <div class="sp-action-sub">Supprime le cache local uniquement</div>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── SECTION APPLICATION ── -->
+    <div class="sp-section">
+      <div class="sp-section-header" onclick="toggleSection('sp-app-body','sp-app-chev')">
+        <span class="sp-section-icon">📱</span>
+        <span class="sp-section-title">Application</span>
+        <span class="sp-section-badge sp-badge-off" id="sp-install-badge">Non installée</span>
+        <span class="sp-section-chevron" id="sp-app-chev">▶</span>
+      </div>
+      <div class="sp-section-body" id="sp-app-body" style="display:none">
+        <div class="sp-row">
+          <div><div class="sp-row-label">Version</div><div class="sp-row-sub">COVO Bénéfices</div></div>
+          <div class="sp-row-val">v2.1</div>
+        </div>
+        <div class="sp-row">
+          <div><div class="sp-row-label">Mode d'affichage</div></div>
+          <div class="sp-row-val" id="sp-display-mode">Navigateur</div>
+        </div>
+        <div class="sp-row">
+          <div><div class="sp-row-label">Hors-ligne</div><div class="sp-row-sub">Service Worker actif</div></div>
+          <div class="sp-row-val" id="sp-sw-status" style="color:#555">—</div>
+        </div>
+        <button class="sp-action" onclick="toggleInstallModal()">
+          <span class="sp-action-icon">⬇</span>
+          <div class="sp-action-text">
+            <div>Installer l'application</div>
+            <div class="sp-action-sub">Accès rapide depuis l'écran d'accueil</div>
+          </div>
+        </button>
+        <button class="sp-action danger" onclick="location.reload()">
+          <span class="sp-action-icon">↺</span>
+          <div class="sp-action-text">
+            <div>Actualiser l'application</div>
+            <div class="sp-action-sub">Recharger les données</div>
+          </div>
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /.sp-body -->
+</div><!-- /#settings-panel -->
 
 <!-- NAVIGATION PRINCIPALE -->
 <div class="main-tabs">
@@ -1482,6 +1769,7 @@ let CLIENT_ID        = localStorage.getItem('covo_benef_client_id') || '';
 let PREF_EMAIL       = localStorage.getItem('covo_benef_email') || '';
 let _lastFileId      = null;
 let _lastModified    = null;
+let _prevSaleIds     = null;
 let _nextCheckIn     = 5;
 let _countdownTimer  = null;
 
@@ -1639,62 +1927,73 @@ async function fetchAndSaveUserEmail(resp) {
 }
 
 function updateAccountHeader(email, name, pictureUrl) {
-  const hdrEl    = document.getElementById('account-hdr');
-  const avEl     = document.getElementById('account-hdr-avatar');
-  const emailEl  = document.getElementById('account-hdr-email');
-  const labelEl  = document.getElementById('drive-label');
-
-  if (hdrEl)   { hdrEl.style.display = 'flex'; }
-  if (labelEl) { labelEl.style.display = 'none'; }
-  if (emailEl) { emailEl.textContent = email; }
-  if (avEl) {
+  // Mettre à jour le panneau réglages
+  const avSp = document.getElementById('sp-drive-avatar');
+  if (avSp) {
     if (pictureUrl) {
-      const fallbackInitials = email.substring(0,2).toUpperCase();
       const img = document.createElement('img');
       img.src = pictureUrl;
-      img.style.cssText = 'width:28px;height:28px;border-radius:50%;object-fit:cover';
-      img.onerror = () => { avEl.innerHTML = ''; avEl.textContent = fallbackInitials; };
-      avEl.innerHTML = '';
-      avEl.appendChild(img);
+      img.style.cssText = 'width:36px;height:36px;border-radius:50%;object-fit:cover';
+      img.onerror = () => { avSp.innerHTML = ''; avSp.textContent = email.substring(0,2).toUpperCase(); };
+      avSp.innerHTML = ''; avSp.appendChild(img);
     } else {
-      avEl.textContent = email.substring(0,2).toUpperCase();
+      avSp.textContent = email.substring(0,2).toUpperCase();
     }
+    avSp.style.background = '#27ae60';
   }
+  const emailSp = document.getElementById('sp-drive-email-sp');
+  if (emailSp) emailSp.textContent = email;
+  const subSp = document.getElementById('sp-drive-sub-sp');
+  if (subSp) { subSp.textContent = '● Drive connecté'; subSp.style.color = '#2ecc71'; }
+  // Badge bouton réglages
+  const badge = document.getElementById('settings-badge');
+  if (badge) badge.classList.add('on');
 }
 
 function updateDriveUI(connected) {
-  document.getElementById('drive-dot').className = 'drive-dot ' + (connected ? 'on' : 'off');
-  const labelEl = document.getElementById('drive-label');
-  const hdrEl   = document.getElementById('account-hdr');
-  if (connected) {
-    if (labelEl) labelEl.style.display = 'none';
-    // account-hdr shown by updateAccountHeader once email is known
-  } else {
-    if (labelEl) { labelEl.style.display = 'block'; labelEl.textContent = 'Non connecté'; }
-    if (hdrEl)   hdrEl.style.display = 'none';
-  }
-  document.getElementById('btn-connect').textContent = connected ? '☁ Paramètres Drive' : '☁ Connecter Drive';
-  document.getElementById('btn-save').style.display = connected ? 'flex' : 'none';
-  document.getElementById('btn-load').style.display = connected ? 'flex' : 'none';
+  // Drive dot (dans le panneau)
+  const dot = document.getElementById('drive-dot');
+  if (dot) dot.className = 'drive-dot ' + (connected ? 'on' : 'off');
+  // Boutons dans le panneau
+  const btnS = document.getElementById('btn-save');
+  const btnL = document.getElementById('btn-load');
+  if (btnS) btnS.style.display = connected ? 'flex' : 'none';
+  if (btnL) btnL.style.display = connected ? 'flex' : 'none';
+  // Sync ring dans le header
   const si = document.getElementById('sync-indicator');
   if (si) si.style.display = connected ? 'flex' : 'none';
+  // Badge sur bouton réglages
+  const badge = document.getElementById('settings-badge');
+  if (badge) badge.classList.toggle('on', connected);
+  // Rafraîchir le panneau si ouvert
+  if (document.getElementById('settings-panel')?.classList.contains('open')) {
+    updateSettingsPanel();
+  }
 }
 
 // ── Récupère les fichiers Drive COVO (dédupliqués, triés par date) ──
+// ─────────────────────────────────────────────────────
+//  RECHERCHE DRIVE — tous les fichiers COVO Pro
+// ─────────────────────────────────────────────────────
 async function fetchDriveFiles() {
+  // Recherche élargie : nom, type JSON, tous les formats COVO Pro
   const queries = [
-    `name contains 'covo' and mimeType='application/json' and trashed=false`,
-    `name contains 'backup' and mimeType='application/json' and trashed=false`
+    "name contains 'covo' and mimeType='application/json' and trashed=false",
+    "name contains 'Covo' and mimeType='application/json' and trashed=false",
+    "name contains 'backup' and mimeType='application/json' and trashed=false",
+    "name contains 'benefices' and mimeType='application/json' and trashed=false"
   ];
   const seenIds = new Set(), files = [];
   for (const q of queries) {
-    const r = await gapi.client.drive.files.list({
-      q, fields: 'files(id,name,modifiedTime,size)', spaces: 'drive',
-      orderBy: 'modifiedTime desc', pageSize: 20
-    });
-    (r.result.files || []).forEach(f => {
-      if (!seenIds.has(f.id)) { seenIds.add(f.id); files.push(f); }
-    });
+    try {
+      const r = await gapi.client.drive.files.list({
+        q, fields: 'files(id,name,modifiedTime,size,description)', spaces: 'drive',
+        orderBy: 'modifiedTime desc', pageSize: 30
+      });
+      (r.result.files || []).forEach(f => {
+        if (!seenIds.has(f.id)) { seenIds.add(f.id); files.push(f); }
+      });
+    } catch(e) { console.warn('[Drive search]', q, e.message); }
   }
   files.sort((a, b) => new Date(b.modifiedTime) - new Date(a.modifiedTime));
   return files;
@@ -1703,15 +2002,117 @@ async function fetchDriveFiles() {
 // ── Télécharge et parse un fichier Drive ──
 async function fetchFileData(fileId) {
   const token = gapi.client.getToken().access_token;
-  const resp  = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
-    { headers: { 'Authorization': 'Bearer ' + token } });
+  const resp  = await fetch(
+    `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
+    { headers: { 'Authorization': 'Bearer ' + token } }
+  );
+  if (!resp.ok) throw new Error('HTTP ' + resp.status);
   return resp.json();
 }
 
-// ── Extrait covo_sales_history depuis n'importe quel format COVO ──
+// ── Extraction COMPLÈTE du backup COVO Pro (toutes versions) ──
+function extractCovoData(data) {
+  // Unwrap si nested dans data.data
+  const d = (data.data && typeof data.data === 'object') ? data.data : data;
+  return {
+    // Tickets de caisse
+    sales: d.covo_sales_history || d.salesHistory || d.sales_history || d.covo_sales || null,
+    // Produits / Articles
+    products: d.products || d.covo_products || d.covo_articles || d.articles || null,
+    // Utilisateurs
+    users: d.users || d.covo_users || null,
+    // Catégories
+    categories: d.categories || d.covo_categories || null,
+    // Paramètres application
+    settings: d.appSettings || d.covo_settings || d.settings || null,
+    // Tarif nuit
+    nightTariff: d.nightTariffSettings || d.covo_night_tariff || null,
+    // Permissions caissiers
+    permissions: d.cashierPermissions || d.covo_cashier_permissions || null,
+    // Objectif livraison
+    deliveryGoal: d.deliveryGoal || null,
+    // Types de promo
+    promoTypes: d.promoTypes || null,
+    // Retours
+    retours: d.covo_retours || null,
+    // Marchandise
+    marchandise: d.covo_marchandise || null,
+    // Historique connexions
+    loginHistory: d.covo_login_history || null,
+    // Messages
+    messages: d.covo_messages || null,
+    // Modules config
+    modulesConfig: d.covo_modules_config || null,
+    // Version du backup
+    version: d._version || d.version || null,
+    savedAt: d._savedAt || d.savedAt || null,
+  };
+}
+
+// Ancien extractSales conservé pour compatibilité
 function extractSales(data) {
-  return data.covo_sales_history || data.salesHistory || data.sales_history ||
-         (data.data && data.data.covo_sales_history) || null;
+  return extractCovoData(data).sales;
+}
+
+// ── Applique toutes les données COVO Pro en localStorage ──
+function applyCovoData(extracted, report) {
+  const saved = [];
+
+  if (extracted.sales && extracted.sales.length) {
+    const localIds = new Set(sales.map(s => s.id || s.ticketId || JSON.stringify(s)));
+    let added = 0;
+    extracted.sales.forEach(s => {
+      const key = s.id || s.ticketId || JSON.stringify(s);
+      if (!localIds.has(key)) { sales.push(s); localIds.add(key); added++; }
+    });
+    localStorage.setItem('covo_sales_history', JSON.stringify(sales));
+    saved.push(extracted.sales.length + ' tickets (' + added + ' nouveaux)');
+  }
+  if (extracted.products && extracted.products.length) {
+    localStorage.setItem('products', JSON.stringify(extracted.products));
+    saved.push(extracted.products.length + ' articles');
+  }
+  if (extracted.users && extracted.users.length) {
+    localStorage.setItem('covo_users', JSON.stringify(extracted.users));
+    saved.push(extracted.users.length + ' utilisateurs');
+  }
+  if (extracted.categories && extracted.categories.length) {
+    localStorage.setItem('covo_categories', JSON.stringify(extracted.categories));
+    saved.push(extracted.categories.length + ' catégories');
+  }
+  if (extracted.settings) {
+    localStorage.setItem('covo_settings', JSON.stringify(extracted.settings));
+    localStorage.setItem('appSettings', JSON.stringify(extracted.settings));
+    saved.push('paramètres');
+  }
+  if (extracted.nightTariff) {
+    localStorage.setItem('covo_night_tariff', JSON.stringify(extracted.nightTariff));
+    saved.push('tarif nuit');
+  }
+  if (extracted.permissions) {
+    localStorage.setItem('cashierPermissions', JSON.stringify(extracted.permissions));
+  }
+  if (extracted.deliveryGoal != null) {
+    localStorage.setItem('deliveryGoal', String(extracted.deliveryGoal));
+  }
+  if (extracted.promoTypes) {
+    localStorage.setItem('promoTypes', JSON.stringify(extracted.promoTypes));
+  }
+  if (extracted.retours) {
+    localStorage.setItem('covo_retours', JSON.stringify(extracted.retours));
+  }
+  if (extracted.messages) {
+    localStorage.setItem('covo_messages', JSON.stringify(extracted.messages));
+  }
+  if (extracted.loginHistory) {
+    localStorage.setItem('covo_login_history', JSON.stringify(extracted.loginHistory));
+  }
+  if (extracted.modulesConfig) {
+    localStorage.setItem('covo_modules_config', JSON.stringify(extracted.modulesConfig));
+  }
+
+  if (report) console.log('[COVO Drive] Données importées :', saved.join(', '));
+  return saved;
 }
 
 // ── RESTAURATION AUTOMATIQUE de la dernière sauvegarde ──
@@ -1730,41 +2131,41 @@ async function autoLoadLatestBackup(isInitial) {
       setSyncLabel('À jour', nowTime(), 'ok');
       return;
     }
-    const data   = await fetchFileData(latest.id);
-    const loaded = extractSales(data);
-    if (!loaded || !Array.isArray(loaded)) { setSyncLabel('Format inconnu', '', 'error'); return; }
-    // Fusion (déduplication)
-    const localIds = new Set(sales.map(s => s.id || s.ticketId || JSON.stringify(s)));
-    let added = 0;
-    loaded.forEach(s => {
-      const key = s.id || s.ticketId || JSON.stringify(s);
-      if (!localIds.has(key)) { sales.push(s); localIds.add(key); added++; }
-    });
-    localStorage.setItem('covo_sales_history', JSON.stringify(sales));
+    const data      = await fetchFileData(latest.id);
+    const extracted = extractCovoData(data);
+
+    if (!extracted.sales || !Array.isArray(extracted.sales)) {
+      setSyncLabel('Format inconnu', '', 'error');
+      console.warn('[COVO Drive] Format non reconnu dans', latest.name);
+      return;
+    }
+
+    const savedItems = applyCovoData(extracted, true);
     _lastFileId   = latest.id;
     _lastModified = latest.modifiedTime;
-    // ── Extraire aussi les produits, users, catégories depuis Drive ──
-    const driveProducts = data.products || data.covo_products || data.covo_articles || null;
-    if (driveProducts && Array.isArray(driveProducts) && driveProducts.length) {
-      localStorage.setItem('products', JSON.stringify(driveProducts));
-    }
-    const driveUsers = data.users || data.covo_users || null;
-    if (driveUsers && Array.isArray(driveUsers)) {
-      localStorage.setItem('covo_users', JSON.stringify(driveUsers));
-    }
-    const driveCats = data.categories || data.covo_categories || null;
-    if (driveCats && Array.isArray(driveCats)) {
-      localStorage.setItem('covo_categories', JSON.stringify(driveCats));
-    }
-    // Rafraîchir l'affichage
+
+    // Rafraîchir tout l'affichage
     loadCovoData(); updateKPIs(); renderChart(); renderTable();
-    // Rafraîchir catalogue et horaires si ouverts
     if (window._reloadCatalogue) window._reloadCatalogue();
     if (window._reloadWorkHours) window._reloadWorkHours();
-    const dStr = new Date(latest.modifiedTime).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-    setSyncLabel(latest.name.slice(0,22) + (latest.name.length>22?'…':''), dStr, 'ok');
-    if (isInitial)      toast('✓ ' + loaded.length + ' tickets restaurés depuis Drive', 'ok');
-    else if (added > 0) toast('🔄 ' + added + ' nouveau' + (added>1?'x':'') + ' ticket' + (added>1?'s':'') + ' synchronisé' + (added>1?'s':''), 'ok');
+    if (typeof updateSettingsPanel === 'function') updateSettingsPanel();
+
+    const dStr    = new Date(latest.modifiedTime).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    const nameStr = latest.name.length > 20 ? latest.name.slice(0,20) + '…' : latest.name;
+    setSyncLabel(nameStr, dStr, 'ok');
+
+    if (isInitial) {
+      const v = extracted.version ? ' v' + extracted.version : '';
+      toast('✓ ' + extracted.sales.length + ' tickets · ' + savedItems.length + ' catégories chargées' + v, 'ok');
+    } else {
+      const newCount = sales.filter(s => {
+        const k = s.id || s.ticketId || JSON.stringify(s);
+        return !_prevSaleIds?.has(k);
+      }).length;
+      if (newCount > 0) toast('🔄 ' + newCount + ' nouveau' + (newCount>1?'x':'') + ' ticket' + (newCount>1?'s':''), 'ok');
+    }
+    _prevSaleIds = new Set(sales.map(s => s.id || s.ticketId || JSON.stringify(s)));
+
   } catch(e) {
     setSyncLabel('Erreur synchro', '', 'error');
     console.warn('[COVO Sync]', e.message);
@@ -1839,7 +2240,7 @@ async function autoSearchCovoBackups() {
       listEl.innerHTML  = `<div class="empty" style="padding:30px"><div class="empty-icon" style="font-size:32px">🔍</div><div class="empty-p">Aucun fichier JSON COVO trouvé.</div></div>`;
       return;
     }
-    subEl.textContent = `${files.length} fichier${files.length>1?'s':''} — restauration auto active (↻ 5s).`;
+    subEl.textContent = files.length + ' sauvegarde' + (files.length>1?'s':'') + ' COVO Pro trouvée' + (files.length>1?'s':'') + ' — restauration auto active (↻ 5s).';
     listEl.innerHTML  = files.map((f, i) => {
       const d      = new Date(f.modifiedTime);
       const dateStr= d.toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'}) + ' ' + d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
@@ -1875,37 +2276,24 @@ async function loadSelectedBackup() {
   btn.textContent = '⏳ Chargement…';
   btn.disabled = true;
   try {
-    const token = gapi.client.getToken().access_token;
-    const resp = await fetch(`https://www.googleapis.com/drive/v3/files/${selectedBackupId}?alt=media`, {
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
-    const data = await resp.json();
+    const data      = await fetchFileData(selectedBackupId);
+    const extracted = extractCovoData(data);
 
-    // Détecte la clé contenant l'historique des ventes (plusieurs formats COVO)
-    const loaded =
-      data.covo_sales_history ||
-      data.salesHistory ||
-      data.sales_history ||
-      (data.data && data.data.covo_sales_history) ||
-      null;
-
-    if (loaded && Array.isArray(loaded)) {
-      // Fusion avec les données locales (déduplication par ID)
-      const localIds = new Set(sales.map(s => s.id || s.ticketId || JSON.stringify(s)));
-      let added = 0;
-      loaded.forEach(s => {
-        const key = s.id || s.ticketId || JSON.stringify(s);
-        if (!localIds.has(key)) { sales.push(s); localIds.add(key); added++; }
-      });
-      localStorage.setItem('covo_sales_history', JSON.stringify(sales));
+    if (extracted.sales && Array.isArray(extracted.sales) && extracted.sales.length) {
+      const savedItems = applyCovoData(extracted, true);
+      _lastFileId = selectedBackupId;
       closeModal('backup-modal');
-      toast(`✓ ${loaded.length} tickets chargés (${added} nouveaux ajoutés)`, 'ok');
-      init();
+      const summary = savedItems.slice(0,3).join(' · ') + (savedItems.length > 3 ? ' …' : '');
+      toast('✓ Chargé : ' + summary, 'ok');
+      loadCovoData(); updateKPIs(); renderChart(); renderTable();
+      if (window._reloadCatalogue) window._reloadCatalogue();
+      if (window._reloadWorkHours) window._reloadWorkHours();
+      if (typeof updateSettingsPanel === 'function') updateSettingsPanel();
     } else {
-      toast('Format non reconnu — données COVO Pro introuvables dans ce fichier', 'err');
+      toast('Format non reconnu — aucun ticket dans ce fichier', 'err');
     }
   } catch(e) {
-    toast('Erreur lors du chargement : ' + e.message, 'err');
+    toast('Erreur chargement : ' + e.message, 'err');
   } finally {
     btn.textContent = '📥 Charger la sélection';
     btn.disabled = false;
@@ -2131,6 +2519,170 @@ function init() {
 }
 
 
+
+
+// ═══════════════════════════════════════════════
+//  PANNEAU RÉGLAGES
+// ═══════════════════════════════════════════════
+function openSettings() {
+  document.getElementById('settings-panel').classList.add('open');
+  document.getElementById('settings-overlay').classList.add('open');
+  updateSettingsPanel();
+}
+function closeSettings() {
+  document.getElementById('settings-panel').classList.remove('open');
+  document.getElementById('settings-overlay').classList.remove('open');
+}
+function toggleSection(bodyId, chevId) {
+  const body = document.getElementById(bodyId);
+  const chev = document.getElementById(chevId);
+  if (!body) return;
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'flex';
+  if (chev) chev.classList.toggle('open', !isOpen);
+}
+
+function updateSettingsPanel() {
+  // ── Drive status ──
+  const connected = driveConnected;
+  const badge = document.getElementById('sp-drive-badge');
+  const email = PREF_EMAIL || '';
+  if (badge) {
+    badge.textContent = connected ? 'Connecté' : 'Non connecté';
+    badge.className   = 'sp-section-badge ' + (connected ? 'sp-badge-on' : 'sp-badge-off');
+  }
+  const emailSp = document.getElementById('sp-drive-email-sp');
+  const subSp   = document.getElementById('sp-drive-sub-sp');
+  const btnC    = document.getElementById('btn-connect');
+  const avSp    = document.getElementById('sp-drive-avatar');
+  if (emailSp) emailSp.textContent = connected && email ? email : (connected ? 'Drive connecté' : 'Non connecté');
+  if (subSp)   subSp.textContent   = connected ? '● Synchronisation active' : 'Cliquez sur Connecter';
+  if (subSp)   subSp.style.color   = connected ? '#2ecc71' : '#555';
+  if (avSp)    avSp.textContent    = email ? email.substring(0,2).toUpperCase() : (connected ? '✓' : '?');
+  if (avSp)    avSp.style.background = connected ? '#27ae60' : '#8e44ad';
+  if (btnC) {
+    btnC.querySelector('.sp-action-text div:first-child').textContent = connected ? '☁ Paramètres Drive' : '🔗 Connecter Drive';
+    const sub = document.getElementById('sp-connect-sub');
+    if (sub) sub.textContent = connected ? 'Modifier le compte ou Client ID' : 'Client ID OAuth 2.0';
+  }
+
+  // Badge vert sur le bouton réglages si Drive connecté
+  const badge2 = document.getElementById('settings-badge');
+  if (badge2) badge2.classList.toggle('on', connected);
+
+  // ── Données locales ──
+  const n = sales.length;
+  const nValid  = sales.filter(s=>!s.cancelled).length;
+  const nArt    = Object.keys(articles).length;
+  const dataBadge = document.getElementById('sp-data-badge');
+  if (dataBadge) dataBadge.textContent = n + ' ticket' + (n>1?'s':'');
+
+  const statsGrid = document.getElementById('sp-stats-grid');
+  if (statsGrid) {
+    const totalCA = sales.filter(s=>!s.cancelled).reduce((a,s)=>a+parseFloat(s.total||0),0);
+    statsGrid.innerHTML =
+      spstat(n, 'Tickets total') +
+      spstat(nValid, 'Validés') +
+      spstat(nArt, 'Articles') +
+      spstat(fmtCA(totalCA), 'CA total');
+  }
+
+  // ── App status ──
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  const modeEl = document.getElementById('sp-display-mode');
+  const instBadge = document.getElementById('sp-install-badge');
+  if (modeEl) modeEl.textContent = isStandalone ? 'Application installée' : 'Navigateur';
+  if (modeEl) modeEl.style.color = isStandalone ? '#2ecc71' : '#666';
+  if (instBadge) {
+    instBadge.textContent = isStandalone ? 'Installée' : 'Non installée';
+    instBadge.className   = 'sp-section-badge ' + (isStandalone ? 'sp-badge-on' : 'sp-badge-off');
+  }
+  const swEl = document.getElementById('sp-sw-status');
+  if (swEl) {
+    const hasSW = 'serviceWorker' in navigator && navigator.serviceWorker.controller;
+    swEl.textContent = hasSW ? 'Actif' : 'Inactif';
+    swEl.style.color = hasSW ? '#2ecc71' : '#555';
+  }
+}
+
+function spstat(val, label) {
+  return '<div class="sp-stat"><div class="sp-stat-val">' + val + '</div><div class="sp-stat-label">' + label + '</div></div>';
+}
+
+function manualSync() {
+  if (!driveConnected) { toast('Non connecté à Drive', 'err'); return; }
+  _nextCheckIn = 0;
+  autoLoadLatestBackup(false);
+  toast('🔄 Synchronisation lancée…', '');
+}
+
+function toggleAutoSync(enabled) {
+  if (enabled) {
+    startPolling();
+    toast('✓ Sync automatique activée', 'ok');
+  } else {
+    if (_countdownTimer) clearInterval(_countdownTimer);
+    const el = document.getElementById('sync-countdown');
+    if (el) el.textContent = 'Suspendu';
+    toast('Sync automatique désactivée', '');
+  }
+}
+
+function exportData() {
+  const payload = JSON.stringify({ covo_sales_history: sales, exportedAt: new Date().toISOString() }, null, 2);
+  const blob = new Blob([payload], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = 'covo_export_' + new Date().toISOString().split('T')[0] + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('✓ Export téléchargé', 'ok');
+}
+
+function confirmClearData() {
+  if (!confirm('Supprimer le cache local ? Les données Drive ne sont pas affectées.')) return;
+  localStorage.removeItem('covo_sales_history');
+  sales = [];
+  loadCovoData(); updateKPIs(); renderChart(); renderTable();
+  updateSettingsPanel();
+  toast('Cache local vidé', '');
+}
+
+// Sync le panneau live avec le ring
+const _origSetSyncLabel = setSyncLabel;
+function setSyncLabel(main, sub, state) {
+  _origSetSyncLabel(main, sub, state);
+  // Mirror dans le panneau
+  const spLabel = document.getElementById('sp-sync-label');
+  const spFile  = document.getElementById('sp-sync-file');
+  const spRing  = document.getElementById('sync-ring-sp');
+  const spIcon  = document.getElementById('sync-icon-sp');
+  if (spLabel) spLabel.textContent = main;
+  if (spFile  && sub) spFile.textContent = sub;
+  if (spRing) {
+    if (state === 'checking') spRing.style.stroke = '#f39c12';
+    else if (state === 'error') spRing.style.stroke = '#e74c3c';
+    else if (state === 'ok')   spRing.style.stroke = '#2ecc71';
+    else                       spRing.style.stroke = '#8e44ad';
+  }
+  if (spIcon) {
+    if (state === 'checking') spIcon.style.animation = 'ring-spin-cw 1s linear infinite';
+    else { spIcon.style.animation = ''; spIcon.textContent = state==='ok'?'✓':state==='error'?'⚠':'↻'; }
+  }
+}
+
+const _origUpdateRing = updateRing;
+function updateRing(s) {
+  _origUpdateRing(s);
+  const spRing  = document.getElementById('sync-ring-sp');
+  const spTimer = document.getElementById('sp-sync-timer');
+  if (spRing) {
+    const c2 = 2 * Math.PI * 15;
+    spRing.style.strokeDashoffset = c2 * (1 - s / POLL_S);
+  }
+  if (spTimer) spTimer.textContent = s > 0 ? s + 's' : '…';
+}
 
 // ═══════════════════════════════════════════════
 //  MODAL DÉTAIL TICKET
