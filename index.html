@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -6,6 +7,7 @@
 <title>COVO Bénéfices</title>
 
 <!-- PWA META -->
+
 <meta name="theme-color" content="#13131f">
 <meta name="description" content="Tableau de bord des bénéfices COVO Pro">
 <meta name="mobile-web-app-capable" content="yes">
@@ -16,11 +18,37 @@
 <link rel="manifest" id="pwa-manifest">
 
 <!-- PWA install prompt capturé le plus tôt possible -->
+
 <script>
 window._pwaPrompt = null;
+window._pwaInstallable = false;
+
+// Détection immédiate du mode installé (avant le splash)
+function _isAppInstalled() {
+  return window.matchMedia('(display-mode: standalone)').matches ||
+         window.matchMedia('(display-mode: fullscreen)').matches ||
+         window.matchMedia('(display-mode: minimal-ui)').matches ||
+         navigator.standalone === true ||
+         document.referrer.startsWith('android-app://') ||
+         localStorage.getItem('covo_installed') === '1';
+}
+window._isAppInstalled = _isAppInstalled;
+
+// Ajouter la classe body dès le départ si installé
+if (_isAppInstalled()) {
+  document.documentElement.classList.add('pwa-installed');
+  // Sera aussi appliqué au body dès son chargement
+  document.addEventListener('DOMContentLoaded', () => {
+    document.body.classList.add('pwa-installed');
+  });
+}
+
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   window._pwaPrompt = e;
+  window._pwaInstallable = true;
+  // Si déjà installée, ignore
+  if (_isAppInstalled()) return;
   // Activer le bouton natif si le modal est déjà ouvert
   const btn = document.getElementById('im-native-btn');
   if (btn) { btn.disabled = false; btn.textContent = '⬇ Installer automatiquement'; }
@@ -53,6 +81,7 @@ window.addEventListener('appinstalled', () => {
 </script>
 
 <!-- LOGO SVG INLINE (utilisé partout : manifest, splash, favicon) -->
+
 <script>
 (function(){
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -138,11 +167,11 @@ body {
 
 /* ─── HEADER ─── */
 .header {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-  border-bottom: 2px solid #8e44ad;
-  padding: 0 24px;
-  display: flex; align-items: center; justify-content: space-between;
-  height: 62px; gap: 16px; flex-wrap: wrap;
+background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+border-bottom: 2px solid #8e44ad;
+padding: 0 24px;
+display: flex; align-items: center; justify-content: space-between;
+height: 62px; gap: 16px; flex-wrap: wrap;
 }
 .logo { display: flex; align-items: center; gap: 10px; }
 .logo-text { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 0.5px; }
@@ -154,11 +183,11 @@ body {
 .drive-dot.off { background: #e74c3c; }
 .drive-label { font-size: 12px; color: #aaa; }
 .btn-hdr {
-  background: rgba(142,68,173,0.2); color: #c39bd3;
-  border: 1px solid #8e44ad; border-radius: 8px;
-  padding: 6px 14px; font-size: 12px; font-weight: 600;
-  cursor: pointer; font-family: 'Poppins', sans-serif;
-  transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+background: rgba(142,68,173,0.2); color: #c39bd3;
+border: 1px solid #8e44ad; border-radius: 8px;
+padding: 6px 14px; font-size: 12px; font-weight: 600;
+cursor: pointer; font-family: ‘Poppins’, sans-serif;
+transition: all 0.2s; display: flex; align-items: center; gap: 6px;
 }
 .btn-hdr:hover { background: rgba(142,68,173,0.4); color: #fff; }
 .btn-hdr.red { background: rgba(231,76,60,0.15); border-color: #e74c3c; color: #e74c3c; }
@@ -170,15 +199,15 @@ body {
 /* ─── KPI CARDS ─── */
 .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 24px; }
 .kpi-card {
-  background: #1e1e35;
-  border: 1px solid #2e2e50;
-  border-radius: 12px; padding: 18px 20px;
-  position: relative; overflow: hidden;
-  transition: border-color 0.2s;
+background: #1e1e35;
+border: 1px solid #2e2e50;
+border-radius: 12px; padding: 18px 20px;
+position: relative; overflow: hidden;
+transition: border-color 0.2s;
 }
 .kpi-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-  border-radius: 12px 12px 0 0;
+content: ‘’; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+border-radius: 12px 12px 0 0;
 }
 .kpi-card.purple::before { background: #8e44ad; }
 .kpi-card.red::before    { background: #e74c3c; }
@@ -195,43 +224,43 @@ body {
 /* ─── SECTION TITLE ─── */
 .section-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
 .section-title { font-size: 13px; font-weight: 600; color: #c39bd3; text-transform: uppercase; letter-spacing: 0.06em; display: flex; align-items: center; gap: 8px; }
-.section-title::before { content: ''; display: inline-block; width: 3px; height: 14px; background: #8e44ad; border-radius: 2px; }
+.section-title::before { content: ‘’; display: inline-block; width: 3px; height: 14px; background: #8e44ad; border-radius: 2px; }
 
 /* ─── FILTERS ─── */
 .filters-bar { display: flex; gap: 8px; flex-wrap: wrap; }
 .f-btn {
-  background: #1e1e35; border: 1px solid #2e2e50; border-radius: 8px;
-  color: #888; font-size: 12px; padding: 6px 14px; cursor: pointer;
-  font-family: 'Poppins', sans-serif; transition: all 0.2s;
+background: #1e1e35; border: 1px solid #2e2e50; border-radius: 8px;
+color: #888; font-size: 12px; padding: 6px 14px; cursor: pointer;
+font-family: ‘Poppins’, sans-serif; transition: all 0.2s;
 }
 .f-btn:hover { border-color: #8e44ad; color: #c39bd3; }
 .f-btn.active { background: #8e44ad; border-color: #8e44ad; color: #fff; font-weight: 600; }
 .f-select {
-  background: #1e1e35; border: 1px solid #2e2e50; border-radius: 8px;
-  color: #aaa; font-size: 12px; padding: 6px 10px;
-  font-family: 'Poppins', sans-serif; cursor: pointer;
+background: #1e1e35; border: 1px solid #2e2e50; border-radius: 8px;
+color: #aaa; font-size: 12px; padding: 6px 10px;
+font-family: ‘Poppins’, sans-serif; cursor: pointer;
 }
 .f-select:focus { outline: none; border-color: #8e44ad; }
 .search-box {
-  background: #1e1e35; border: 1px solid #2e2e50; border-radius: 8px;
-  color: #ddd; font-size: 12px; padding: 6px 12px;
-  font-family: 'Poppins', sans-serif; width: 180px;
+background: #1e1e35; border: 1px solid #2e2e50; border-radius: 8px;
+color: #ddd; font-size: 12px; padding: 6px 12px;
+font-family: ‘Poppins’, sans-serif; width: 180px;
 }
 .search-box:focus { outline: none; border-color: #8e44ad; }
 .search-box::placeholder { color: #555; }
 
 /* ─── CHART ─── */
 .chart-card {
-  background: #1e1e35; border: 1px solid #2e2e50; border-radius: 12px;
-  padding: 20px; margin-bottom: 24px;
+background: #1e1e35; border: 1px solid #2e2e50; border-radius: 12px;
+padding: 20px; margin-bottom: 24px;
 }
 .chart-wrap { position: relative; height: 200px; }
 
 /* ─── INFO BANNER ─── */
 .info-banner {
-  background: rgba(52,152,219,0.12); border: 1px solid rgba(52,152,219,0.3);
-  border-radius: 10px; padding: 10px 16px; font-size: 12px; color: #7fb3d3;
-  margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+background: rgba(52,152,219,0.12); border: 1px solid rgba(52,152,219,0.3);
+border-radius: 10px; padding: 10px 16px; font-size: 12px; color: #7fb3d3;
+margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
 }
 
 /* ─── TABLE CARD ─── */
@@ -242,10 +271,10 @@ body {
 /* ─── MONTH GROUP ─── */
 .month-group {}
 .month-header {
-  background: #22203a; padding: 12px 20px;
-  display: flex; align-items: center; justify-content: space-between;
-  cursor: pointer; border-bottom: 1px solid #2e2e50;
-  transition: background 0.15s;
+background: #22203a; padding: 12px 20px;
+display: flex; align-items: center; justify-content: space-between;
+cursor: pointer; border-bottom: 1px solid #2e2e50;
+transition: background 0.15s;
 }
 .month-header:hover { background: #28254a; }
 .month-name-wrap { display: flex; align-items: center; gap: 10px; }
@@ -263,10 +292,10 @@ body {
 /* ─── WEEK GROUP ─── */
 .week-group { border-bottom: 1px solid #252540; }
 .week-header {
-  background: #1c1c30; padding: 9px 20px 9px 36px;
-  display: flex; align-items: center; justify-content: space-between;
-  cursor: pointer; border-top: 1px solid #252540;
-  transition: background 0.15s;
+background: #1c1c30; padding: 9px 20px 9px 36px;
+display: flex; align-items: center; justify-content: space-between;
+cursor: pointer; border-top: 1px solid #252540;
+transition: background 0.15s;
 }
 .week-header:hover { background: #232338; }
 .week-name { font-size: 12px; color: #8e44ad; font-weight: 600; }
@@ -274,20 +303,20 @@ body {
 
 /* ─── DAY HEADER ─── */
 .day-header {
-  padding: 7px 20px 7px 52px; background: #19192e;
-  display: flex; align-items: center; justify-content: space-between;
-  border-top: 1px solid #252540;
+padding: 7px 20px 7px 52px; background: #19192e;
+display: flex; align-items: center; justify-content: space-between;
+border-top: 1px solid #252540;
 }
 .day-label { font-size: 11px; color: #7f8c9a; font-weight: 500; }
 .day-total { font-size: 11px; color: #2ecc71; font-weight: 700; }
 
 /* ─── TICKET ROW ─── */
 .ticket-row {
-  padding: 9px 20px 9px 68px; display: grid;
-  grid-template-columns: 42px auto 1fr auto auto 80px;
-  gap: 12px; align-items: center;
-  border-top: 1px solid #1e1e30;
-  transition: background 0.1s;
+padding: 9px 20px 9px 68px; display: grid;
+grid-template-columns: 42px auto 1fr auto auto 80px;
+gap: 12px; align-items: center;
+border-top: 1px solid #1e1e30;
+transition: background 0.1s;
 }
 .ticket-row:hover { background: #1f1f38; }
 .ticket-id { font-size: 10px; color: #555; font-family: monospace; }
@@ -308,25 +337,25 @@ body {
 
 /* ─── MODAL DÉTAIL TICKET ─── */
 #ticket-modal-overlay {
-  display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65);
-  z-index:9800; align-items:center; justify-content:center; padding:16px;
+display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65);
+z-index:9800; align-items:center; justify-content:center; padding:16px;
 }
 #ticket-modal-overlay.open { display:flex; }
 #ticket-modal {
-  background:#1e1e35; border:1px solid #8e44ad; border-radius:16px;
-  width:100%; max-width:480px; max-height:90vh; display:flex; flex-direction:column;
-  box-shadow:0 16px 60px rgba(0,0,0,0.6);
-  animation:modal-pop 0.25s cubic-bezier(.34,1.56,.64,1);
+background:#1e1e35; border:1px solid #8e44ad; border-radius:16px;
+width:100%; max-width:480px; max-height:90vh; display:flex; flex-direction:column;
+box-shadow:0 16px 60px rgba(0,0,0,0.6);
+animation:modal-pop 0.25s cubic-bezier(.34,1.56,.64,1);
 }
 .tm-header {
-  padding:16px 20px; border-bottom:1px solid #2e2e50;
-  display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+padding:16px 20px; border-bottom:1px solid #2e2e50;
+display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
 }
 .tm-title { font-size:15px; font-weight:700; color:#fff; }
 .tm-sub { font-size:11px; color:#666; margin-top:2px; }
 .tm-close {
-  background:none; border:none; color:#555; cursor:pointer;
-  font-size:20px; line-height:1; padding:2px 6px; flex-shrink:0;
+background:none; border:none; color:#555; cursor:pointer;
+font-size:20px; line-height:1; padding:2px 6px; flex-shrink:0;
 }
 .tm-close:hover { color:#ddd; }
 .tm-body { padding:16px 20px; overflow-y:auto; flex:1; }
@@ -339,9 +368,9 @@ body {
 .tm-kpi-val.purple { color:#c39bd3; }
 .tm-items-title { font-size:10px; font-weight:600; color:#666; text-transform:uppercase; letter-spacing:0.07em; margin-bottom:10px; }
 .tm-item {
-  display:grid; grid-template-columns:1fr auto auto auto; gap:10px;
-  align-items:center; padding:9px 12px; border-radius:8px;
-  background:#13131f; margin-bottom:6px; font-size:12px;
+display:grid; grid-template-columns:1fr auto auto auto; gap:10px;
+align-items:center; padding:9px 12px; border-radius:8px;
+background:#13131f; margin-bottom:6px; font-size:12px;
 }
 .tm-item-name { color:#ddd; font-weight:500; }
 .tm-item-qty  { color:#888; font-size:11px; text-align:right; }
@@ -351,8 +380,8 @@ body {
 .tm-item-benef.neg { color:#e74c3c; }
 .tm-item-benef.na  { color:#444; }
 .tm-footer {
-  padding:14px 20px; border-top:1px solid #2e2e50;
-  display:flex; align-items:center; justify-content:space-between;
+padding:14px 20px; border-top:1px solid #2e2e50;
+display:flex; align-items:center; justify-content:space-between;
 }
 .tm-total { font-size:14px; font-weight:700; color:#fff; }
 .tm-benef-total { font-size:14px; font-weight:700; }
@@ -367,9 +396,9 @@ body {
 
 /* ─── TOTAUX FOOTER ─── */
 .totaux-card {
-  background: linear-gradient(135deg, #1e1633 0%, #1a1a2e 100%);
-  border: 1px solid #8e44ad; border-radius: 12px;
-  padding: 20px 24px; margin-bottom: 24px;
+background: linear-gradient(135deg, #1e1633 0%, #1a1a2e 100%);
+border: 1px solid #8e44ad; border-radius: 12px;
+padding: 20px 24px; margin-bottom: 24px;
 }
 .totaux-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; }
 .totaux-item { text-align: center; }
@@ -383,12 +412,12 @@ body {
 
 /* ─── TOAST ─── */
 .toast {
-  position: fixed; bottom: 24px; right: 24px;
-  background: #1e1e35; border: 1px solid #8e44ad;
-  color: #ddd; padding: 12px 20px; border-radius: 10px;
-  font-size: 13px; z-index: 9999; font-family: 'Poppins', sans-serif;
-  transform: translateY(80px); opacity: 0; transition: all 0.3s;
-  border-left: 4px solid #8e44ad;
+position: fixed; bottom: 24px; right: 24px;
+background: #1e1e35; border: 1px solid #8e44ad;
+color: #ddd; padding: 12px 20px; border-radius: 10px;
+font-size: 13px; z-index: 9999; font-family: ‘Poppins’, sans-serif;
+transform: translateY(80px); opacity: 0; transition: all 0.3s;
+border-left: 4px solid #8e44ad;
 }
 .toast.show { transform: translateY(0); opacity: 1; }
 .toast.ok { border-left-color: #27ae60; border-color: #27ae60; }
@@ -396,32 +425,32 @@ body {
 
 /* ─── CLIENT ID MODAL ─── */
 .modal-overlay {
-  display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,0.7); z-index: 8000;
-  align-items: center; justify-content: center; padding: 16px;
+display: none; position: fixed; inset: 0;
+background: rgba(0,0,0,0.7); z-index: 8000;
+align-items: center; justify-content: center; padding: 16px;
 }
 .modal-overlay.open { display: flex; }
 .modal-box {
-  background: #1e1e35; border: 1px solid #8e44ad;
-  border-radius: 16px; padding: 28px; max-width: 500px; width: 100%;
+background: #1e1e35; border: 1px solid #8e44ad;
+border-radius: 16px; padding: 28px; max-width: 500px; width: 100%;
 }
 .modal-title { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 6px; }
 .modal-sub { font-size: 11px; color: #777; margin-bottom: 20px; line-height: 1.6; }
 .modal-label { font-size: 11px; color: #888; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; display: block; }
 .modal-input {
-  width: 100%; background: #13131f; border: 1px solid #3a3a5c;
-  border-radius: 8px; color: #ddd; font-size: 12px;
-  padding: 10px 14px; font-family: 'Poppins', sans-serif;
-  margin-bottom: 16px; transition: border-color 0.2s;
+width: 100%; background: #13131f; border: 1px solid #3a3a5c;
+border-radius: 8px; color: #ddd; font-size: 12px;
+padding: 10px 14px; font-family: ‘Poppins’, sans-serif;
+margin-bottom: 16px; transition: border-color 0.2s;
 }
 .modal-input:focus { outline: none; border-color: #8e44ad; }
 .modal-input.saved { border-color: #27ae60; }
 .modal-saved-tag { font-size: 10px; color: #27ae60; margin-top: -12px; margin-bottom: 14px; display: block; }
 .modal-btns { display: flex; gap: 10px; }
 .modal-btn {
-  flex: 1; padding: 10px; border-radius: 8px; font-size: 13px;
-  font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif;
-  transition: all 0.2s;
+flex: 1; padding: 10px; border-radius: 8px; font-size: 13px;
+font-weight: 600; cursor: pointer; font-family: ‘Poppins’, sans-serif;
+transition: all 0.2s;
 }
 .modal-btn.primary { background: #8e44ad; color: #fff; border: none; }
 .modal-btn.primary:hover { background: #7d3c98; }
@@ -433,9 +462,9 @@ body {
 /* ─── BACKUP PICKER ─── */
 .backup-list { display: flex; flex-direction: column; gap: 8px; max-height: 260px; overflow-y: auto; margin-bottom: 16px; }
 .backup-item {
-  background: #13131f; border: 1px solid #2e2e50; border-radius: 8px;
-  padding: 10px 14px; cursor: pointer; transition: all 0.15s;
-  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+background: #13131f; border: 1px solid #2e2e50; border-radius: 8px;
+padding: 10px 14px; cursor: pointer; transition: all 0.15s;
+display: flex; align-items: center; justify-content: space-between; gap: 10px;
 }
 .backup-item:hover { border-color: #8e44ad; }
 .backup-item.selected { border-color: #8e44ad; background: rgba(142,68,173,0.1); }
@@ -446,129 +475,143 @@ body {
 @keyframes spin { to { transform: rotate(360deg); } }
 
 @media (max-width: 640px) {
-  .page { padding: 12px; }
-  .ticket-row { grid-template-columns: 1fr auto; }
-  .ticket-id, .ticket-items, .ticket-actions { display: none; }
-  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+.page { padding: 12px; }
+.ticket-row { grid-template-columns: 1fr auto; }
+.ticket-id, .ticket-items, .ticket-actions { display: none; }
+.kpi-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 /* ─── PWA SPLASH SCREEN ─── */
 #pwa-splash {
-  position: fixed; inset: 0; z-index: 99999;
-  background: #0e0e1a;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 0;
-  transition: opacity 0.5s ease;
+position: fixed; inset: 0; z-index: 99999;
+background: #0e0e1a;
+display: flex; flex-direction: column;
+align-items: center; justify-content: center; gap: 0;
+transition: opacity 0.5s ease;
 }
 #pwa-splash.fade-out { opacity: 0; pointer-events: none; }
 
 .splash-logo-wrap {
-  position: relative; width: 110px; height: 110px; margin-bottom: 28px;
+position: relative; width: 110px; height: 110px; margin-bottom: 28px;
 }
 .splash-ring {
-  position: absolute; inset: 0;
-  border-radius: 50%;
-  border: 3px solid transparent;
-  animation: ring-spin 1.4s linear infinite;
+position: absolute; inset: 0;
+border-radius: 50%;
+border: 3px solid transparent;
+animation: ring-spin 1.4s linear infinite;
 }
 .splash-ring.r1 {
-  border-top-color: #8e44ad;
-  border-right-color: rgba(142,68,173,0.3);
+border-top-color: #8e44ad;
+border-right-color: rgba(142,68,173,0.3);
 }
 .splash-ring.r2 {
-  inset: 12px;
-  border-bottom-color: #e74c3c;
-  border-left-color: rgba(231,76,60,0.2);
-  animation-duration: 1.9s;
-  animation-direction: reverse;
+inset: 12px;
+border-bottom-color: #e74c3c;
+border-left-color: rgba(231,76,60,0.2);
+animation-duration: 1.9s;
+animation-direction: reverse;
 }
 .splash-ring.r3 {
-  inset: 24px;
-  border-top-color: #2ecc71;
-  border-right-color: rgba(46,204,113,0.2);
-  animation-duration: 2.5s;
+inset: 24px;
+border-top-color: #2ecc71;
+border-right-color: rgba(46,204,113,0.2);
+animation-duration: 2.5s;
 }
 @keyframes ring-spin { to { transform: rotate(360deg); } }
 
 .splash-logo-img {
-  position: absolute; inset: 18px;
-  border-radius: 20px;
-  background: #1a1a2e;
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
+position: absolute; inset: 18px;
+border-radius: 20px;
+background: #1a1a2e;
+display: flex; align-items: center; justify-content: center;
+overflow: hidden;
 }
 .splash-logo-img img { width: 100%; height: 100%; object-fit: contain; border-radius: 16px; }
 
 .splash-app-name {
-  font-size: 22px; font-weight: 700; color: #fff; letter-spacing: 0.5px;
-  margin-bottom: 4px;
+font-size: 22px; font-weight: 700; color: #fff; letter-spacing: 0.5px;
+margin-bottom: 4px;
 }
 .splash-app-name span { color: #8e44ad; }
 
 .splash-tagline {
-  font-size: 12px; color: #555; margin-bottom: 32px; letter-spacing: 0.04em;
+font-size: 12px; color: #555; margin-bottom: 32px; letter-spacing: 0.04em;
 }
 
 .splash-steps {
-  display: flex; flex-direction: column; gap: 10px;
-  min-width: 240px; margin-bottom: 20px;
+display: flex; flex-direction: column; gap: 10px;
+min-width: 240px; margin-bottom: 20px;
 }
 .splash-step {
-  display: flex; align-items: center; gap: 10px;
-  font-size: 12px; color: #666; transition: color 0.3s;
+display: flex; align-items: center; gap: 10px;
+font-size: 12px; color: #666; transition: color 0.3s;
 }
 .splash-step.done { color: #2ecc71; }
 .splash-step.active { color: #c39bd3; }
 .splash-step-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: #333; flex-shrink: 0; transition: background 0.3s;
+width: 8px; height: 8px; border-radius: 50%;
+background: #333; flex-shrink: 0; transition: background 0.3s;
 }
 .splash-step.done .splash-step-dot { background: #2ecc71; }
 .splash-step.active .splash-step-dot { background: #8e44ad; animation: dot-pulse 0.8s ease infinite; }
 @keyframes dot-pulse { 0%,100%{transform:scale(1)}50%{transform:scale(1.5)} }
 
 .splash-progress-bar {
-  width: 240px; height: 3px; background: #1e1e35; border-radius: 2px; overflow: hidden;
+width: 240px; height: 3px; background: #1e1e35; border-radius: 2px; overflow: hidden;
 }
 .splash-progress-fill {
-  height: 100%; background: linear-gradient(90deg, #8e44ad, #e74c3c);
-  border-radius: 2px; width: 0%; transition: width 0.4s ease;
+height: 100%; background: linear-gradient(90deg, #8e44ad, #e74c3c);
+border-radius: 2px; width: 0%; transition: width 0.4s ease;
 }
 
 .splash-version {
-  position: absolute; bottom: 24px;
-  font-size: 10px; color: #333; letter-spacing: 0.06em;
+position: absolute; bottom: 24px;
+font-size: 10px; color: #333; letter-spacing: 0.06em;
 }
 
 /* ─── INSTALL BANNER ─── */
+/* FAB — caché dans modes installé */
+#fab-install.hidden { display: none !important; }
+body.pwa-installed #fab-install { display: none !important; }
+/* Indicateur PWA (petite pastille en haut à droite quand installé) */
+.pwa-status-pill {
+display: inline-flex; align-items: center; gap: 5px;
+font-size: 10px; padding: 3px 9px; border-radius: 20px;
+background: rgba(39,174,96,0.15); color: #2ecc71;
+border: 1px solid rgba(39,174,96,0.3); font-weight: 600;
+margin-left: 8px;
+}
+.pwa-status-pill.na { background: rgba(243,156,18,0.12); color: #f39c12; border-color: rgba(243,156,18,0.3); }
+.pwa-status-pill.offline-ready { background: rgba(142,68,173,0.15); color: #c39bd3; border-color: rgba(142,68,173,0.3); }
+
 /* ─── FAB INSTALL ─── */
 #fab-install {
-  position: fixed; bottom: 28px; right: 28px; z-index: 9500;
-  width: 58px; height: 58px; border-radius: 50%;
-  background: linear-gradient(135deg, #8e44ad, #6c3483);
-  border: 3px solid rgba(255,255,255,0.15);
-  box-shadow: 0 4px 20px rgba(142,68,173,0.55);
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  flex-direction: column; gap: 2px;
-  transition: transform 0.2s, box-shadow 0.2s;
-  animation: fab-pulse 2.5s ease-in-out infinite;
+position: fixed; bottom: 28px; right: 28px; z-index: 9500;
+width: 58px; height: 58px; border-radius: 50%;
+background: linear-gradient(135deg, #8e44ad, #6c3483);
+border: 3px solid rgba(255,255,255,0.15);
+box-shadow: 0 4px 20px rgba(142,68,173,0.55);
+cursor: pointer; display: flex; align-items: center; justify-content: center;
+flex-direction: column; gap: 2px;
+transition: transform 0.2s, box-shadow 0.2s;
+animation: fab-pulse 2.5s ease-in-out infinite;
 }
 #fab-install:hover { transform: scale(1.12); box-shadow: 0 6px 28px rgba(142,68,173,0.75); }
 #fab-install.installed { background: linear-gradient(135deg,#27ae60,#1e8449); animation: none; box-shadow: 0 4px 16px rgba(39,174,96,0.4); }
 @keyframes fab-pulse {
-  0%,100% { box-shadow: 0 4px 20px rgba(142,68,173,0.55); }
-  50%      { box-shadow: 0 4px 30px rgba(142,68,173,0.9), 0 0 0 8px rgba(142,68,173,0.12); }
+0%,100% { box-shadow: 0 4px 20px rgba(142,68,173,0.55); }
+50%      { box-shadow: 0 4px 30px rgba(142,68,173,0.9), 0 0 0 8px rgba(142,68,173,0.12); }
 }
 .fab-icon { font-size: 22px; line-height: 1; }
 .fab-label { font-size: 7px; font-weight: 700; color: rgba(255,255,255,0.85); letter-spacing: 0.04em; text-transform: uppercase; }
 
 /* ─── INSTALL MODAL (flottant, bas de page) ─── */
 #install-modal {
-  display: none; position: fixed; bottom: 100px; right: 20px; z-index: 9400;
-  background: #1e1e35; border: 1px solid #8e44ad; border-radius: 16px;
-  padding: 20px; width: 310px;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(142,68,173,0.2);
-  animation: modal-pop 0.25s cubic-bezier(.34,1.56,.64,1);
+display: none; position: fixed; bottom: 100px; right: 20px; z-index: 9400;
+background: #1e1e35; border: 1px solid #8e44ad; border-radius: 16px;
+padding: 20px; width: 310px;
+box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(142,68,173,0.2);
+animation: modal-pop 0.25s cubic-bezier(.34,1.56,.64,1);
 }
 #install-modal.open { display: block; }
 @keyframes modal-pop { from{transform:scale(0.85) translateY(20px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
@@ -576,29 +619,29 @@ body {
 
 /* ─── FAB READY STATE ─── */
 #fab-install.pwa-ready {
-  background: linear-gradient(135deg,#27ae60,#1e8449);
-  box-shadow: 0 4px 24px rgba(39,174,96,0.6);
-  animation: fab-ready-pulse 1.5s ease-in-out infinite;
+background: linear-gradient(135deg,#27ae60,#1e8449);
+box-shadow: 0 4px 24px rgba(39,174,96,0.6);
+animation: fab-ready-pulse 1.5s ease-in-out infinite;
 }
 @keyframes fab-ready-pulse {
-  0%,100%{box-shadow:0 4px 24px rgba(39,174,96,0.6);}
-  50%{box-shadow:0 4px 36px rgba(39,174,96,0.9),0 0 0 10px rgba(39,174,96,0.12);}
+0%,100%{box-shadow:0 4px 24px rgba(39,174,96,0.6);}
+50%{box-shadow:0 4px 36px rgba(39,174,96,0.9),0 0 0 10px rgba(39,174,96,0.12);}
 }
 
 /* ─── INSTALL TOAST ─── */
 #install-toast {
-  position:fixed; bottom:100px; right:20px; z-index:9300;
-  background:#1e1e35; border:1px solid #27ae60; border-radius:14px;
-  padding:14px 16px; width:290px; display:flex; align-items:center; gap:12px;
-  box-shadow:0 8px 32px rgba(0,0,0,0.4);
-  animation:modal-pop 0.3s cubic-bezier(.34,1.56,.64,1);
+position:fixed; bottom:100px; right:20px; z-index:9300;
+background:#1e1e35; border:1px solid #27ae60; border-radius:14px;
+padding:14px 16px; width:290px; display:flex; align-items:center; gap:12px;
+box-shadow:0 8px 32px rgba(0,0,0,0.4);
+animation:modal-pop 0.3s cubic-bezier(.34,1.56,.64,1);
 }
 .it-logo { width:40px;height:40px;border-radius:10px;flex-shrink:0;overflow:hidden;background:#13131f; }
 .it-logo img { width:100%;height:100%;object-fit:contain; }
 .it-text { flex:1;min-width:0; }
 .it-title { font-size:13px;font-weight:700;color:#fff; }
 .it-sub { font-size:10px;color:#555;margin-top:2px; }
-.it-install { background:#27ae60;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;white-space:nowrap;flex-shrink:0; }
+.it-install { background:#27ae60;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:‘Poppins’,sans-serif;white-space:nowrap;flex-shrink:0; }
 .it-close { background:none;border:none;color:#555;cursor:pointer;font-size:14px;padding:2px 5px;flex-shrink:0; }
 .im-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
 .im-logo { width: 42px; height: 42px; border-radius: 10px; background: #13131f; flex-shrink: 0; overflow: hidden; }
@@ -608,35 +651,35 @@ body {
 .im-close { margin-left: auto; background: none; border: none; color: #555; cursor: pointer; font-size: 16px; padding: 2px 6px; }
 .im-close:hover { color: #aaa; }
 .im-native-btn {
-  width: 100%; padding: 11px; border-radius: 10px; border: none;
-  background: linear-gradient(135deg,#8e44ad,#6c3483); color: #fff;
-  font-size: 13px; font-weight: 700; cursor: pointer; margin-bottom: 14px;
-  font-family: 'Poppins',sans-serif; transition: opacity 0.2s;
+width: 100%; padding: 11px; border-radius: 10px; border: none;
+background: linear-gradient(135deg,#8e44ad,#6c3483); color: #fff;
+font-size: 13px; font-weight: 700; cursor: pointer; margin-bottom: 14px;
+font-family: ‘Poppins’,sans-serif; transition: opacity 0.2s;
 }
 .im-native-btn:hover { opacity: 0.88; }
 .im-native-btn:disabled { opacity: 0.4; cursor: default; }
 .im-divider { text-align: center; font-size: 11px; color: #444; margin-bottom: 12px; position: relative; }
-.im-divider::before,.im-divider::after { content:''; position:absolute; top:50%; width:38%; height:1px; background:#2e2e50; }
+.im-divider::before,.im-divider::after { content:’’; position:absolute; top:50%; width:38%; height:1px; background:#2e2e50; }
 .im-divider::before { left:0; } .im-divider::after { right:0; }
 .im-steps { display: flex; flex-direction: column; gap: 8px; }
 .im-step { display: flex; align-items: flex-start; gap: 10px; font-size: 11px; color: #999; }
 .im-step-num { width: 20px; height: 20px; border-radius: 50%; background: #2e2e50; color: #8e44ad; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
 .im-tabs { display: flex; gap: 6px; margin-bottom: 12px; }
-.im-tab { flex: 1; padding: 6px; border-radius: 7px; border: 1px solid #2e2e50; background: none; color: #666; font-size: 11px; cursor: pointer; font-family: 'Poppins',sans-serif; transition: all 0.15s; }
+.im-tab { flex: 1; padding: 6px; border-radius: 7px; border: 1px solid #2e2e50; background: none; color: #666; font-size: 11px; cursor: pointer; font-family: ‘Poppins’,sans-serif; transition: all 0.15s; }
 .im-tab.active { background: #2e2e50; color: #c39bd3; border-color: #8e44ad; font-weight: 600; }
 
 /* ─── PWA STATUS BAR ─── */
 .pwa-bar {
-  background: rgba(39,174,96,0.1); border-bottom: 1px solid rgba(39,174,96,0.25);
-  padding: 5px 24px; font-size: 11px; color: #2ecc71; display: none;
-  align-items: center; gap: 8px;
+background: rgba(39,174,96,0.1); border-bottom: 1px solid rgba(39,174,96,0.25);
+padding: 5px 24px; font-size: 11px; color: #2ecc71; display: none;
+align-items: center; gap: 8px;
 }
 .pwa-bar.visible { display: flex; }
 .pwa-bar-dot { width: 6px; height: 6px; border-radius: 50%; background: #2ecc71; }
 
 /* ─── ONGLETS PRINCIPAUX ─── */
 .main-tabs { display:flex; gap:4px; padding:12px 24px 0; background:#1a1a2e; border-bottom:2px solid #2e2e50; overflow-x:auto; }
-.main-tab { background:none; border:none; color:#666; font-size:13px; font-weight:600; padding:10px 20px; cursor:pointer; font-family:'Poppins',sans-serif; border-radius:8px 8px 0 0; transition:all 0.2s; white-space:nowrap; border-bottom:3px solid transparent; }
+.main-tab { background:none; border:none; color:#666; font-size:13px; font-weight:600; padding:10px 20px; cursor:pointer; font-family:‘Poppins’,sans-serif; border-radius:8px 8px 0 0; transition:all 0.2s; white-space:nowrap; border-bottom:3px solid transparent; }
 .main-tab:hover { color:#c39bd3; background:rgba(142,68,173,0.1); }
 .main-tab.active { color:#c39bd3; border-bottom-color:#8e44ad; background:rgba(142,68,173,0.15); }
 .tab-content { display:none; }
@@ -692,23 +735,23 @@ body {
 
 /* Responsive : sur petit écran on cache les colonnes CA/Bénéf/Panier/Tendance et on rééquilibre la grille à 6 colonnes */
 @media (max-width: 900px) {
-  .wh-ca-col, .wh-benef-col, .wh-panier-col, .wh-trend-col { display:none !important; }
-  .wh-table-cols, .wh-header-row, .wh-footer-row { grid-template-columns: 22px minmax(90px,1fr) 62px 62px 70px 52px !important; gap: 6px !important; }
-  .wh-header-row > span:nth-child(n+7) { display:none; }
-  .wh-footer-row > span:nth-child(n+7) { display:none; }
+.wh-ca-col, .wh-benef-col, .wh-panier-col, .wh-trend-col { display:none !important; }
+.wh-table-cols, .wh-header-row, .wh-footer-row { grid-template-columns: 22px minmax(90px,1fr) 62px 62px 70px 52px !important; gap: 6px !important; }
+.wh-header-row > span:nth-child(n+7) { display:none; }
+.wh-footer-row > span:nth-child(n+7) { display:none; }
 }
 @media (max-width: 560px) {
-  .wh-header-row > span:nth-child(3), .wh-header-row > span:nth-child(4) { display:none; }
-  .wh-footer-row > span:nth-child(3), .wh-footer-row > span:nth-child(4) { display:none; }
-  .wh-time { display:none; }
-  .wh-table-cols, .wh-header-row, .wh-footer-row { grid-template-columns: 20px minmax(70px,1fr) 60px 48px 48px !important; gap: 4px !important; }
+.wh-header-row > span:nth-child(3), .wh-header-row > span:nth-child(4) { display:none; }
+.wh-footer-row > span:nth-child(3), .wh-footer-row > span:nth-child(4) { display:none; }
+.wh-time { display:none; }
+.wh-table-cols, .wh-header-row, .wh-footer-row { grid-template-columns: 20px minmax(70px,1fr) 60px 48px 48px !important; gap: 4px !important; }
 }
 .wh-bar-wrap { background:#13131f; border-radius:4px; height:4px; overflow:hidden; }
 .wh-bar-fill { height:100%; border-radius:4px; background:linear-gradient(90deg,#8e44ad,#2ecc71); transition:width 0.4s; }
 
 /* ─── CATALOGUE ─── */
 .cat-controls { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:16px; }
-.cat-search { background:#1e1e35; border:1px solid #2e2e50; border-radius:8px; color:#ddd; font-size:12px; padding:7px 12px; font-family:'Poppins',sans-serif; flex:1; min-width:160px; }
+.cat-search { background:#1e1e35; border:1px solid #2e2e50; border-radius:8px; color:#ddd; font-size:12px; padding:7px 12px; font-family:‘Poppins’,sans-serif; flex:1; min-width:160px; }
 .cat-search:focus { outline:none; border-color:#8e44ad; }
 .cat-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; }
 .cat-card { background:#1e1e35; border:1px solid #2e2e50; border-radius:12px; overflow:hidden; transition:border-color 0.2s,transform 0.15s; }
@@ -723,47 +766,68 @@ body {
 .cat-benef.pos { background:rgba(39,174,96,0.15); color:#2ecc71; }
 .cat-benef.neg { background:rgba(231,76,60,0.15); color:#e74c3c; }
 .cat-stock { font-size:10px; color:#555; margin-top:4px; }
-.cat-filter-btn { background:#1e1e35; border:1px solid #2e2e50; border-radius:8px; color:#666; font-size:12px; padding:7px 14px; cursor:pointer; font-family:'Poppins',sans-serif; transition:all 0.2s; }
+.cat-filter-btn { background:#1e1e35; border:1px solid #2e2e50; border-radius:8px; color:#666; font-size:12px; padding:7px 14px; cursor:pointer; font-family:‘Poppins’,sans-serif; transition:all 0.2s; }
 .cat-filter-btn.active { background:#8e44ad; border-color:#8e44ad; color:#fff; font-weight:600; }
 
 /* ─── BOUTON RÉGLAGES ─── */
 .btn-settings {
-  width: 38px; height: 38px; border-radius: 50%;
-  background: rgba(142,68,173,0.15); border: 1px solid #8e44ad;
-  color: #c39bd3; cursor: pointer; display: flex; align-items: center;
-  justify-content: center; font-size: 17px; transition: all 0.2s;
-  flex-shrink: 0; position: relative;
+width: 38px; height: 38px; border-radius: 50%;
+background: rgba(142,68,173,0.15); border: 1px solid #8e44ad;
+color: #c39bd3; cursor: pointer; display: flex; align-items: center;
+justify-content: center; font-size: 17px; transition: all 0.2s;
+flex-shrink: 0; position: relative;
 }
 .btn-settings:hover { background: rgba(142,68,173,0.35); color: #fff; transform: rotate(45deg); }
 .btn-settings-badge {
-  position: absolute; top: -3px; right: -3px;
-  width: 10px; height: 10px; border-radius: 50%;
-  background: #27ae60; border: 2px solid #13131f;
-  display: none;
+position: absolute; top: -3px; right: -3px;
+width: 10px; height: 10px; border-radius: 50%;
+background: #27ae60; border: 2px solid #13131f;
+display: none;
 }
 .btn-settings-badge.on { display: block; }
 
-/* ─── PANNEAU RÉGLAGES ─── */
-#settings-panel {
-  position: fixed; top: 0; right: -400px; width: 360px; height: 100vh;
-  background: #1a1a2e; border-left: 1px solid #2e2e50;
-  z-index: 9700; display: flex; flex-direction: column;
-  transition: right 0.3s cubic-bezier(.4,0,.2,1);
-  box-shadow: -8px 0 40px rgba(0,0,0,0.5);
-}
-#settings-panel.open { right: 0; }
+/* ─── MODAL RÉGLAGES CENTRÉ ─── */
 #settings-overlay {
-  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45);
-  z-index: 9699; backdrop-filter: blur(2px);
+display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65);
+z-index: 9699; backdrop-filter: blur(4px);
+align-items: center; justify-content: center;
+padding: 24px; opacity: 0; transition: opacity 0.25s;
 }
-#settings-overlay.open { display: block; }
+#settings-overlay.open { display: flex; opacity: 1; }
+#settings-panel {
+position: relative; width: 100%; max-width: 520px; max-height: 90vh;
+background: #1a1a2e; border: 1px solid #2e2e50; border-radius: 18px;
+z-index: 9700; display: flex; flex-direction: column;
+box-shadow: 0 24px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(142,68,173,0.2);
+transform: scale(0.92); opacity: 0;
+transition: transform 0.3s cubic-bezier(.34,1.56,.64,1), opacity 0.25s;
+overflow: hidden;
+}
+#settings-overlay.open #settings-panel { transform: scale(1); opacity: 1; }
+
+/* Onglets horizontaux rapides */
+.sp-tabs {
+display: flex; gap: 4px; padding: 0 16px;
+background: #13131f; border-bottom: 1px solid #2e2e50;
+overflow-x: auto; flex-shrink: 0;
+}
+.sp-tab {
+background: none; border: none; color: #666; font-size: 11px; font-weight: 600;
+padding: 10px 14px; cursor: pointer; font-family: ‘Poppins’,sans-serif;
+border-bottom: 2px solid transparent; transition: all 0.15s;
+white-space: nowrap; display: flex; align-items: center; gap: 5px;
+}
+.sp-tab:hover { color: #c39bd3; }
+.sp-tab.active { color: #c39bd3; border-bottom-color: #8e44ad; }
+.sp-tab-content { display: none; }
+.sp-tab-content.active { display: flex; flex-direction: column; gap: 12px; }
 
 .sp-header {
-  padding: 20px 20px 16px;
-  border-bottom: 1px solid #2e2e50;
-  display: flex; align-items: center; justify-content: space-between;
-  background: linear-gradient(135deg,#1e1e35,#16213e);
-  flex-shrink: 0;
+padding: 20px 20px 16px;
+border-bottom: 1px solid #2e2e50;
+display: flex; align-items: center; justify-content: space-between;
+background: linear-gradient(135deg,#1e1e35,#16213e);
+flex-shrink: 0;
 }
 .sp-logo { display: flex; align-items: center; gap: 10px; }
 .sp-logo-icon { width: 34px; height: 34px; border-radius: 8px; background: #8e44ad; display: flex; align-items: center; justify-content: center; font-size: 16px; }
@@ -772,13 +836,13 @@ body {
 .sp-close { background: none; border: none; color: #555; cursor: pointer; font-size: 20px; padding: 4px 8px; border-radius: 6px; transition: all 0.15s; }
 .sp-close:hover { background: #2e2e50; color: #ddd; }
 
-.sp-body { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.sp-body { flex: 1; overflow-y: auto; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; }
 
 /* Sections */
 .sp-section { background: #1e1e35; border: 1px solid #2e2e50; border-radius: 12px; overflow: hidden; }
 .sp-section-header {
-  padding: 12px 16px; display: flex; align-items: center; gap: 10px;
-  border-bottom: 1px solid #2e2e50; cursor: pointer; transition: background 0.15s;
+padding: 12px 16px; display: flex; align-items: center; gap: 10px;
+border-bottom: 1px solid #2e2e50; cursor: pointer; transition: background 0.15s;
 }
 .sp-section-header:hover { background: #252550; }
 .sp-section-icon { font-size: 16px; }
@@ -799,10 +863,10 @@ body {
 
 /* Boutons action */
 .sp-action {
-  width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid #2e2e50;
-  background: #13131f; color: #aaa; font-size: 12px; font-weight: 600;
-  cursor: pointer; font-family: 'Poppins',sans-serif; text-align: left;
-  display: flex; align-items: center; gap: 10px; transition: all 0.2s;
+width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid #2e2e50;
+background: #13131f; color: #aaa; font-size: 12px; font-weight: 600;
+cursor: pointer; font-family: ‘Poppins’,sans-serif; text-align: left;
+display: flex; align-items: center; gap: 10px; transition: all 0.2s;
 }
 .sp-action:hover { background: #252540; border-color: #8e44ad; color: #c39bd3; }
 .sp-action.danger:hover { border-color: #e74c3c; color: #e74c3c; background: rgba(231,76,60,0.08); }
@@ -836,24 +900,36 @@ body {
 .sp-toggle { display: flex; align-items: center; gap: 8px; cursor: pointer; }
 .sp-toggle input { display: none; }
 .sp-toggle-track {
-  width: 36px; height: 20px; border-radius: 20px; background: #2e2e50;
-  position: relative; transition: background 0.2s; flex-shrink: 0;
+width: 36px; height: 20px; border-radius: 20px; background: #2e2e50;
+position: relative; transition: background 0.2s; flex-shrink: 0;
 }
 .sp-toggle input:checked + .sp-toggle-track { background: #8e44ad; }
 .sp-toggle-thumb {
-  position: absolute; top: 2px; left: 2px; width: 16px; height: 16px;
-  border-radius: 50%; background: white; transition: left 0.2s;
+position: absolute; top: 2px; left: 2px; width: 16px; height: 16px;
+border-radius: 50%; background: white; transition: left 0.2s;
 }
 .sp-toggle input:checked ~ .sp-toggle-track .sp-toggle-thumb { left: 18px; }
 
-@media (max-width: 480px) {
-  #settings-panel { width: 100%; }
+@media (max-width: 600px) {
+#settings-overlay { padding: 0; }
+#settings-panel { max-width: 100%; max-height: 100vh; border-radius: 0; border: none; }
+.sp-tab { padding: 10px 12px; font-size: 10px; }
+}
+
+/* Classe pour désactiver les animations */
+body.no-animations *,
+body.no-animations *::before,
+body.no-animations *::after {
+animation-duration: 0.001s !important;
+transition-duration: 0.001s !important;
 }
 </style>
+
 </head>
 <body>
 
 <!-- PWA SPLASH SCREEN -->
+
 <div id="pwa-splash">
   <div class="splash-logo-wrap">
     <div class="splash-ring r1"></div>
@@ -877,15 +953,18 @@ body {
 </div>
 
 <!-- PWA STATUS BAR -->
+
 <!-- pwa-bar masquée --><div id="pwa-bar" style="display:none"></div>
 
 <!-- FAB INSTALLATION -->
+
 <div id="fab-install" onclick="toggleInstallModal()" title="Installer l'application">
   <span class="fab-icon">⬇</span>
   <span class="fab-label">Installer</span>
 </div>
 
 <!-- MODAL D'INSTALLATION FLOTTANTE -->
+
 <div id="install-modal">
   <div class="im-header">
     <div class="im-logo"><img id="im-logo-img" src="" alt="COVO"></div>
@@ -897,6 +976,7 @@ body {
   </div>
 
   <!-- Bouton natif si disponible -->
+
   <button class="im-native-btn" id="im-native-btn" onclick="installPWA()" disabled>
     ⬇ Installer automatiquement
   </button>
@@ -904,6 +984,7 @@ body {
   <div class="im-divider">ou suivez ces étapes</div>
 
   <!-- Sélecteur de plateforme -->
+
   <div class="im-tabs">
     <button class="im-tab active" onclick="showPlatform('chrome',this)">🖥 Chrome</button>
     <button class="im-tab" onclick="showPlatform('android',this)">🤖 Android</button>
@@ -911,6 +992,7 @@ body {
   </div>
 
   <!-- Instructions Chrome -->
+
   <div class="im-steps" id="steps-chrome">
     <div class="im-step"><div class="im-step-num">1</div><span>Ouvrez le fichier dans <strong>Chrome</strong> ou <strong>Edge</strong></span></div>
     <div class="im-step"><div class="im-step-num">2</div><span>Cliquez sur <strong>⋮</strong> (menu en haut à droite)</span></div>
@@ -919,6 +1001,7 @@ body {
   </div>
 
   <!-- Instructions Android -->
+
   <div class="im-steps" id="steps-android" style="display:none">
     <div class="im-step"><div class="im-step-num">1</div><span>Ouvrez dans <strong>Chrome Android</strong></span></div>
     <div class="im-step"><div class="im-step-num">2</div><span>Appuyez sur <strong>⋮</strong> → <strong>"Ajouter à l'écran d'accueil"</strong></span></div>
@@ -927,6 +1010,7 @@ body {
   </div>
 
   <!-- Instructions iOS -->
+
   <div class="im-steps" id="steps-ios" style="display:none">
     <div class="im-step"><div class="im-step-num">1</div><span>Ouvrez dans <strong>Safari</strong> sur iPhone/iPad</span></div>
     <div class="im-step"><div class="im-step-num">2</div><span>Appuyez sur <strong>□↑</strong> (Partager) en bas</span></div>
@@ -936,6 +1020,7 @@ body {
 </div>
 
 <!-- HEADER -->
+
 <div class="header">
   <div class="logo">
     <div class="logo-text">COVO <span>Pro</span></div>
@@ -974,11 +1059,10 @@ body {
   </div>
 </div>
 
-<!-- OVERLAY RÉGLAGES -->
-<div id="settings-overlay" onclick="closeSettings()"></div>
+<!-- MODAL RÉGLAGES (overlay + panneau centré) -->
 
-<!-- PANNEAU RÉGLAGES -->
-<div id="settings-panel">
+<div id="settings-overlay" onclick="closeSettings(event)">
+<div id="settings-panel" onclick="event.stopPropagation()">
   <!-- En-tête -->
   <div class="sp-header">
     <div class="sp-logo">
@@ -991,174 +1075,360 @@ body {
     <button class="sp-close" onclick="closeSettings()">✕</button>
   </div>
 
+  <!-- Onglets rapides -->
+
+  <div class="sp-tabs">
+    <button class="sp-tab active" onclick="switchSpTab('drive',this)">☁ Drive</button>
+    <button class="sp-tab" onclick="switchSpTab('sync',this)">↻ Sync</button>
+    <button class="sp-tab" onclick="switchSpTab('data',this)">📊 Données</button>
+    <button class="sp-tab" onclick="switchSpTab('app',this)">📱 App</button>
+    <button class="sp-tab" onclick="switchSpTab('pref',this)">⚙ Préférences</button>
+  </div>
+
   <div class="sp-body">
+    <!-- Onglet Drive -->
+    <div class="sp-tab-content active" id="sp-tab-drive">
 
-    <!-- ── SECTION GOOGLE DRIVE ── -->
-    <div class="sp-section">
-      <div class="sp-section-header" onclick="toggleSection('sp-drive-body','sp-drive-chev')">
-        <span class="sp-section-icon">☁</span>
-        <span class="sp-section-title">Google Drive</span>
-        <span class="sp-section-badge sp-badge-off" id="sp-drive-badge">Non connecté</span>
-        <span class="sp-section-chevron open" id="sp-drive-chev">▶</span>
-      </div>
-      <div class="sp-section-body" id="sp-drive-body">
-        <!-- Compte connecté -->
-        <div class="sp-drive-card" id="sp-drive-card">
-          <div class="sp-drive-status">
-            <div class="sp-drive-avatar" id="sp-drive-avatar">?</div>
-            <div class="sp-drive-info">
-              <div class="sp-drive-email" id="sp-drive-email-sp">Non connecté</div>
-              <div class="sp-drive-sub" id="sp-drive-sub-sp">Cliquez sur Connecter pour accéder à Drive</div>
-            </div>
-            <span class="drive-dot" id="drive-dot"></span>
-          </div>
+```
+<!-- ── SECTION GOOGLE DRIVE ── -->
+<div class="sp-section">
+  <div class="sp-section-header" style="cursor:default">
+    <span class="sp-section-icon">☁</span>
+    <span class="sp-section-title">Google Drive</span>
+    <span class="sp-section-badge sp-badge-off" id="sp-drive-badge">Non connecté</span>
+    
+  </div>
+  <div class="sp-section-body" id="sp-drive-body" style="display:flex">
+    <!-- Compte connecté -->
+    <div class="sp-drive-card" id="sp-drive-card">
+      <div class="sp-drive-status">
+        <div class="sp-drive-avatar" id="sp-drive-avatar">?</div>
+        <div class="sp-drive-info">
+          <div class="sp-drive-email" id="sp-drive-email-sp">Non connecté</div>
+          <div class="sp-drive-sub" id="sp-drive-sub-sp">Cliquez sur Connecter pour accéder à Drive</div>
         </div>
-        <button class="sp-action success" id="btn-connect" onclick="openClientIdModal()">
-          <span class="sp-action-icon">🔗</span>
-          <div class="sp-action-text">
-            <div>Connecter Drive</div>
-            <div class="sp-action-sub" id="sp-connect-sub">Client ID OAuth 2.0</div>
-          </div>
-        </button>
-        <button class="sp-action" id="btn-save" onclick="saveDrive()" style="display:none">
-          <span class="sp-action-icon">💾</span>
-          <div class="sp-action-text">
-            <div>Sauvegarder maintenant</div>
-            <div class="sp-action-sub">Enregistrer les tickets sur Drive</div>
-          </div>
-        </button>
-        <button class="sp-action" id="btn-load" onclick="autoSearchCovoBackups()" style="display:none">
-          <span class="sp-action-icon">📂</span>
-          <div class="sp-action-text">
-            <div>Parcourir les sauvegardes</div>
-            <div class="sp-action-sub">Choisir une sauvegarde COVO Pro</div>
-          </div>
-        </button>
+        <span class="drive-dot" id="drive-dot"></span>
       </div>
     </div>
-
-    <!-- ── SECTION SYNCHRO ── -->
-    <div class="sp-section">
-      <div class="sp-section-header" onclick="toggleSection('sp-sync-body','sp-sync-chev')">
-        <span class="sp-section-icon">↻</span>
-        <span class="sp-section-title">Synchronisation auto</span>
-        <span class="sp-section-badge sp-badge-on" id="sp-sync-badge">Toutes les 5s</span>
-        <span class="sp-section-chevron" id="sp-sync-chev">▶</span>
+    <button class="sp-action success" id="btn-connect" onclick="openClientIdModal()">
+      <span class="sp-action-icon">🔗</span>
+      <div class="sp-action-text">
+        <div>Connecter Drive</div>
+        <div class="sp-action-sub" id="sp-connect-sub">Client ID OAuth 2.0</div>
       </div>
-      <div class="sp-section-body" id="sp-sync-body" style="display:none">
-        <!-- Live sync status -->
-        <div class="sp-sync-live">
-          <div class="sp-sync-ring-wrap">
-            <svg width="34" height="34" viewBox="0 0 38 38" style="transform:rotate(-90deg)">
-              <circle cx="19" cy="19" r="15" fill="none" stroke="#1e1e35" stroke-width="3"/>
-              <circle id="sync-ring-sp" cx="19" cy="19" r="15" fill="none"
-                stroke="#8e44ad" stroke-width="3" stroke-linecap="round"
-                stroke-dasharray="94.25" stroke-dashoffset="0"
-                style="transition:stroke-dashoffset 1s linear,stroke 0.4s"/>
-              <circle cx="19" cy="19" r="12" fill="#1e1e35"/>
-            </svg>
-            <div id="sync-icon-sp" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px">↻</div>
-          </div>
-          <div style="flex:1;min-width:0">
-            <div style="font-size:12px;font-weight:600;color:#ddd" id="sp-sync-label">En attente…</div>
-            <div style="font-size:10px;color:#555" id="sp-sync-file">—</div>
-          </div>
-          <div style="font-size:13px;font-weight:700;color:#8e44ad" id="sp-sync-timer">—</div>
+    </button>
+    <button class="sp-action" id="btn-save" onclick="saveDrive()" style="display:none">
+      <span class="sp-action-icon">💾</span>
+      <div class="sp-action-text">
+        <div>Sauvegarder maintenant</div>
+        <div class="sp-action-sub">Enregistrer les tickets sur Drive</div>
+      </div>
+    </button>
+    <button class="sp-action" id="btn-load" onclick="autoSearchCovoBackups()" style="display:none">
+      <span class="sp-action-icon">📂</span>
+      <div class="sp-action-text">
+        <div>Parcourir les sauvegardes</div>
+        <div class="sp-action-sub">Choisir une sauvegarde COVO Pro</div>
+      </div>
+    </button>
+  </div>
+</div>
+
+</div><!-- /#sp-tab-drive -->
+
+<!-- Onglet Sync -->
+<div class="sp-tab-content" id="sp-tab-sync">
+
+<!-- ── SECTION SYNCHRO ── -->
+<div class="sp-section">
+  <div class="sp-section-header" style="cursor:default">
+    <span class="sp-section-icon">↻</span>
+    <span class="sp-section-title">Synchronisation auto</span>
+    <span class="sp-section-badge sp-badge-on" id="sp-sync-badge">Toutes les 5s</span>
+    
+  </div>
+  <div class="sp-section-body" id="sp-sync-body" style="display:flex">
+    <!-- Live sync status -->
+    <div class="sp-sync-live">
+      <div class="sp-sync-ring-wrap">
+        <svg width="34" height="34" viewBox="0 0 38 38" style="transform:rotate(-90deg)">
+          <circle cx="19" cy="19" r="15" fill="none" stroke="#1e1e35" stroke-width="3"/>
+          <circle id="sync-ring-sp" cx="19" cy="19" r="15" fill="none"
+            stroke="#8e44ad" stroke-width="3" stroke-linecap="round"
+            stroke-dasharray="94.25" stroke-dashoffset="0"
+            style="transition:stroke-dashoffset 1s linear,stroke 0.4s"/>
+          <circle cx="19" cy="19" r="12" fill="#1e1e35"/>
+        </svg>
+        <div id="sync-icon-sp" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px">↻</div>
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:12px;font-weight:600;color:#ddd" id="sp-sync-label">En attente…</div>
+        <div style="font-size:10px;color:#555" id="sp-sync-file">—</div>
+      </div>
+      <div style="font-size:13px;font-weight:700;color:#8e44ad" id="sp-sync-timer">—</div>
+    </div>
+    <button class="sp-action success" onclick="manualSync()">
+      <span class="sp-action-icon">⟳</span>
+      <div class="sp-action-text">
+        <div>Synchroniser maintenant</div>
+        <div class="sp-action-sub">Forcer une vérification immédiate</div>
+      </div>
+    </button>
+    <div class="sp-row">
+      <div><div class="sp-row-label">Synchronisation auto</div><div class="sp-row-sub">Vérifie Drive toutes les 5 secondes</div></div>
+      <label class="sp-toggle">
+        <input type="checkbox" id="sp-sync-toggle" checked onchange="toggleAutoSync(this.checked)">
+        <div class="sp-toggle-track"><div class="sp-toggle-thumb"></div></div>
+      </label>
+    </div>
+  </div>
+</div>
+
+</div><!-- /#sp-tab-sync -->
+
+<!-- Onglet Données -->
+<div class="sp-tab-content" id="sp-tab-data">
+
+<!-- ── SECTION DONNÉES ── -->
+<div class="sp-section">
+  <div class="sp-section-header" style="cursor:default">
+    <span class="sp-section-icon">📊</span>
+    <span class="sp-section-title">Données locales</span>
+    <span class="sp-section-badge sp-badge-off" id="sp-data-badge">0 tickets</span>
+    
+  </div>
+  <div class="sp-section-body" id="sp-data-body" style="display:flex">
+    <div class="sp-stat-grid" id="sp-stats-grid"></div>
+    <hr class="sp-divider">
+    <button class="sp-action" onclick="showImportLog()">
+      <span class="sp-action-icon">📜</span>
+      <div class="sp-action-text">
+        <div>Historique des imports</div>
+        <div class="sp-action-sub">10 dernières synchros Drive</div>
+      </div>
+    </button>
+    <button class="sp-action" onclick="exportData()">
+      <span class="sp-action-icon">📤</span>
+      <div class="sp-action-text">
+        <div>Exporter les données</div>
+        <div class="sp-action-sub">Télécharger un fichier JSON local</div>
+      </div>
+    </button>
+    <button class="sp-action danger" onclick="confirmClearData()">
+      <span class="sp-action-icon">🗑</span>
+      <div class="sp-action-text">
+        <div>Vider les données locales</div>
+        <div class="sp-action-sub">Supprime le cache local uniquement</div>
+      </div>
+    </button>
+  </div>
+</div>
+
+</div><!-- /#sp-tab-data -->
+
+<!-- Onglet App -->
+<div class="sp-tab-content" id="sp-tab-app">
+
+<!-- ── SECTION APPLICATION (PWA DYNAMIQUE) ── -->
+<div class="sp-section">
+  <div class="sp-section-header" style="cursor:default">
+    <span class="sp-section-icon">📱</span>
+    <span class="sp-section-title">Application</span>
+    <span class="sp-section-badge sp-badge-off" id="sp-install-badge">Non installée</span>
+    
+  </div>
+  <div class="sp-section-body" id="sp-app-body" style="display:flex">
+    <!-- Status PWA en carte -->
+    <div class="sp-drive-card" id="sp-pwa-card">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+        <div id="sp-pwa-icon" style="width:40px;height:40px;border-radius:10px;background:#8e44ad;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">📱</div>
+        <div style="flex:1;min-width:0">
+          <div id="sp-pwa-title" style="font-size:13px;font-weight:700;color:#ddd">COVO Bénéfices</div>
+          <div id="sp-pwa-state" style="font-size:10px;color:#888;margin-top:2px">Détection en cours…</div>
         </div>
-        <button class="sp-action success" onclick="manualSync()">
-          <span class="sp-action-icon">⟳</span>
-          <div class="sp-action-text">
-            <div>Synchroniser maintenant</div>
-            <div class="sp-action-sub">Forcer une vérification immédiate</div>
-          </div>
-        </button>
-        <div class="sp-row">
-          <div><div class="sp-row-label">Synchronisation auto</div><div class="sp-row-sub">Vérifie Drive toutes les 5 secondes</div></div>
-          <label class="sp-toggle">
-            <input type="checkbox" id="sp-sync-toggle" checked onchange="toggleAutoSync(this.checked)">
-            <div class="sp-toggle-track"><div class="sp-toggle-thumb"></div></div>
-          </label>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+        <div class="sp-stat" style="padding:8px 10px">
+          <div class="sp-stat-label">Mode</div>
+          <div class="sp-stat-val" id="sp-pwa-mode" style="font-size:13px">—</div>
+        </div>
+        <div class="sp-stat" style="padding:8px 10px">
+          <div class="sp-stat-label">Plateforme</div>
+          <div class="sp-stat-val" id="sp-pwa-platform" style="font-size:13px">—</div>
         </div>
       </div>
     </div>
-
-    <!-- ── SECTION DONNÉES ── -->
-    <div class="sp-section">
-      <div class="sp-section-header" onclick="toggleSection('sp-data-body','sp-data-chev')">
-        <span class="sp-section-icon">📊</span>
-        <span class="sp-section-title">Données locales</span>
-        <span class="sp-section-badge sp-badge-off" id="sp-data-badge">0 tickets</span>
-        <span class="sp-section-chevron" id="sp-data-chev">▶</span>
+    <!-- Détails techniques -->
+    <div class="sp-row">
+      <div><div class="sp-row-label">Service Worker</div><div class="sp-row-sub">Cache hors-ligne</div></div>
+      <div class="sp-row-val" id="sp-sw-status">—</div>
+    </div>
+    <div class="sp-row">
+      <div><div class="sp-row-label">HTTPS</div><div class="sp-row-sub">Requis pour PWA</div></div>
+      <div class="sp-row-val" id="sp-https-status">—</div>
+    </div>
+    <div class="sp-row">
+      <div><div class="sp-row-label">Installation</div><div class="sp-row-sub">Prompt disponible</div></div>
+      <div class="sp-row-val" id="sp-install-ready">—</div>
+    </div>
+    <div class="sp-row">
+      <div><div class="sp-row-label">Taille cache</div><div class="sp-row-sub">Hors-ligne</div></div>
+      <div class="sp-row-val" id="sp-cache-size">—</div>
+    </div>
+    <!-- Boutons dynamiques — masqués/affichés selon l'état -->
+    <button class="sp-action success" id="sp-btn-install" onclick="installPWA()" style="display:none">
+      <span class="sp-action-icon">📥</span>
+      <div class="sp-action-text">
+        <div>Installer l'application</div>
+        <div class="sp-action-sub">Accès rapide depuis l'écran d'accueil</div>
       </div>
-      <div class="sp-section-body" id="sp-data-body" style="display:none">
-        <div class="sp-stat-grid" id="sp-stats-grid"></div>
-        <hr class="sp-divider">
-        <button class="sp-action" onclick="showImportLog()">
-          <span class="sp-action-icon">📜</span>
-          <div class="sp-action-text">
-            <div>Historique des imports</div>
-            <div class="sp-action-sub">10 dernières synchros Drive</div>
-          </div>
-        </button>
-        <button class="sp-action" onclick="exportData()">
-          <span class="sp-action-icon">📤</span>
-          <div class="sp-action-text">
-            <div>Exporter les données</div>
-            <div class="sp-action-sub">Télécharger un fichier JSON local</div>
-          </div>
-        </button>
-        <button class="sp-action danger" onclick="confirmClearData()">
-          <span class="sp-action-icon">🗑</span>
-          <div class="sp-action-text">
-            <div>Vider les données locales</div>
-            <div class="sp-action-sub">Supprime le cache local uniquement</div>
-          </div>
-        </button>
+    </button>
+    <button class="sp-action" id="sp-btn-manual" onclick="toggleInstallModal()" style="display:none">
+      <span class="sp-action-icon">📖</span>
+      <div class="sp-action-text">
+        <div>Instructions d'installation</div>
+        <div class="sp-action-sub">Guide manuel pour votre navigateur</div>
+      </div>
+    </button>
+    <div id="sp-installed-notice" style="display:none;padding:12px 14px;background:rgba(39,174,96,0.08);border:1px solid rgba(39,174,96,0.25);border-radius:10px;font-size:11px;color:#2ecc71;text-align:center">
+      ✓ Application installée — mode hors-ligne actif
+    </div>
+    <hr class="sp-divider">
+    <button class="sp-action" onclick="clearAppCache()">
+      <span class="sp-action-icon">🧹</span>
+      <div class="sp-action-text">
+        <div>Vider le cache de l'app</div>
+        <div class="sp-action-sub">Force la mise à jour du Service Worker</div>
+      </div>
+    </button>
+    <button class="sp-action danger" onclick="location.reload()">
+      <span class="sp-action-icon">↺</span>
+      <div class="sp-action-text">
+        <div>Actualiser l'application</div>
+        <div class="sp-action-sub">Recharger les données</div>
+      </div>
+    </button>
+  </div>
+</div>
+
+</div><!-- /#sp-tab-app -->
+
+<!-- Onglet Préférences (NEW) -->
+<div class="sp-tab-content" id="sp-tab-pref">
+
+  <!-- ── SECTION INTERFACE ── -->
+  <div class="sp-section">
+    <div class="sp-section-header" style="cursor:default">
+      <span class="sp-section-icon">🎨</span>
+      <span class="sp-section-title">Interface</span>
+    </div>
+    <div class="sp-section-body">
+      <div class="sp-row">
+        <div>
+          <div class="sp-row-label">Bouton flottant "Installer"</div>
+          <div class="sp-row-sub">Afficher le FAB en bas à droite</div>
+        </div>
+        <label class="sp-toggle">
+          <input type="checkbox" id="sp-pref-fab" onchange="toggleFabPref(this.checked)">
+          <div class="sp-toggle-track"><div class="sp-toggle-thumb"></div></div>
+        </label>
+      </div>
+      <div class="sp-row">
+        <div>
+          <div class="sp-row-label">Toast d'installation</div>
+          <div class="sp-row-sub">Notification automatique au démarrage</div>
+        </div>
+        <label class="sp-toggle">
+          <input type="checkbox" id="sp-pref-toast" onchange="toggleToastPref(this.checked)">
+          <div class="sp-toggle-track"><div class="sp-toggle-thumb"></div></div>
+        </label>
+      </div>
+      <div class="sp-row">
+        <div>
+          <div class="sp-row-label">Indicateur synchro (haut gauche)</div>
+          <div class="sp-row-sub">Pastille de statut Drive</div>
+        </div>
+        <label class="sp-toggle">
+          <input type="checkbox" id="sp-pref-sync" checked onchange="toggleSyncIndicator(this.checked)">
+          <div class="sp-toggle-track"><div class="sp-toggle-thumb"></div></div>
+        </label>
+      </div>
+      <div class="sp-row">
+        <div>
+          <div class="sp-row-label">Animations</div>
+          <div class="sp-row-sub">Transitions et effets visuels</div>
+        </div>
+        <label class="sp-toggle">
+          <input type="checkbox" id="sp-pref-anim" checked onchange="toggleAnimations(this.checked)">
+          <div class="sp-toggle-track"><div class="sp-toggle-thumb"></div></div>
+        </label>
       </div>
     </div>
+  </div>
 
-    <!-- ── SECTION APPLICATION ── -->
-    <div class="sp-section">
-      <div class="sp-section-header" onclick="toggleSection('sp-app-body','sp-app-chev')">
-        <span class="sp-section-icon">📱</span>
-        <span class="sp-section-title">Application</span>
-        <span class="sp-section-badge sp-badge-off" id="sp-install-badge">Non installée</span>
-        <span class="sp-section-chevron" id="sp-app-chev">▶</span>
+  <!-- ── SECTION NOTIFICATIONS ── -->
+  <div class="sp-section">
+    <div class="sp-section-header" style="cursor:default">
+      <span class="sp-section-icon">🔔</span>
+      <span class="sp-section-title">Notifications</span>
+    </div>
+    <div class="sp-section-body">
+      <div class="sp-row">
+        <div>
+          <div class="sp-row-label">Nouveaux tickets</div>
+          <div class="sp-row-sub">Toast à chaque synchro avec ajout</div>
+        </div>
+        <label class="sp-toggle">
+          <input type="checkbox" id="sp-pref-notif-sync" checked onchange="saveTogglePref('notif_sync',this.checked)">
+          <div class="sp-toggle-track"><div class="sp-toggle-thumb"></div></div>
+        </label>
       </div>
-      <div class="sp-section-body" id="sp-app-body" style="display:none">
-        <div class="sp-row">
-          <div><div class="sp-row-label">Version</div><div class="sp-row-sub">COVO Bénéfices</div></div>
-          <div class="sp-row-val">v2.1</div>
+      <div class="sp-row">
+        <div>
+          <div class="sp-row-label">Sons</div>
+          <div class="sp-row-sub">Bip à la synchronisation réussie</div>
         </div>
-        <div class="sp-row">
-          <div><div class="sp-row-label">Mode d'affichage</div></div>
-          <div class="sp-row-val" id="sp-display-mode">Navigateur</div>
-        </div>
-        <div class="sp-row">
-          <div><div class="sp-row-label">Hors-ligne</div><div class="sp-row-sub">Service Worker actif</div></div>
-          <div class="sp-row-val" id="sp-sw-status" style="color:#555">—</div>
-        </div>
-        <button class="sp-action" onclick="toggleInstallModal()">
-          <span class="sp-action-icon">⬇</span>
-          <div class="sp-action-text">
-            <div>Installer l'application</div>
-            <div class="sp-action-sub">Accès rapide depuis l'écran d'accueil</div>
-          </div>
-        </button>
-        <button class="sp-action danger" onclick="location.reload()">
-          <span class="sp-action-icon">↺</span>
-          <div class="sp-action-text">
-            <div>Actualiser l'application</div>
-            <div class="sp-action-sub">Recharger les données</div>
-          </div>
-        </button>
+        <label class="sp-toggle">
+          <input type="checkbox" id="sp-pref-sound" onchange="saveTogglePref('sound',this.checked)">
+          <div class="sp-toggle-track"><div class="sp-toggle-thumb"></div></div>
+        </label>
       </div>
     </div>
+  </div>
+
+  <!-- ── SECTION RÉINITIALISATION ── -->
+  <div class="sp-section">
+    <div class="sp-section-header" style="cursor:default">
+      <span class="sp-section-icon">♻</span>
+      <span class="sp-section-title">Réinitialisation</span>
+    </div>
+    <div class="sp-section-body">
+      <button class="sp-action" onclick="resetPreferences()">
+        <span class="sp-action-icon">↺</span>
+        <div class="sp-action-text">
+          <div>Réinitialiser les préférences</div>
+          <div class="sp-action-sub">Restaurer tous les réglages par défaut</div>
+        </div>
+      </button>
+      <button class="sp-action danger" onclick="resetAll()">
+        <span class="sp-action-icon">⚠</span>
+        <div class="sp-action-text">
+          <div>Tout réinitialiser</div>
+          <div class="sp-action-sub">Préférences + cache + connexion Drive</div>
+        </div>
+      </button>
+    </div>
+  </div>
+
+</div><!-- /#sp-tab-pref -->
+```
 
   </div><!-- /.sp-body -->
 </div><!-- /#settings-panel -->
+</div><!-- /#settings-overlay -->
 
 <!-- NAVIGATION PRINCIPALE -->
+
 <div class="main-tabs">
   <button class="main-tab active" id="tab-btn-dashboard" onclick="switchMainTab('dashboard',this)">📊 Bénéfices</button>
   <button class="main-tab" id="tab-btn-workhours" onclick="switchMainTab('workhours',this)">⏱ Horaires</button>
@@ -1166,10 +1436,12 @@ body {
 </div>
 
 <!-- TAB: DASHBOARD -->
+
 <div class="tab-content active" id="tc-dashboard">
 <div class="page">
 
   <!-- KPI CARDS -->
+
   <div class="kpi-grid">
     <div class="kpi-card purple">
       <div class="kpi-label">Bénéfice total</div>
@@ -1210,6 +1482,7 @@ body {
   </div>
 
   <!-- TOTAUX RÉCAPITULATIFS -->
+
   <div class="totaux-card" id="totaux-card">
     <div class="section-title" style="margin-bottom:14px">Récapitulatif global</div>
     <div class="totaux-grid" id="totaux-grid">
@@ -1223,6 +1496,7 @@ body {
   </div>
 
   <!-- CHART -->
+
   <div class="chart-card">
     <div class="section-row" style="margin-bottom:14px">
       <div class="section-title">Évolution mensuelle (12 mois)</div>
@@ -1237,6 +1511,7 @@ body {
   </div>
 
   <!-- FILTERS -->
+
   <div class="section-row">
     <div class="section-title">Détail par Mois / Semaine / Jour</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
@@ -1262,11 +1537,13 @@ body {
   </div>
 
   <!-- INFO BANNER -->
+
   <div class="info-banner" id="info-banner" style="display:none">
     ℹ️ <span id="info-text"></span>
   </div>
 
   <!-- TABLE -->
+
   <div class="table-card">
     <div class="table-top">
       <span class="table-top-title">Tickets COVO Pro</span>
@@ -1279,10 +1556,12 @@ body {
 </div><!-- /#tc-dashboard -->
 
 <!-- TAB: HORAIRES DE TRAVAIL -->
+
 <div class="tab-content" id="tc-workhours">
 <div class="page">
 
   <!-- Filtres -->
+
   <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:20px">
     <select id="wh-year" onchange="renderWorkHours()" class="f-select"><option>2026</option></select>
     <select id="wh-month" onchange="renderWorkHours()" class="f-select">
@@ -1301,9 +1580,11 @@ body {
   </div>
 
   <!-- KPIs horaires -->
+
   <div class="wh-grid" id="wh-kpis" style="margin-bottom:20px"></div>
 
   <!-- SECTION RÉSUMÉ HEBDOMADAIRE -->
+
   <div class="chart-card" style="margin-bottom:20px">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
       <div class="chart-title" style="margin-bottom:0">📈 Durée d'activité moyenne par semaine</div>
@@ -1316,6 +1597,7 @@ body {
   </div>
 
   <!-- SECTION DISTRIBUTION HORAIRE -->
+
   <div class="chart-card" style="margin-bottom:20px">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
       <div class="chart-title" style="margin-bottom:0">🕐 Distribution des tickets par heure</div>
@@ -1329,6 +1611,7 @@ body {
   </div>
 
   <!-- TABLEAU DÉTAIL OUVERTURE / FERMETURE -->
+
   <div class="table-card">
     <div class="table-top">
       <span class="table-top-title">⏱ Détail journalier — ouverture · fermeture · durée</span>
@@ -1358,6 +1641,7 @@ body {
 </div><!-- /#tc-workhours -->
 
 <!-- TAB: CATALOGUE ARTICLES -->
+
 <div class="tab-content" id="tc-catalogue">
 <div class="page">
 
@@ -1374,6 +1658,7 @@ body {
   </div>
 
   <!-- Résumé bénéfices catalogue -->
+
   <div class="kpi-grid" style="margin-bottom:20px" id="cat-kpis"></div>
 
   <div class="cat-grid" id="cat-grid"></div>
@@ -1382,39 +1667,44 @@ body {
 </div><!-- /#tc-catalogue -->
 
 <!-- CLIENT ID MODAL -->
+
 <div class="modal-overlay" id="clientid-modal">
   <div class="modal-box">
     <div class="modal-title">☁️ Connexion Google Drive</div>
     <div class="modal-sub">Configurez une fois — la connexion se fera automatiquement à chaque ouverture.</div>
 
-    <!-- Compte préféré -->
-    <div id="account-card" style="display:none;background:#0e0e1a;border:1px solid #27ae60;border-radius:10px;padding:12px 14px;margin-bottom:16px;display:none;align-items:center;gap:12px">
-      <div id="account-avatar" style="width:38px;height:38px;border-radius:50%;background:#8e44ad;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;flex-shrink:0">?</div>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:13px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="account-name-display">—</div>
-        <div style="font-size:11px;color:#27ae60">✓ Compte préféré mémorisé</div>
-      </div>
-      <button onclick="clearPreferredAccount()" style="background:none;border:none;color:#555;cursor:pointer;font-size:18px;padding:2px 6px" title="Supprimer ce compte">✕</button>
-    </div>
+```
+<!-- Compte préféré -->
+<div id="account-card" style="display:none;background:#0e0e1a;border:1px solid #27ae60;border-radius:10px;padding:12px 14px;margin-bottom:16px;display:none;align-items:center;gap:12px">
+  <div id="account-avatar" style="width:38px;height:38px;border-radius:50%;background:#8e44ad;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;flex-shrink:0">?</div>
+  <div style="flex:1;min-width:0">
+    <div style="font-size:13px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="account-name-display">—</div>
+    <div style="font-size:11px;color:#27ae60">✓ Compte préféré mémorisé</div>
+  </div>
+  <button onclick="clearPreferredAccount()" style="background:none;border:none;color:#555;cursor:pointer;font-size:18px;padding:2px 6px" title="Supprimer ce compte">✕</button>
+</div>
 
-    <label class="modal-label">Compte Google préféré</label>
-    <input type="email" class="modal-input" id="email-input" placeholder="votre@gmail.com" autocomplete="email">
-    <div style="font-size:11px;color:#555;margin-bottom:14px">Connexion Drive automatique à chaque ouverture via ce compte.</div>
+<label class="modal-label">Compte Google préféré</label>
+<input type="email" class="modal-input" id="email-input" placeholder="votre@gmail.com" autocomplete="email">
+<div style="font-size:11px;color:#555;margin-bottom:14px">Connexion Drive automatique à chaque ouverture via ce compte.</div>
 
-    <label class="modal-label">Google OAuth Client ID</label>
-    <input type="text" class="modal-input" id="cid-input" placeholder="xxxx.apps.googleusercontent.com">
-    <span class="modal-saved-tag" id="cid-saved-tag" style="display:none">✓ Client ID mémorisé</span>
-    <div style="font-size:11px;color:#444;margin-bottom:16px;line-height:1.5">🔗 <a href="https://console.cloud.google.com/apis/credentials" target="_blank" style="color:#8e44ad">console.cloud.google.com</a> → Identifiants → ID client OAuth 2.0</div>
+<label class="modal-label">Google OAuth Client ID</label>
+<input type="text" class="modal-input" id="cid-input" placeholder="xxxx.apps.googleusercontent.com">
+<span class="modal-saved-tag" id="cid-saved-tag" style="display:none">✓ Client ID mémorisé</span>
+<div style="font-size:11px;color:#444;margin-bottom:16px;line-height:1.5">🔗 <a href="https://console.cloud.google.com/apis/credentials" target="_blank" style="color:#8e44ad">console.cloud.google.com</a> → Identifiants → ID client OAuth 2.0</div>
 
-    <div class="modal-btns">
-      <button class="modal-btn cancel" onclick="closeModal('clientid-modal')">Annuler</button>
-      <button class="modal-btn danger" id="btn-forget" onclick="forgetClientId()" style="display:none">🗑 Tout effacer</button>
-      <button class="modal-btn primary" onclick="saveAndConnect()">🔗 Connecter →</button>
-    </div>
+<div class="modal-btns">
+  <button class="modal-btn cancel" onclick="closeModal('clientid-modal')">Annuler</button>
+  <button class="modal-btn danger" id="btn-forget" onclick="forgetClientId()" style="display:none">🗑 Tout effacer</button>
+  <button class="modal-btn primary" onclick="saveAndConnect()">🔗 Connecter →</button>
+</div>
+```
+
   </div>
 </div>
 
 <!-- BACKUP PICKER MODAL -->
+
 <div class="modal-overlay" id="backup-modal">
   <div class="modal-box">
     <div class="modal-title">📂 Sauvegardes COVO Pro sur Drive</div>
@@ -1428,6 +1718,7 @@ body {
 </div>
 
 <!-- MODAL DÉTAIL TICKET -->
+
 <div id="ticket-modal-overlay" onclick="closeTicketModal(event)">
   <div id="ticket-modal">
     <div class="tm-header">
@@ -2604,28 +2895,65 @@ self.addEventListener('fetch', e => {
     .catch(e => console.warn('[COVO PWA] SW non supporté:', e));
 }
 
-// ── FAB Install + Modal ──────────────────────────
-// Note: beforeinstallprompt est capturé tôt dans <head> → window._pwaPrompt
+// ═══════════════════════════════════════════════
+//  GESTION PWA DYNAMIQUE (détection + installation + état)
+// ═══════════════════════════════════════════════
 let deferredPrompt = null; // alias pour compat
 
-// Sync avec le prompt capturé dans <head>
 function getPwaPrompt() { return window._pwaPrompt || deferredPrompt; }
 
+// État PWA global utilisé partout
+function getPwaState() {
+  const installed = window._isAppInstalled();
+  const installable = !!getPwaPrompt();
+  const hasSW = 'serviceWorker' in navigator;
+  const swActive = hasSW && !!navigator.serviceWorker.controller;
+  const isHttps = location.protocol === 'https:' || location.hostname === 'localhost';
+  const ua = navigator.userAgent;
+  let platform = 'desktop';
+  if (/iPhone|iPad|iPod/i.test(ua)) platform = 'ios';
+  else if (/Android/i.test(ua)) platform = 'android';
+
+  return {
+    installed, installable, hasSW, swActive, isHttps, platform,
+    canInstall: !installed && (installable || platform === 'ios'),
+    displayMode: installed ? 'standalone' : 'browser'
+  };
+}
+
+// ── Masque/affiche le FAB selon l'état ─────────
+function updateFabVisibility() {
+  const fab = document.getElementById('fab-install');
+  if (!fab) return;
+  const state = getPwaState();
+  if (state.installed) {
+    fab.classList.add('hidden');
+    fab.style.display = 'none';
+    document.body.classList.add('pwa-installed');
+  } else {
+    fab.classList.remove('hidden');
+    fab.style.display = '';
+    document.body.classList.remove('pwa-installed');
+    // Indique visuellement si installation native est dispo
+    if (state.installable) fab.classList.add('pwa-ready');
+    else fab.classList.remove('pwa-ready');
+  }
+}
+
 function showInstallToast() {
-  if (localStorage.getItem('covo_installed') || document.getElementById('install-toast')) return;
+  const state = getPwaState();
+  if (state.installed || localStorage.getItem('covo_install_seen') || document.getElementById('install-toast')) return;
   const toast_el = document.createElement('div');
   toast_el.id = 'install-toast';
-  toast_el.innerHTML = `
-    <div class="it-logo"><img src="${window._logoSvgDataUrl||''}" alt="COVO"></div>
-    <div class="it-text">
-      <div class="it-title">COVO Bénéfices</div>
-      <div class="it-sub">Installer pour un accès rapide</div>
-    </div>
-    <button class="it-install" onclick="installPWA();this.closest('#install-toast').remove()">Installer</button>
-    <button class="it-close" onclick="this.closest('#install-toast').remove();localStorage.setItem('covo_install_seen','1')" title="Fermer">✕</button>
-  `;
+  toast_el.innerHTML =
+    '<div class="it-logo"><img src="' + (window._logoSvgDataUrl||'') + '" alt="COVO"></div>' +
+    '<div class="it-text">' +
+      '<div class="it-title">COVO Bénéfices</div>' +
+      '<div class="it-sub">Installer pour un accès rapide</div>' +
+    '</div>' +
+    '<button class="it-install" onclick="installPWA();this.closest(\'#install-toast\').remove()">Installer</button>' +
+    '<button class="it-close" onclick="this.closest(\'#install-toast\').remove();localStorage.setItem(\'covo_install_seen\',\'1\')" title="Fermer">✕</button>';
   document.body.appendChild(toast_el);
-  // Auto-fermer après 12s
   setTimeout(() => toast_el.remove(), 12000);
 }
 
@@ -2633,25 +2961,33 @@ function toggleInstallModal() {
   const modal = document.getElementById('install-modal');
   if (!modal) return;
   if (modal.classList.contains('open')) { modal.classList.remove('open'); return; }
+
+  const state = getPwaState();
+  if (state.installed) {
+    toast('Application déjà installée ✓', 'ok');
+    return;
+  }
+
   const logoImg = document.getElementById('im-logo-img');
   if (logoImg && window._logoSvgDataUrl) logoImg.src = window._logoSvgDataUrl;
   const btn = document.getElementById('im-native-btn');
-  if (btn) btn.disabled = !getPwaPrompt();
+  if (btn) {
+    btn.disabled = !state.installable;
+    btn.textContent = state.installable ? '📥 Installer maintenant' : '⚠ Installation manuelle uniquement';
+  }
   autoDetectPlatform();
   modal.classList.add('open');
 }
 
 function autoDetectPlatform() {
-  const ua = navigator.userAgent;
-  let p = 'chrome';
-  if (/iPhone|iPad|iPod/i.test(ua)) p = 'ios';
-  else if (/Android/i.test(ua)) p = 'android';
-  showPlatform(p, document.querySelector('.im-tab[onclick*="' + p + '"]'));
+  const state = getPwaState();
+  showPlatform(state.platform === 'desktop' ? 'chrome' : state.platform, document.querySelector('.im-tab[onclick*="' + (state.platform === 'desktop' ? 'chrome' : state.platform) + '"]'));
 }
 
 function showPlatform(platform, btn) {
   ['chrome','android','ios'].forEach(p => {
-    document.getElementById('steps-' + p).style.display = p === platform ? '' : 'none';
+    const el = document.getElementById('steps-' + p);
+    if (el) el.style.display = p === platform ? '' : 'none';
   });
   document.querySelectorAll('.im-tab').forEach(t => t.classList.remove('active'));
   if (btn) btn.classList.add('active');
@@ -2659,17 +2995,45 @@ function showPlatform(platform, btn) {
 
 function installPWA() {
   const prompt = getPwaPrompt();
-  if (!prompt) { toast("Hébergez le fichier en HTTPS pour l'installation auto", "err"); return; }
+  const state = getPwaState();
+
+  if (state.installed) {
+    toast('Application déjà installée ✓', 'ok');
+    return;
+  }
+
+  if (!state.isHttps) {
+    toast('Installation impossible : hébergez le fichier en HTTPS', 'err');
+    return;
+  }
+
+  if (!prompt) {
+    if (state.platform === 'ios') {
+      toast('Sur iOS : appuyez sur ⎙ puis "Sur l\'écran d\'accueil"', '');
+    } else {
+      toast('Ouvrez le menu du navigateur → Installer l\'application', '');
+    }
+    return;
+  }
+
   prompt.prompt();
   prompt.userChoice.then(r => {
-    if (r.outcome === 'accepted') toast('✓ Application installée !', 'ok');
-    window._pwaPrompt = null; deferredPrompt = null;
-    const btn = document.getElementById('im-native-btn');
-    if (btn) btn.disabled = true;
-    document.getElementById('install-modal').classList.remove('open');
+    if (r.outcome === 'accepted') {
+      toast('✓ Application installée !', 'ok');
+      localStorage.setItem('covo_installed', '1');
+    } else {
+      toast('Installation annulée', '');
+    }
+    window._pwaPrompt = null;
+    deferredPrompt = null;
+    window._pwaInstallable = false;
+    document.getElementById('install-modal')?.classList.remove('open');
+    updateFabVisibility();
+    if (typeof updateSettingsPanel === 'function') updateSettingsPanel();
   });
 }
 
+// Fermer modal en cliquant dehors
 document.addEventListener('click', e => {
   const modal = document.getElementById('install-modal');
   const fab   = document.getElementById('fab-install');
@@ -2678,16 +3042,29 @@ document.addEventListener('click', e => {
   }
 });
 
+// L'app vient d'être installée
 window.addEventListener('appinstalled', () => {
   toast("✓ COVO Bénéfices installé sur l'écran d'accueil", 'ok');
-  document.getElementById('install-modal').classList.remove('open');
-  const fab = document.getElementById('fab-install');
-  if (fab) {
-    fab.classList.add('installed');
-    fab.innerHTML = '<span class="fab-icon">✓</span><span class="fab-label">Installé</span>';
-    fab.onclick = null;
-  }
-  /* pwa-bar masquée */
+  localStorage.setItem('covo_installed', '1');
+  document.getElementById('install-modal')?.classList.remove('open');
+  updateFabVisibility();
+  if (typeof updateSettingsPanel === 'function') updateSettingsPanel();
+});
+
+// Détecte si l'app passe en mode standalone (installation par OS)
+if (window.matchMedia) {
+  window.matchMedia('(display-mode: standalone)').addEventListener?.('change', e => {
+    if (e.matches) {
+      localStorage.setItem('covo_installed', '1');
+      updateFabVisibility();
+      if (typeof updateSettingsPanel === 'function') updateSettingsPanel();
+    }
+  });
+}
+
+// Vérifier au chargement + à chaque changement de visibilité
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') updateFabVisibility();
 });
 
 // ── Splash screen séquencé ──
@@ -2742,6 +3119,10 @@ function init() {
   updateKPIs();
   renderChart();
   renderTable();
+  // Initialiser le FAB (cacher si déjà installé)
+  if (typeof updateFabVisibility === 'function') updateFabVisibility();
+  // Appliquer les préférences utilisateur sauvegardées
+  if (typeof applyUserPreferences === 'function') applyUserPreferences();
   // Initialiser l'état visuel de la sync (non connecté au démarrage)
   updateDriveUI(false);
   if (CLIENT_ID) {
@@ -2763,13 +3144,153 @@ function init() {
 //  PANNEAU RÉGLAGES
 // ═══════════════════════════════════════════════
 function openSettings() {
-  document.getElementById('settings-panel').classList.add('open');
   document.getElementById('settings-overlay').classList.add('open');
+  // Charger les préférences persistées dans les toggles
+  loadPreferencesToToggles();
   updateSettingsPanel();
+  // Auto-focus dernière onglet si besoin
+  const lastTab = localStorage.getItem('covo_sp_last_tab');
+  if (lastTab) {
+    const btn = document.querySelector('.sp-tab[onclick*="\'' + lastTab + '\'"]');
+    if (btn) switchSpTab(lastTab, btn);
+  }
 }
-function closeSettings() {
-  document.getElementById('settings-panel').classList.remove('open');
+function closeSettings(e) {
+  if (e && e.target && e.target.id && e.target.id !== 'settings-overlay') return;
   document.getElementById('settings-overlay').classList.remove('open');
+}
+
+// Navigation par onglets dans le modal réglages
+function switchSpTab(tab, btn) {
+  document.querySelectorAll('.sp-tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.sp-tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('sp-tab-' + tab)?.classList.add('active');
+  if (btn) btn.classList.add('active');
+  localStorage.setItem('covo_sp_last_tab', tab);
+  // Scroll to top du body
+  const body = document.querySelector('.sp-body');
+  if (body) body.scrollTop = 0;
+}
+
+// ═══════════════════════════════════════════════
+//  PRÉFÉRENCES UTILISATEUR (persistées)
+// ═══════════════════════════════════════════════
+function getPref(key, def) {
+  try {
+    const v = localStorage.getItem('covo_pref_' + key);
+    if (v === null) return def;
+    return v === 'true';
+  } catch(e) { return def; }
+}
+function setPref(key, val) {
+  try { localStorage.setItem('covo_pref_' + key, val ? 'true' : 'false'); } catch(e) {}
+}
+function saveTogglePref(key, val) { setPref(key, val); }
+
+function loadPreferencesToToggles() {
+  // FAB : par défaut FAUX (caché) une fois installé, mais respecte la préférence utilisateur
+  const fabPref = getPref('fab_visible', !window._isAppInstalled());
+  const fabEl = document.getElementById('sp-pref-fab');
+  if (fabEl) fabEl.checked = fabPref;
+  // Toast install : par défaut FAUX
+  const toastEl = document.getElementById('sp-pref-toast');
+  if (toastEl) toastEl.checked = getPref('install_toast', false);
+  // Indicateur sync : par défaut VRAI
+  const syncEl = document.getElementById('sp-pref-sync');
+  if (syncEl) syncEl.checked = getPref('sync_indicator', true);
+  // Animations : par défaut VRAI
+  const animEl = document.getElementById('sp-pref-anim');
+  if (animEl) animEl.checked = getPref('animations', true);
+  // Notif sync : par défaut VRAI
+  const notifEl = document.getElementById('sp-pref-notif-sync');
+  if (notifEl) notifEl.checked = getPref('notif_sync', true);
+  // Son : par défaut FAUX
+  const soundEl = document.getElementById('sp-pref-sound');
+  if (soundEl) soundEl.checked = getPref('sound', false);
+}
+
+// Toggles d'interface
+function toggleFabPref(show) {
+  setPref('fab_visible', show);
+  const fab = document.getElementById('fab-install');
+  if (!fab) return;
+  if (show && !window._isAppInstalled()) {
+    fab.style.display = '';
+    fab.classList.remove('hidden');
+    toast('✓ Bouton flottant affiché', 'ok');
+  } else {
+    fab.style.display = 'none';
+    fab.classList.add('hidden');
+    toast('✓ Bouton flottant masqué', '');
+  }
+}
+
+function toggleToastPref(show) {
+  setPref('install_toast', show);
+  toast(show ? '✓ Toast d\'installation activé' : 'Toast d\'installation désactivé', show ? 'ok' : '');
+  if (!show) {
+    const t = document.getElementById('install-toast');
+    if (t) t.remove();
+    localStorage.setItem('covo_install_seen', '1');
+  }
+}
+
+function toggleSyncIndicator(show) {
+  setPref('sync_indicator', show);
+  const el = document.getElementById('sync-indicator');
+  if (el) el.style.display = show ? 'flex' : 'none';
+  toast(show ? '✓ Indicateur synchro affiché' : 'Indicateur synchro masqué', show ? 'ok' : '');
+}
+
+function toggleAnimations(enabled) {
+  setPref('animations', enabled);
+  if (enabled) {
+    document.documentElement.style.removeProperty('--anim-duration');
+    document.body.classList.remove('no-animations');
+  } else {
+    document.body.classList.add('no-animations');
+  }
+  toast(enabled ? '✓ Animations activées' : 'Animations désactivées', '');
+}
+
+function resetPreferences() {
+  if (!confirm('Restaurer tous les réglages par défaut ?')) return;
+  Object.keys(localStorage).filter(k => k.startsWith('covo_pref_')).forEach(k => localStorage.removeItem(k));
+  localStorage.removeItem('covo_install_seen');
+  loadPreferencesToToggles();
+  // Réappliquer les valeurs par défaut
+  toggleFabPref(getPref('fab_visible', !window._isAppInstalled()));
+  toggleSyncIndicator(true);
+  toggleAnimations(true);
+  toast('✓ Préférences réinitialisées', 'ok');
+}
+
+function resetAll() {
+  if (!confirm('Effacer TOUTES les données locales ? Cette action est irréversible.\n\nLes tickets sur Drive ne seront pas affectés.')) return;
+  const toKeep = [];
+  Object.keys(localStorage).forEach(k => {
+    if (!toKeep.includes(k)) localStorage.removeItem(k);
+  });
+  toast('✓ Tout réinitialisé — rechargement…', 'ok');
+  setTimeout(() => location.reload(), 800);
+}
+
+// Appliquer les préférences au chargement de l'app
+function applyUserPreferences() {
+  // FAB
+  if (!getPref('fab_visible', !window._isAppInstalled()) || window._isAppInstalled()) {
+    const fab = document.getElementById('fab-install');
+    if (fab) { fab.style.display = 'none'; fab.classList.add('hidden'); }
+  }
+  // Indicateur synchro
+  if (!getPref('sync_indicator', true)) {
+    const el = document.getElementById('sync-indicator');
+    if (el) el.style.display = 'none';
+  }
+  // Animations
+  if (!getPref('animations', true)) {
+    document.body.classList.add('no-animations');
+  }
 }
 function toggleSection(bodyId, chevId) {
   const body = document.getElementById(bodyId);
@@ -2825,22 +3346,98 @@ function updateSettingsPanel() {
       spstat(fmtCA(totalCA), 'CA total');
   }
 
-  // ── App status ──
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
-  const modeEl = document.getElementById('sp-display-mode');
+  // ── État PWA DYNAMIQUE ──
+  const state = getPwaState();
+
+  // Badge en-tête section
   const instBadge = document.getElementById('sp-install-badge');
-  if (modeEl) modeEl.textContent = isStandalone ? 'Application installée' : 'Navigateur';
-  if (modeEl) modeEl.style.color = isStandalone ? '#2ecc71' : '#666';
   if (instBadge) {
-    instBadge.textContent = isStandalone ? 'Installée' : 'Non installée';
-    instBadge.className   = 'sp-section-badge ' + (isStandalone ? 'sp-badge-on' : 'sp-badge-off');
+    instBadge.textContent = state.installed ? 'Installée' : (state.installable ? 'Prête à installer' : 'Non installée');
+    instBadge.className = 'sp-section-badge ' + (state.installed ? 'sp-badge-on' : 'sp-badge-off');
   }
+
+  // Icône + état PWA
+  const pwaIcon = document.getElementById('sp-pwa-icon');
+  if (pwaIcon) {
+    if (state.installed) { pwaIcon.style.background = '#27ae60'; pwaIcon.textContent = '✓'; }
+    else if (state.installable) { pwaIcon.style.background = '#8e44ad'; pwaIcon.textContent = '📥'; }
+    else { pwaIcon.style.background = '#555'; pwaIcon.textContent = '📱'; }
+  }
+  const pwaState = document.getElementById('sp-pwa-state');
+  if (pwaState) {
+    if (state.installed) { pwaState.innerHTML = '<span style="color:#2ecc71">● Application installée</span>'; }
+    else if (state.installable) { pwaState.innerHTML = '<span style="color:#c39bd3">● Prête à être installée</span>'; }
+    else { pwaState.innerHTML = '<span style="color:#888">● Installation manuelle requise</span>'; }
+  }
+
+  // Mode
+  const modeEl = document.getElementById('sp-pwa-mode');
+  if (modeEl) {
+    modeEl.textContent = state.installed ? 'Standalone' : 'Navigateur';
+    modeEl.style.color = state.installed ? '#2ecc71' : '#ddd';
+  }
+
+  // Plateforme
+  const platEl = document.getElementById('sp-pwa-platform');
+  if (platEl) {
+    const icons = { ios: '🍎 iOS', android: '🤖 Android', desktop: '💻 Desktop' };
+    platEl.textContent = icons[state.platform] || state.platform;
+    platEl.style.fontSize = '13px';
+  }
+
+  // Service Worker
   const swEl = document.getElementById('sp-sw-status');
   if (swEl) {
-    const hasSW = 'serviceWorker' in navigator && navigator.serviceWorker.controller;
-    swEl.textContent = hasSW ? 'Actif' : 'Inactif';
-    swEl.style.color = hasSW ? '#2ecc71' : '#555';
+    swEl.textContent = state.swActive ? '✓ Actif' : (state.hasSW ? '⚠ En attente' : '✗ Non supporté');
+    swEl.style.color = state.swActive ? '#2ecc71' : state.hasSW ? '#f39c12' : '#e74c3c';
   }
+
+  // HTTPS
+  const httpsEl = document.getElementById('sp-https-status');
+  if (httpsEl) {
+    httpsEl.textContent = state.isHttps ? '✓ Sécurisé' : '✗ Non sécurisé';
+    httpsEl.style.color = state.isHttps ? '#2ecc71' : '#e74c3c';
+  }
+
+  // Prompt d'installation
+  const readyEl = document.getElementById('sp-install-ready');
+  if (readyEl) {
+    if (state.installed) { readyEl.textContent = '✓ Installée'; readyEl.style.color = '#2ecc71'; }
+    else if (state.installable) { readyEl.textContent = '✓ Disponible'; readyEl.style.color = '#2ecc71'; }
+    else if (state.platform === 'ios') { readyEl.textContent = 'Manuelle (iOS)'; readyEl.style.color = '#f39c12'; }
+    else { readyEl.textContent = '⚠ Pas disponible'; readyEl.style.color = '#e74c3c'; }
+  }
+
+  // Taille du cache
+  const cacheEl = document.getElementById('sp-cache-size');
+  if (cacheEl && navigator.storage && navigator.storage.estimate) {
+    navigator.storage.estimate().then(e => {
+      const kb = Math.round((e.usage || 0) / 1024);
+      cacheEl.textContent = kb < 1024 ? kb + ' KB' : (Math.round(kb/102.4)/10) + ' MB';
+    }).catch(() => { cacheEl.textContent = '—'; });
+  }
+
+  // Boutons dynamiques selon l'état
+  const btnInstall = document.getElementById('sp-btn-install');
+  const btnManual  = document.getElementById('sp-btn-manual');
+  const notice     = document.getElementById('sp-installed-notice');
+
+  if (state.installed) {
+    if (btnInstall) btnInstall.style.display = 'none';
+    if (btnManual)  btnManual.style.display = 'none';
+    if (notice)     notice.style.display = 'block';
+  } else if (state.installable) {
+    if (btnInstall) btnInstall.style.display = 'flex';
+    if (btnManual)  btnManual.style.display = 'flex';
+    if (notice)     notice.style.display = 'none';
+  } else {
+    if (btnInstall) btnInstall.style.display = 'none';
+    if (btnManual)  btnManual.style.display = 'flex';
+    if (notice)     notice.style.display = 'none';
+  }
+
+  // Masquer/afficher le FAB
+  if (typeof updateFabVisibility === 'function') updateFabVisibility();
 }
 
 function spstat(val, label) {
@@ -2863,6 +3460,27 @@ function toggleAutoSync(enabled) {
     const el = document.getElementById('sync-countdown');
     if (el) el.textContent = 'Suspendu';
     toast('Sync automatique désactivée', '');
+  }
+}
+
+function clearAppCache() {
+  if (!confirm('Vider le cache du Service Worker et recharger l\'app ?')) return;
+  if ('caches' in window) {
+    caches.keys().then(keys => {
+      return Promise.all(keys.map(k => caches.delete(k)));
+    }).then(() => {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(regs => {
+          regs.forEach(r => r.unregister());
+          toast('✓ Cache vidé — rechargement…', 'ok');
+          setTimeout(() => location.reload(), 600);
+        });
+      } else {
+        location.reload();
+      }
+    });
+  } else {
+    location.reload();
   }
 }
 
@@ -3636,5 +4254,6 @@ window._reloadWorkHours  = function() { if (document.getElementById('tc-workhour
 runSplash(() => init());
 registerSW();
 </script>
+
 </body>
 </html>
