@@ -2855,44 +2855,134 @@ function toast(msg, type='') {
 //  PWA — SERVICE WORKER + SPLASH + INSTALL
 // ═══════════════════════════════════════════════
 
-// ── Service Worker (inline via Blob) ──
+// ─────────────────────────────────────────────────
+// SERVICE WORKER — version robuste (iOS + desktop)
+// ─────────────────────────────────────────────────
+window._swState = 'unknown';       // unknown | installing | waiting | active | failed | unsupported
+window._swRegistration = null;
+
 function registerSW() {
-  if (!('serviceWorker' in navigator)) return;
-  const swCode = `
-const CACHE = 'covo-benef-v2';
-const ASSETS = ['./', location.href];
-self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).catch(()=>{}));
-  self.skipWaiting();
-});
-self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys().then(keys =>
-    Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))
-  ));
-  self.clients.claim();
-});
-self.addEventListener('fetch', e => {
-  if (e.request.method !== 'GET') return;
-  e.respondWith(
-    fetch(e.request).then(r => {
-      const clone = r.clone();
-      caches.open(CACHE).then(c => c.put(e.request, clone));
-      return r;
-    }).catch(() => caches.match(e.request))
-  );
-});
-`;
+  if (!('serviceWorker' in navigator)) {
+    window._swState = 'unsupported';
+    return;
+  }
+
+  // Si contrôleur déjà présent → SW actif depuis un chargement précédent
+  if (navigator.serviceWorker.controller) {
+    window._swState = 'active';
+  }
+
+  // SW inline via Blob — compatible iOS/Safari/Chrome/Firefox
+  const swCode = [
+    "const CACHE = 'covo-benef-v3';",
+    "// Installation : pré-cache minimal et résilient",
+    "self.addEventListener('install', e => {",
+    "  e.waitUntil((async () => {",
+    "    try {",
+    "      const cache = await caches.open(CACHE);",
+    "      // Cache chaque asset indépendamment — aucune erreur ne bloque l'install",
+    "      const assets = ['./', location.href.split('#')[0].split('?')[0]];",
+    "      await Promise.allSettled(assets.map(a => cache.add(a).catch(()=>null)));",
+    "    } catch(err) { /* cache indisponible — SW fonctionne quand même */ }",
+    "  })());",
+    "  self.skipWaiting();",
+    "});",
+    "// Activation : nettoyage des anciennes caches et prise de contrôle immédiate",
+    "self.addEventListener('activate', e => {",
+    "  e.waitUntil((async () => {",
+    "    const keys = await caches.keys();",
+    "    await Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)));",
+    "    await self.clients.claim();",
+    "  })());",
+    "});",
+    "// Fetch : réseau d'abord, cache en fallback (network-first)",
+    "self.addEventListener('fetch', e => {",
+    "  if (e.request.method !== 'GET') return;",
+    "  if (!e.request.url.startsWith('http')) return;",
+    "  e.respondWith((async () => {",
+    "    try {",
+    "      const resp = await fetch(e.request);",
+    "      if (resp && resp.status === 200 && resp.type === 'basic') {",
+    "        const clone = resp.clone();",
+    "        caches.open(CACHE).then(c => c.put(e.request, clone)).catch(()=>{});",
+    "      }",
+    "      return resp;",
+    "    } catch(err) {",
+    "      const cached = await caches.match(e.request);",
+    "      return cached || new Response('Hors ligne', { status: 503 });",
+    "    }",
+    "  })());",
+    "});",
+    "// Message handler — pour forcer des actions depuis l'app",
+    "self.addEventListener('message', e => {",
+    "  if (e.data && e.data.type === 'SKIP_WAITING') self.skipWaiting();",
+    "});"
+  ].join('\n');
+
   const blob = new Blob([swCode], { type: 'application/javascript' });
   const url  = URL.createObjectURL(blob);
+
   navigator.serviceWorker.register(url, { scope: './' })
     .then(reg => {
-      console.log('[COVO PWA] SW enregistré', reg.scope);
-      if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone) {
-        /* pwa-bar masquée */
-        
+      window._swRegistration = reg;
+      console.log('[COVO PWA] SW enregistré, scope:', reg.scope);
+
+      // Gérer les 3 états possibles
+      if (reg.installing) {
+        window._swState = 'installing';
+        reg.installing.addEventListener('statechange', () => {
+          const worker = reg.installing || reg.waiting || reg.active;
+          if (worker) {
+            if (worker.state === 'installed')  window._swState = navigator.serviceWorker.controller ? 'waiting' : 'active';
+            if (worker.state === 'activated')  window._swState = 'active';
+            refreshSwStatus();
+          }
+        });
+      } else if (reg.waiting) {
+        window._swState = 'waiting';
+      } else if (reg.active) {
+        window._swState = 'active';
       }
+
+      // Rafraîchir statut après détection
+      refreshSwStatus();
+
+      // Utiliser serviceWorker.ready comme backup — promesse qui se résout quand SW est actif
+      navigator.serviceWorker.ready.then(activeReg => {
+        window._swState = 'active';
+        window._swRegistration = activeReg;
+        refreshSwStatus();
+      }).catch(() => {});
+
+      // Écouter les changements de contrôleur
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        window._swState = 'active';
+        refreshSwStatus();
+      });
     })
-    .catch(e => console.warn('[COVO PWA] SW non supporté:', e));
+    .catch(e => {
+      console.warn('[COVO PWA] SW échec:', e.message);
+      window._swState = 'failed';
+      refreshSwStatus();
+    });
+}
+
+// ── Rafraîchit l'affichage du statut SW dans le panneau réglages ──
+function refreshSwStatus() {
+  if (typeof updateSettingsPanel === 'function' &&
+      document.getElementById('settings-overlay')?.classList.contains('open')) {
+    updateSettingsPanel();
+  }
+}
+
+// ── Force le SW à prendre le contrôle maintenant ──
+function activateSwNow() {
+  if (window._swRegistration && window._swRegistration.waiting) {
+    window._swRegistration.waiting.postMessage({ type: 'SKIP_WAITING' });
+  }
+  // Recharger pour que le nouveau SW contrôle la page
+  toast('↻ Activation du Service Worker…', '');
+  setTimeout(() => location.reload(), 400);
 }
 
 // ═══════════════════════════════════════════════
@@ -2907,15 +2997,26 @@ function getPwaState() {
   const installed = window._isAppInstalled();
   const installable = !!getPwaPrompt();
   const hasSW = 'serviceWorker' in navigator;
-  const swActive = hasSW && !!navigator.serviceWorker.controller;
-  const isHttps = location.protocol === 'https:' || location.hostname === 'localhost';
+  // Combinaison de plusieurs indicateurs pour un statut SW fiable (surtout sur iOS)
+  const hasController = hasSW && !!navigator.serviceWorker.controller;
+  const swStateVar = window._swState || 'unknown';
+  const hasActiveReg = window._swRegistration && !!window._swRegistration.active;
+  // Le SW est "actif" si :
+  // - navigator.serviceWorker.controller existe (SW contrôle la page) OU
+  // - l'enregistrement a un worker 'active' OU
+  // - window._swState === 'active'
+  const swActive = hasController || hasActiveReg || swStateVar === 'active';
+  const swInstalling = swStateVar === 'installing';
+  const swWaiting = swStateVar === 'waiting' || (window._swRegistration && !!window._swRegistration.waiting);
+  const isHttps = location.protocol === 'https:' || location.hostname === 'localhost' || location.protocol === 'file:';
   const ua = navigator.userAgent;
   let platform = 'desktop';
   if (/iPhone|iPad|iPod/i.test(ua)) platform = 'ios';
   else if (/Android/i.test(ua)) platform = 'android';
 
   return {
-    installed, installable, hasSW, swActive, isHttps, platform,
+    installed, installable, hasSW, swActive, swInstalling, swWaiting,
+    swStateVar, hasController, isHttps, platform,
     canInstall: !installed && (installable || platform === 'ios'),
     displayMode: installed ? 'standalone' : 'browser'
   };
@@ -3385,11 +3486,30 @@ function updateSettingsPanel() {
     platEl.style.fontSize = '13px';
   }
 
-  // Service Worker
+  // Service Worker — statut précis
   const swEl = document.getElementById('sp-sw-status');
   if (swEl) {
-    swEl.textContent = state.swActive ? '✓ Actif' : (state.hasSW ? '⚠ En attente' : '✗ Non supporté');
-    swEl.style.color = state.swActive ? '#2ecc71' : state.hasSW ? '#f39c12' : '#e74c3c';
+    if (!state.hasSW) {
+      swEl.textContent = '✗ Non supporté';
+      swEl.style.color = '#e74c3c';
+    } else if (state.swActive) {
+      swEl.textContent = '✓ Actif';
+      swEl.style.color = '#2ecc71';
+    } else if (state.swWaiting) {
+      swEl.innerHTML = '⏳ Prêt <button onclick="activateSwNow()" style="background:#8e44ad;color:#fff;border:none;border-radius:12px;padding:2px 8px;font-size:9px;margin-left:4px;cursor:pointer;font-family:Poppins">Activer</button>';
+      swEl.style.color = '#f39c12';
+    } else if (state.swInstalling) {
+      swEl.textContent = '⏳ Installation…';
+      swEl.style.color = '#f39c12';
+    } else if (state.swStateVar === 'failed') {
+      swEl.textContent = '✗ Échec';
+      swEl.style.color = '#e74c3c';
+    } else {
+      // Cas iOS standalone : SW souvent registered mais pas encore controlling
+      // Un simple rechargement résout le problème
+      swEl.innerHTML = '⏳ Active au prochain chargement <button onclick="location.reload()" style="background:#8e44ad;color:#fff;border:none;border-radius:12px;padding:2px 8px;font-size:9px;margin-left:4px;cursor:pointer;font-family:Poppins">↺</button>';
+      swEl.style.color = '#f39c12';
+    }
   }
 
   // HTTPS
@@ -3408,13 +3528,29 @@ function updateSettingsPanel() {
     else { readyEl.textContent = '⚠ Pas disponible'; readyEl.style.color = '#e74c3c'; }
   }
 
-  // Taille du cache
+  // Taille du cache — combine storage.estimate + décompte manuel des caches
   const cacheEl = document.getElementById('sp-cache-size');
-  if (cacheEl && navigator.storage && navigator.storage.estimate) {
-    navigator.storage.estimate().then(e => {
-      const kb = Math.round((e.usage || 0) / 1024);
-      cacheEl.textContent = kb < 1024 ? kb + ' KB' : (Math.round(kb/102.4)/10) + ' MB';
-    }).catch(() => { cacheEl.textContent = '—'; });
+  if (cacheEl) {
+    // D'abord, essai via storage.estimate (plus rapide mais pas dispo partout)
+    if (navigator.storage && navigator.storage.estimate) {
+      navigator.storage.estimate().then(e => {
+        const bytes = e.usage || 0;
+        if (bytes === 0 && 'caches' in window) {
+          // Fallback : parcourir toutes les caches
+          return caches.keys().then(keys => {
+            return Promise.all(keys.map(key => caches.open(key).then(cache => cache.keys().then(reqs => reqs.length)))).then(counts => {
+              const total = counts.reduce((a,b) => a+b, 0);
+              cacheEl.textContent = total > 0 ? total + ' entrée' + (total>1?'s':'') : '0 (vide)';
+            });
+          });
+        } else {
+          const kb = Math.round(bytes / 1024);
+          cacheEl.textContent = kb === 0 ? '0 (vide)' : (kb < 1024 ? kb + ' KB' : (Math.round(kb/102.4)/10) + ' MB');
+        }
+      }).catch(() => { cacheEl.textContent = '—'; });
+    } else {
+      cacheEl.textContent = 'API non dispo';
+    }
   }
 
   // Boutons dynamiques selon l'état
@@ -4250,9 +4386,27 @@ function renderCatalogue() {
 window._reloadCatalogue  = function() { if (document.getElementById('tc-catalogue')?.classList.contains('active')) initCatalogue(); };
 window._reloadWorkHours  = function() { if (document.getElementById('tc-workhours')?.classList.contains('active')) renderWorkHours(); };
 
+// Démarrage : SW d'abord (avant splash), puis app
+// SW enregistré immédiatement pour une activation plus rapide
+try { registerSW(); } catch(e) { console.warn('[SW]', e); }
+
+// Rafraîchir périodiquement le statut SW pendant les premières 30 secondes
+// (résout le cas iOS où le SW met quelques secondes à s'activer)
+let _swCheckCount = 0;
+const _swCheckInterval = setInterval(() => {
+  _swCheckCount++;
+  // Vérifier si le SW est passé en état actif
+  if (navigator.serviceWorker && (navigator.serviceWorker.controller || (window._swRegistration && window._swRegistration.active))) {
+    window._swState = 'active';
+    if (typeof refreshSwStatus === 'function') refreshSwStatus();
+    clearInterval(_swCheckInterval);
+  } else if (_swCheckCount > 30) {
+    clearInterval(_swCheckInterval);
+  }
+}, 1000);
+
 // Lancer le splash puis l'app
 runSplash(() => init());
-registerSW();
 </script>
 
 </body>
