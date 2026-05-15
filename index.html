@@ -436,6 +436,8 @@ border:1px solid rgba(142,68,173,0.30); border-radius:10px; padding:11px 13px;
 .invest-row { display:grid; grid-template-columns:1.3fr 110px 110px 110px 120px 100px; gap:12px; align-items:center; padding:12px 14px; border-bottom:1px solid #252540; }
 .invest-row:last-child { border-bottom:0; }
 .invest-row.head { background:#17172a; color:#666; font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; }
+.invest-row.clickable { cursor:pointer; transition:background 0.15s, transform 0.15s; }
+.invest-row.clickable:hover { background:#252540; transform:translateX(2px); }
 .invest-name { font-size:12px; font-weight:700; color:#ddd; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .invest-meta { font-size:10px; color:#666; margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .invest-num { font-size:12px; font-weight:800; color:#fff; text-align:right; }
@@ -1252,7 +1254,7 @@ body {
 .table-card { padding: 20px; }
 .table-card { padding: 0; overflow: hidden; }
 .totaux-card { background: #fff !important; }
-.totaux-grid { grid-template-columns: repeat(6, minmax(120px, 1fr)); }
+.totaux-grid { grid-template-columns: repeat(4, minmax(120px, 1fr)); }
 .totaux-item {
   text-align: left;
   padding: 10px 12px;
@@ -1272,6 +1274,9 @@ body {
 .invest-signal { box-shadow: none; }
 .invest-row.head {
   background: var(--dash-panel-soft) !important;
+}
+.invest-row.clickable:hover {
+  background: #f7f8ff !important;
 }
 .invest-title,
 .invest-signal-value,
@@ -1990,6 +1995,8 @@ body {
     <div class="totaux-grid" id="totaux-grid">
       <div class="totaux-item"><div class="totaux-label">Tickets validés</div><div class="totaux-value purple" id="t-valid">—</div></div>
       <div class="totaux-item"><div class="totaux-label">Tickets annulés</div><div class="totaux-value red" id="t-cancel">—</div></div>
+      <div class="totaux-item"><div class="totaux-label">Reçu par CB</div><div class="totaux-value purple" id="t-card">—</div></div>
+      <div class="totaux-item"><div class="totaux-label">Reçu espèces</div><div class="totaux-value green" id="t-cash">—</div></div>
       <div class="totaux-item"><div class="totaux-label">Panier moyen</div><div class="totaux-value gold" id="t-basket">—</div></div>
       <div class="totaux-item"><div class="totaux-label">Bénéfice / ticket</div><div class="totaux-value green" id="t-benef-avg">—</div></div>
       <div class="totaux-item"><div class="totaux-label">Meilleur mois</div><div class="totaux-value purple" id="t-best-month">—</div></div>
@@ -2101,6 +2108,8 @@ body {
     </select>
     <select id="wh-cashier" onchange="renderWorkHours()" class="f-select">
       <option value="all">👥 Tous les caissiers</option>
+      <option value="role:admin">🛡 Admin</option>
+      <option value="role:cashier">💼 Caissier</option>
     </select>
     <span style="font-size:11px;color:#666;margin-left:auto" id="wh-count">—</span>
   </div>
@@ -2435,7 +2444,8 @@ function normalizeInvestment(inv, idx) {
     amount,
     paidAmount: isPaid ? amount : paidAmount,
     remaining: isPaid ? 0 : (remaining || Math.max(amount - paidAmount, amount)),
-    status
+    status,
+    raw: inv
   };
 }
 
@@ -2447,6 +2457,23 @@ function mergeInvestments(existing, incoming) {
     map.set(key, { ...prev, ...inv });
   });
   return [...map.values()];
+}
+
+function salePaymentMode(s) {
+  return String(firstVal(s, [
+    'paymentMode','payment','mode','paymentType','payment_method','paymentMethod',
+    'method','payMode','reglement','règlement','typePaiement','paiement','modePaiement'
+  ], '')).toLowerCase();
+}
+
+function isCardPayment(s) {
+  const m = salePaymentMode(s);
+  return m.includes('cb') || m.includes('carte') || m.includes('card') || m.includes('visa') || m.includes('master') || m.includes('tpe') || m.includes('bancontact');
+}
+
+function isCashPayment(s) {
+  const m = salePaymentMode(s);
+  return m.includes('esp') || m.includes('cash') || m.includes('liquid') || m.includes('cashier') || m.includes('monnaie');
 }
 
 // ── FILTER ────────────────────────────────────────
@@ -2504,6 +2531,8 @@ function updateKPIs() {
   const weekSales  = valid.filter(s => saleDate(s) >= startWeek);
   const todaySales = valid.filter(s => toYMD(saleDate(s)) === todayStr);
   const margin = totalCA > 0 ? (totalBenef / totalCA * 100) : 0;
+  const cardTotal = valid.filter(isCardPayment).reduce((a,s) => a + parseFloat(s.total||0), 0);
+  const cashTotal = valid.filter(isCashPayment).reduce((a,s) => a + parseFloat(s.total||0), 0);
   const avgDay = (() => {
     const d30 = new Date(now); d30.setDate(d30.getDate()-30);
     const last30 = valid.filter(s => saleDate(s) >= d30);
@@ -2535,6 +2564,8 @@ function updateKPIs() {
 
   set('t-valid',     valid.length);
   set('t-cancel',    cancelled.length);
+  set('t-card',      fmtCA(cardTotal));
+  set('t-cash',      fmtCA(cashTotal));
   set('t-basket',    fmtCA(avgBasket));
   set('t-benef-avg', fmtCA(avgBenefTicket));
   set('t-best-month', bestMonth ? `${mNames[parseInt(bestMonth[0].split('-')[1])-1]} ${bestMonth[0].split('-')[0]} (${fmtCA(bestMonth[1])})` : '—');
@@ -2595,11 +2626,13 @@ function renderInvestments() {
   const rows = [...credits, ...paid].sort((a,b) => {
     if (a.status !== b.status) return a.status === 'paid' ? 1 : -1;
     return b.remaining - a.remaining || b.amount - a.amount;
-  }).map(i => {
+  });
+  window._investRows = rows;
+  const rowsHtml = rows.map((i, idx) => {
     const date = i.date ? new Date(i.date).toLocaleDateString('fr-FR') : '—';
     const statusLabel = i.status === 'paid' ? 'Payé' : (i.status === 'partial' ? 'Crédit partiel' : 'Crédit non payé');
     const statusCls = i.status === 'paid' ? 'paid' : (i.status === 'partial' ? 'partial' : 'credit');
-    return '<div class="invest-row">' +
+    return '<div class="invest-row clickable" onclick="openInvestmentDetail(' + idx + ')" title="Cliquer pour voir les informations">' +
       '<div><div class="invest-name" title="' + escH(i.name) + '">' + escH(i.name) + '</div><div class="invest-meta">' + escH(i.category) + (i.supplier ? ' · ' + escH(i.supplier) : '') + '</div></div>' +
       '<div class="invest-num">' + fmtCA(i.amount) + '</div>' +
       '<div class="invest-num green">' + fmtCA(i.paidAmount) + '</div>' +
@@ -2612,7 +2645,58 @@ function renderInvestments() {
   table.innerHTML =
     '<div class="invest-row head">' +
       '<div>Investissement</div><div style="text-align:right">Montant</div><div style="text-align:right">Payé</div><div style="text-align:right">Reste</div><div>Statut</div><div style="text-align:right">Date</div>' +
-    '</div>' + rows;
+    '</div>' + rowsHtml;
+}
+
+function openInvestmentDetail(idx) {
+  const inv = (window._investRows || [])[idx];
+  if (!inv) return;
+  const raw = inv.raw || {};
+  const statusLabel = inv.status === 'paid' ? 'Payé' : (inv.status === 'partial' ? 'Crédit partiel' : 'Crédit non payé');
+  const date = inv.date ? new Date(inv.date).toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' }) : '—';
+
+  document.getElementById('tm-title').textContent = 'Investissement';
+  document.getElementById('tm-sub').innerHTML = escH(inv.name) + ' · <strong style="color:#8e44ad">' + escH(statusLabel) + '</strong>';
+  document.getElementById('tm-kpis').innerHTML =
+    tmkpi('Montant', fmtCA(inv.amount), 'purple') +
+    tmkpi('Payé', fmtCA(inv.paidAmount), 'green') +
+    tmkpi('Reste', fmtCA(inv.remaining), inv.remaining > 0 ? 'red' : 'green') +
+    tmkpi('Statut', statusLabel, inv.status === 'paid' ? 'green' : 'red') +
+    tmkpi('Catégorie', escH(inv.category || '—'), '') +
+    tmkpi('Date', date, '');
+
+  document.getElementById('tm-items-title').textContent = 'Informations liées';
+  const known = new Set(['raw']);
+  const infoRows = [
+    ['Nom', inv.name],
+    ['Catégorie', inv.category],
+    ['Fournisseur', inv.supplier || '—'],
+    ['Date', date],
+    ['Montant', fmtCA(inv.amount)],
+    ['Montant payé', fmtCA(inv.paidAmount)],
+    ['Reste à payer', fmtCA(inv.remaining)],
+    ['Statut', statusLabel],
+    ['Référence', firstVal(raw, ['id','investmentId','uuid','ref','reference'], '—')],
+    ['Note', firstVal(raw, ['note','notes','comment','commentaire','description'], '—')]
+  ];
+  const extraRows = Object.entries(raw)
+    .filter(([k,v]) => v !== null && v !== undefined && v !== '' && !known.has(k))
+    .filter(([k]) => !['name','nom','title','libelle','label','amount','montant','total','price','prix','cost','cout','paidAmount','amountPaid','montantPaye','remaining','reste','restant','status','statut','etat','category','categorie','supplier','fournisseur','date','createdAt','timestamp'].includes(k))
+    .slice(0, 10)
+    .map(([k,v]) => [k, typeof v === 'object' ? JSON.stringify(v) : v]);
+
+  document.getElementById('tm-items').innerHTML = infoRows.concat(extraRows).map(([label, val]) =>
+    '<div class="tm-item" style="grid-template-columns:140px 1fr">' +
+      '<span class="tm-item-qty" style="text-align:left;color:#666">' + escH(label) + '</span>' +
+      '<span class="tm-item-name">' + escH(String(val)) + '</span>' +
+    '</div>'
+  ).join('');
+
+  document.getElementById('tm-total').textContent = fmtCA(inv.amount);
+  const bEl = document.getElementById('tm-benef-total');
+  bEl.textContent = inv.remaining > 0 ? fmtCA(inv.remaining) : 'Soldé';
+  bEl.className = 'tm-benef-total ' + (inv.remaining > 0 ? 'neg' : 'pos');
+  document.getElementById('ticket-modal-overlay').classList.add('open');
 }
 
 // ═══════════════════════════════════════════════
@@ -4498,22 +4582,83 @@ function switchMainTab(tab, btn) {
 let _whChartWeekly = null, _whChartHours = null;
 let _whCashiers = [];
 
+function whRoleOf(u) {
+  const r = String(u?.role || u?.type || u?.profil || u?.profile || '').toLowerCase();
+  if (r.includes('admin') || r.includes('gerant') || r.includes('gérant') || r.includes('owner')) return 'admin';
+  if (r.includes('caiss') || r.includes('cashier')) return 'cashier';
+  return '';
+}
+
+function whPersonId(u) {
+  return String(u?.id || u?.userId || u?.uid || u?.username || u?.name || u?.email || '');
+}
+
+function whPersonName(u) {
+  return String(u?.username || u?.name || u?.displayName || u?.email || u?.id || 'Utilisateur');
+}
+
+function whSaleActorValue(s) {
+  return String(s.cashier || s.caissier || s.userId || s.user || s.userName || s.username || s.createdBy || '');
+}
+
+function whSaleRole(s) {
+  const direct = whRoleOf({ role: s.role || s.userRole || s.cashierRole || s.caissierRole || s.createdByRole });
+  if (direct) return direct;
+  const actor = whSaleActorValue(s).toLowerCase();
+  const match = _whCashiers.find(u => {
+    const vals = [whPersonId(u), whPersonName(u), u.email].filter(Boolean).map(v => String(v).toLowerCase());
+    return vals.includes(actor);
+  });
+  return whRoleOf(match);
+}
+
+function whSaleActorLabel(s) {
+  const actor = whSaleActorValue(s) || 'Utilisateur';
+  const role = whSaleRole(s);
+  if (role === 'admin') return 'Admin — ' + actor;
+  if (role === 'cashier') return 'Caissier — ' + actor;
+  return actor;
+}
+
+function whMatchesSelection(s, selected) {
+  if (!selected || selected === 'all') return true;
+  if (selected === 'role:admin') return whSaleRole(s) === 'admin';
+  if (selected === 'role:cashier') return whSaleRole(s) === 'cashier' || !whSaleRole(s);
+  if (selected.startsWith('user:')) {
+    const wanted = selected.slice(5).toLowerCase();
+    const actor = whSaleActorValue(s).toLowerCase();
+    return actor === wanted;
+  }
+  return String(whSaleActorValue(s)) === String(selected);
+}
+
 function initWorkHours() {
   // Lire les caissiers depuis les données COVO Pro (déjà chargé par loadCovoData)
   const users = window._covoUsers || [];
-  _whCashiers = users.filter(u => u.role === 'caissier' || u.role === 'cashier' || u.role === 'Caissier');
-  // Si pas d'users, extraire les caissiers uniques des tickets
+  _whCashiers = users.filter(u => {
+    const role = whRoleOf(u);
+    return role === 'admin' || role === 'cashier';
+  });
+  // Si pas d'users, extraire les utilisateurs uniques des tickets
   if (!_whCashiers.length) {
-    const cashierSet = new Set(sales.map(s => s.cashier || s.caissier).filter(Boolean));
-    _whCashiers = [...cashierSet].map(name => ({ id: name, username: name }));
+    const cashierSet = new Set(sales.map(s => whSaleActorValue(s)).filter(Boolean));
+    _whCashiers = [...cashierSet].map(name => ({ id: name, username: name, role: 'cashier' }));
   }
 
   const cSel = document.getElementById('wh-cashier');
   if (cSel) {
-    cSel.innerHTML = '<option value="all">👥 Tous les caissiers</option>';
+    const prev = cSel.value || 'all';
+    cSel.innerHTML = '<option value="all">👥 Tous les caissiers</option>' +
+      '<option value="role:admin">🛡 Admin</option>' +
+      '<option value="role:cashier">💼 Caissier</option>';
     _whCashiers.forEach(u => {
-      cSel.innerHTML += `<option value="${u.id||u.username}">💼 ${u.username||u.name}</option>`;
+      const role = whRoleOf(u);
+      const icon = role === 'admin' ? '🛡' : '💼';
+      const label = role === 'admin' ? 'Admin' : 'Caissier';
+      const id = whPersonId(u);
+      cSel.innerHTML += `<option value="user:${escH(id)}">${icon} ${label} · ${escH(whPersonName(u))}</option>`;
     });
+    if ([...cSel.options].some(o => o.value === prev)) cSel.value = prev;
   }
 
   // Peupler les années disponibles
@@ -4542,10 +4687,7 @@ function renderWorkHours() {
     const d = saleDate(s);
     if (d.getFullYear() !== year) return false;
     if (month !== -1 && d.getMonth() !== month) return false;
-    if (cashier !== 'all') {
-      const sc = s.cashier || s.caissier || s.userId || s.user || '';
-      if (String(sc) !== String(cashier)) return false;
-    }
+    if (!whMatchesSelection(s, cashier)) return false;
     return !s.cancelled;
   });
 
@@ -4588,7 +4730,7 @@ function renderWorkHours() {
     byDay[key].benef += getTicketBenef(s);
     byDay[key].sales.push(s);
     byDay[key].hourCounts[d.getHours()]++;
-    const cc = s.cashier || s.caissier || '';
+    const cc = whSaleActorLabel(s);
     if (cc) byDay[key].caisse.add(cc);
   });
 
@@ -4859,7 +5001,7 @@ function toggleWhExpand(dkey) {
       const sd = saleDate(s);
       const t  = sd.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
       const sid = String(s.id||s.ticketId||'?').slice(-6);
-      const caissier = s.cashier || s.caissier || '';
+      const caissier = whSaleActorLabel(s);
       const n = (s.items||[]).length;
       const desc = (caissier ? '👤 ' + escH(caissier) : '🧾') + ' · #' + sid + (n>0 ? ' · ' + n + ' art.' : '');
       const cancCls = s.cancelled ? 'style="opacity:0.5;text-decoration:line-through"' : '';
@@ -5103,124 +5245,4 @@ function loadCatalogueData() {
 
   document.getElementById('cat-kpis').innerHTML = `
     <div class="kpi-card purple"><div class="kpi-label">Articles</div><div class="kpi-value">${total}</div><div class="kpi-meta">${withCost} avec prix d'achat</div><div class="kpi-icon">📦</div></div>
-    <div class="kpi-card green"><div class="kpi-label">Quantité vendue</div><div class="kpi-value">${fmtQty(totalSoldQty)}</div><div class="kpi-meta">Total articles sortis</div><div class="kpi-icon">🛒</div></div>
-    <div class="kpi-card red"><div class="kpi-label">Montant reçu</div><div class="kpi-value">${fmtCA(totalReceived)}</div><div class="kpi-meta">CA articles vendus</div><div class="kpi-icon">💳</div></div>
-  `;
-}
-
-function setCatFilter(f, btn) {
-  _catFilter = f;
-  document.querySelectorAll('.cat-filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderCatalogue();
-}
-
-function renderCatalogue() {
-  const search = (document.getElementById('cat-search')?.value || '').toLowerCase();
-  let list = catalogueProducts;
-  const salesStats = buildCatalogueSalesStats();
-  renderCatalogueTopSales(salesStats.top);
-
-  if (!list.length) {
-    const board = document.getElementById('cat-sales-board');
-    if (board) board.innerHTML = '';
-    document.getElementById('cat-grid').innerHTML = `<div style="grid-column:1/-1;padding:60px 0;text-align:center;color:#555">
-      <div style="font-size:40px;margin-bottom:12px">📦</div>
-      <div style="font-size:13px">Aucun article trouvé dans COVO Pro.<br>
-      <span style="font-size:11px;color:#444">Clés cherchées : products, covo_products, covo_articles</span></div>
-    </div>`;
-    document.getElementById('cat-count').textContent = '0 article';
-    return;
-  }
-
-  const catFilter = document.getElementById('cat-category-filter')?.value || '';
-  if (search)     list = list.filter(p => (p.name||'').toLowerCase().includes(search) || (p.category||p.categorie||p.cat||'').toLowerCase().includes(search));
-  if (catFilter)  list = list.filter(p => (p.category||p.categorie||p.cat||'') === catFilter);
-  if (_catFilter === 'withcost')  list = list.filter(p => parseFloat(p.costPrice||p.cost||0) > 0);
-  if (_catFilter === 'nocost')    list = list.filter(p => !parseFloat(p.costPrice||p.cost||0));
-  if (_catFilter === 'lowstock')  list = list.filter(p => p.stock != null && parseFloat(p.stock) < 10);
-  list = [...list].sort((a,b) => {
-    const sa = getProductSalesStat(a, salesStats.aliases);
-    const sb = getProductSalesStat(b, salesStats.aliases);
-    return (sb?.amount || 0) - (sa?.amount || 0) || (sb?.qty || 0) - (sa?.qty || 0) || String(a.name||'').localeCompare(String(b.name||''), 'fr');
-  });
-
-  document.getElementById('cat-count').textContent = `${list.length} article${list.length>1?'s':''}`;
-
-  document.getElementById('cat-grid').innerHTML = list.map(p => {
-    const stat = getProductSalesStat(p, salesStats.aliases);
-    const avgSoldPrice = stat && stat.qty > 0 ? stat.amount / stat.qty : 0;
-    const price = parseFloat(p.price || p.pricePerKg || p.unitPrice || avgSoldPrice || 0);
-    const cost  = parseFloat(p.costPrice || p.cost || 0);
-    const benef = cost > 0 ? price - cost : null;
-    const marge = (benef !== null && price > 0) ? Math.round(benef/price*100) : null;
-
-    const imgSrc = p.image || p.img || p.imageUrl || p.photo || '';
-    const imgHtml = imgSrc
-      ? '<img src="' + escH(imgSrc) + '" alt="' + escH(p.name||'') + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'
-        + '<div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:36px;background:#fff">📦</div>'
-      : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:36px;background:#fff">📦</div>';
-
-    const cat = p.category || p.categorie || p.cat || p.type || '';
-    const catBadge = cat
-      ? '<span style="font-size:9px;background:rgba(142,68,173,0.15);color:#c39bd3;border:1px solid rgba(142,68,173,0.3);border-radius:20px;padding:1px 7px;margin-bottom:4px;display:inline-block">' + escH(cat) + '</span>'
-      : '';
-
-    const unitLabel = p.unitType === 'kg' ? ' /kg' : '';
-    const soldQty = stat ? stat.qty : 0;
-    const received = stat ? stat.amount : 0;
-
-    const benefHtml = benef !== null
-      ? '<span class="cat-benef ' + (benef>=0?'pos':'neg') + '">' + (benef>=0?'+':'') + fmtCA(benef) + (marge!==null?' · '+marge+'%':'') + '</span>'
-      : '<span class="cat-benef" style="background:rgba(255,255,255,0.04);color:#444;border:1px dashed #2e2e50;font-size:10px">prix achat manquant</span>';
-
-    const stkVal = parseFloat(p.stock ?? p.qty ?? '');
-    const stockHtml = !isNaN(stkVal)
-      ? '<div class="cat-stock" style="color:' + (stkVal<5?'#e74c3c':stkVal<20?'#f39c12':'#555') + '">Stock : ' + stkVal + ' ' + (p.unitType==='kg'?'kg':'u.') + '</div>'
-      : '';
-
-    return '<div class="cat-card">'
-      + '<div class="cat-img">' + imgHtml + '</div>'
-      + '<div class="cat-info">'
-      + (catBadge ? '<div>' + catBadge + '</div>' : '')
-      + '<div class="cat-name" title="' + escH(p.name||'') + '">' + escH(p.name||'Sans nom') + '</div>'
-      + '<div class="cat-card-price-row"><span>Prix</span><strong>' + fmtCA(price) + unitLabel + '</strong></div>'
-      + '<div class="cat-card-sales">'
-      + '<div class="cat-card-sale-stat"><div class="cat-card-sale-label">Vendu</div><div class="cat-card-sale-val">' + fmtQty(soldQty) + '</div></div>'
-      + '<div class="cat-card-sale-stat"><div class="cat-card-sale-label">Montant reçu</div><div class="cat-card-sale-val green">' + fmtCA(received) + '</div></div>'
-      + '</div>'
-      + '<div class="cat-cost">' + (cost>0 ? 'Achat : ' + fmtCA(cost) : '—') + '</div>'
-      + benefHtml + stockHtml
-      + '</div></div>';
-  }).join('') || '<div style="grid-column:1/-1;padding:40px;text-align:center;color:#555">Aucun résultat</div>';
-}
-
-// Exposer pour Drive restore
-window._reloadCatalogue  = function() { if (document.getElementById('tc-catalogue')?.classList.contains('active')) initCatalogue(); };
-window._reloadWorkHours  = function() { if (document.getElementById('tc-workhours')?.classList.contains('active')) renderWorkHours(); };
-
-// Démarrage : SW d'abord (avant splash), puis app
-// SW enregistré immédiatement pour une activation plus rapide
-try { registerSW(); } catch(e) { console.warn('[SW]', e); }
-
-// Rafraîchir périodiquement le statut SW pendant les premières 30 secondes
-// (résout le cas iOS où le SW met quelques secondes à s'activer)
-let _swCheckCount = 0;
-const _swCheckInterval = setInterval(() => {
-  _swCheckCount++;
-  // Vérifier si le SW est passé en état actif
-  if (navigator.serviceWorker && (navigator.serviceWorker.controller || (window._swRegistration && window._swRegistration.active))) {
-    window._swState = 'active';
-    if (typeof refreshSwStatus === 'function') refreshSwStatus();
-    clearInterval(_swCheckInterval);
-  } else if (_swCheckCount > 30) {
-    clearInterval(_swCheckInterval);
-  }
-}, 1000);
-
-// Lancer le splash puis l'app
-runSplash(() => init());
-</script>
-
-</body>
-</html>
+    <div class="kpi-card green"><div class="kpi-label">Quantité vendue</div><div class="kpi-value">${fmtQty(tot
