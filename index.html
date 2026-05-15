@@ -388,6 +388,102 @@ display:flex; align-items:center; justify-content:space-between;
 .tm-benef-total.pos { color:#2ecc71; }
 .tm-benef-total.neg { color:#e74c3c; }
 
+/* ─── MODAL SEMAINE ─── */
+#wk-modal-overlay {
+display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65);
+z-index:9800; align-items:center; justify-content:center; padding:16px;
+}
+#wk-modal-overlay.open { display:flex; }
+#wk-modal {
+background:#1e1e35; border:1px solid #8e44ad; border-radius:16px;
+width:100%; max-width:520px; max-height:92vh; display:flex; flex-direction:column;
+box-shadow:0 16px 60px rgba(0,0,0,0.6);
+animation:modal-pop 0.25s cubic-bezier(.34,1.56,.64,1);
+}
+.wkm-header {
+padding:14px 20px; border-bottom:1px solid #2e2e50;
+display:flex; align-items:center; justify-content:space-between; gap:12px;
+}
+.wkm-title { font-size:15px; font-weight:700; color:#fff; }
+.wkm-sub { font-size:11px; color:#666; margin-top:2px; }
+.wkm-close { background:none; border:none; color:#555; cursor:pointer; font-size:20px; line-height:1; padding:2px 6px; }
+.wkm-close:hover { color:#ddd; }
+.wkm-body { padding:16px 20px; overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:14px; }
+.wkm-kpis { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+.wkm-kpi { background:#13131f; border-radius:8px; padding:10px 14px; }
+.wkm-kpi-label { font-size:9px; color:#555; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px; }
+.wkm-kpi-val { font-size:16px; font-weight:700; color:#fff; }
+.wkm-kpi-val.green { color:#2ecc71; }
+.wkm-kpi-val.blue { color:#2980b9; }
+.wkm-kpi-val.gold { color:#f39c12; }
+.wkm-kpi-val.purple { color:#c39bd3; }
+.wkm-breakdown { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.wkm-bd-item { background:#13131f; border-radius:8px; padding:8px 12px; display:flex; align-items:center; gap:8px; }
+.wkm-bd-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.wkm-bd-label { font-size:10px; color:#666; flex:1; }
+.wkm-bd-val { font-size:12px; font-weight:700; color:#ddd; }
+.wkm-chart-title { font-size:10px; font-weight:700; color:#666; text-transform:uppercase; letter-spacing:0.07em; margin-bottom:8px; }
+.wkm-chart-wrap { position:relative; height:170px; }
+.wkm-footer {
+padding:12px 20px; border-top:1px solid #2e2e50;
+display:flex; align-items:center; justify-content:space-around;
+}
+.wkm-footer-item { text-align:center; }
+.wkm-footer-label { font-size:9px; color:#555; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:2px; }
+.wkm-footer-val { font-size:13px; font-weight:700; color:#fff; }
+.wkm-footer-val.green { color:#2ecc71; }
+
+/* ─── MODAL PRODUIT CATALOGUE ─── */
+#cpm-overlay {
+display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65);
+z-index:9800; align-items:center; justify-content:center; padding:16px;
+}
+#cpm-overlay.open { display:flex; }
+#cpm-modal {
+background:#1e1e35; border:1px solid #8e44ad; border-radius:16px;
+width:100%; max-width:540px; max-height:92vh; display:flex; flex-direction:column;
+box-shadow:0 16px 60px rgba(0,0,0,0.6);
+animation:modal-pop 0.25s cubic-bezier(.34,1.56,.64,1);
+}
+.cpm-header {
+padding:16px 20px; border-bottom:1px solid #2e2e50;
+display:flex; align-items:center; gap:14px; justify-content:space-between;
+}
+.cpm-header-left { display:flex; align-items:center; gap:12px; flex:1; min-width:0; }
+.cpm-thumb {
+width:44px; height:44px; border-radius:8px; background:#fff;
+display:flex; align-items:center; justify-content:center; font-size:22px;
+overflow:hidden; flex-shrink:0;
+}
+.cpm-thumb img { width:100%; height:100%; object-fit:contain; }
+.cpm-name { font-size:15px; font-weight:700; color:#fff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.cpm-cat-badge { font-size:9px; background:rgba(142,68,173,0.15); color:#c39bd3; border:1px solid rgba(142,68,173,0.3); border-radius:20px; padding:2px 8px; margin-top:3px; display:inline-block; }
+.cpm-close { background:none; border:none; color:#555; cursor:pointer; font-size:20px; line-height:1; padding:2px 6px; flex-shrink:0; }
+.cpm-close:hover { color:#ddd; }
+.cpm-body { padding:16px 20px; overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:14px; }
+.cpm-kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+.cpm-kpi { background:#13131f; border-radius:8px; padding:10px 12px; }
+.cpm-kpi-label { font-size:9px; color:#555; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px; }
+.cpm-kpi-val { font-size:15px; font-weight:700; color:#fff; }
+.cpm-kpi-val.green { color:#2ecc71; }
+.cpm-kpi-val.red { color:#e74c3c; }
+.cpm-kpi-val.purple { color:#c39bd3; }
+.cpm-chart-header { display:flex; align-items:center; justify-content:space-between; }
+.cpm-chart-title { font-size:10px; font-weight:700; color:#666; text-transform:uppercase; letter-spacing:0.07em; }
+.cpm-chart-legend { display:flex; gap:10px; }
+.cpm-chart-legend span { display:flex; align-items:center; gap:4px; font-size:10px; color:#888; }
+.cpm-chart-legend em { display:inline-block; width:18px; height:2px; border-radius:2px; }
+.cpm-chart-wrap { position:relative; height:180px; }
+.cpm-footer {
+padding:12px 20px; border-top:1px solid #2e2e50;
+display:flex; align-items:center; justify-content:space-between;
+}
+.cpm-footer-item { text-align:center; }
+.cpm-footer-label { font-size:9px; color:#555; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:2px; }
+.cpm-footer-val { font-size:14px; font-weight:700; color:#fff; }
+.cpm-footer-val.green { color:#2ecc71; }
+@media (max-width:520px) { .cpm-kpis { grid-template-columns:repeat(2,1fr); } }
+
 /* ─── EMPTY ─── */
 .empty { padding: 60px 24px; text-align: center; color: #555; }
 .empty-icon { font-size: 48px; margin-bottom: 12px; }
@@ -450,6 +546,33 @@ border:1px solid rgba(142,68,173,0.30); border-radius:10px; padding:11px 13px;
 .invest-empty { padding:34px 18px; text-align:center; color:#666; font-size:12px; }
 .invest-alert { background:rgba(231,76,60,0.10); border:1px solid rgba(231,76,60,0.30); border-radius:8px; padding:10px 16px; font-size:12px; color:#e74c3c; margin-bottom:14px; display:flex; align-items:center; gap:8px; font-weight:600; }
 .invest-all-clear { background:rgba(39,174,96,0.10); border:1px solid rgba(39,174,96,0.25); border-radius:8px; padding:10px 16px; font-size:12px; color:#2ecc71; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+
+/* ─── CALENDRIER FILTRE HORAIRE ─── */
+.hf-toggle-row { display:flex; align-items:center; gap:8px; margin-bottom:12px; }
+.hf-toggle-btn { display:flex; align-items:center; gap:6px; background:rgba(142,68,173,0.12); border:1px solid rgba(142,68,173,0.3); border-radius:8px; padding:5px 12px; font-size:11px; font-weight:600; color:#c39bd3; cursor:pointer; font-family:'Poppins',sans-serif; transition:all 0.15s; }
+.hf-toggle-btn:hover { background:rgba(142,68,173,0.22); }
+.hf-toggle-btn .hf-tb-icon { font-size:13px; }
+.hf-toggle-btn .hf-tb-chevron { font-size:9px; color:#666; transition:transform 0.2s; }
+.hf-toggle-btn.open .hf-tb-chevron { transform:rotate(180deg); }
+.hf-cal-btn { font-size:10px; font-weight:700; padding:4px 10px; border-radius:6px; border:1px solid #2e2e50; background:transparent; color:#666; cursor:pointer; font-family:'Poppins',sans-serif; white-space:nowrap; transition:all 0.15s; }
+.hf-cal-btn:hover { border-color:#8e44ad; color:#c39bd3; }
+.hf-cal-count { font-size:10px; color:#555; }
+
+.hf-dropdown { display:none; background:#13131f; border:1px solid #2e2e50; border-radius:10px; padding:10px; margin-bottom:12px; width:220px; }
+.hf-dropdown.open { display:block; }
+.hf-cal-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.hf-cal-title { font-size:11px; font-weight:700; color:#ddd; text-transform:capitalize; }
+.hf-cal-arrow { background:none; border:none; color:#666; font-size:16px; width:22px; height:22px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:color 0.15s; font-family:'Poppins',sans-serif; padding:0; line-height:1; }
+.hf-cal-arrow:hover { color:#c39bd3; }
+.hf-cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; }
+.hf-cal-dow { font-size:8px; font-weight:800; color:#333; text-align:center; padding:2px 0; text-transform:uppercase; }
+.hf-cal-cell { width:26px; height:26px; border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:600; position:relative; transition:all 0.12s; user-select:none; cursor:default; }
+.hf-cal-cell.blank { pointer-events:none; }
+.hf-cal-cell.no-data { color:#fff; opacity:0.18; }
+.hf-cal-cell.has-data { color:#c39bd3; background:rgba(142,68,173,0.15); cursor:pointer; }
+.hf-cal-cell.has-data:hover { background:rgba(142,68,173,0.30); color:#fff; }
+.hf-cal-cell.has-data.selected { background:#8e44ad; color:#fff; }
+.hf-cal-cell.today-mark::after { content:''; position:absolute; bottom:2px; left:50%; transform:translateX(-50%); width:3px; height:3px; border-radius:50%; background:#e74c3c; }
 
 @media (max-width: 860px) {
 .invest-head { flex-direction:column; }
@@ -2085,6 +2208,39 @@ body {
     </div>
   </div>
 
+  <!-- CHART RÉPARTITION HORAIRE PAIEMENTS -->
+
+  <div class="chart-card" id="hourly-payment-card">
+    <div class="section-row" style="margin-bottom:14px">
+      <div class="section-title">Répartition horaire — Paiement moyen</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:#888"><span style="width:10px;height:3px;background:#2980b9;border-radius:2px;display:inline-block"></span>Carte bancaire</span>
+        <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:#888"><span style="width:10px;height:3px;background:#27ae60;border-radius:2px;display:inline-block"></span>Espèces</span>
+      </div>
+    </div>
+    <div class="hf-toggle-row">
+      <button class="hf-toggle-btn" id="hf-toggle-btn" onclick="hfToggleDropdown()">
+        <span class="hf-tb-icon">📅</span>
+        <span id="hf-count">Tous les jours</span>
+        <span class="hf-tb-chevron">▼</span>
+      </button>
+      <button class="hf-cal-btn" onclick="hfSelectAll()">Tout</button>
+      <button class="hf-cal-btn" onclick="hfClearAll()">Aucun</button>
+    </div>
+    <div class="hf-dropdown" id="hf-dropdown">
+      <div class="hf-cal-nav">
+        <button class="hf-cal-arrow" onclick="hfNavMonth(-1)">&#8249;</button>
+        <span class="hf-cal-title" id="hf-cal-title">—</span>
+        <button class="hf-cal-arrow" onclick="hfNavMonth(1)">&#8250;</button>
+      </div>
+      <div class="hf-cal-grid" id="hf-cal-grid"></div>
+    </div>
+    <div class="chart-wrap" style="height:220px" id="hourly-payment-wrap">
+      <canvas id="hourlyPaymentChart" role="img" aria-label="Répartition horaire paiement moyen carte vs espèces"></canvas>
+    </div>
+    <div id="hourly-payment-empty" style="display:none;text-align:center;color:#555;font-size:12px;padding:28px 0">Aucune donnée de paiement horodatée disponible — les tickets doivent contenir l'heure et le mode de règlement.</div>
+  </div>
+
   <!-- FILTERS -->
 
   <div class="section-row">
@@ -2325,6 +2481,87 @@ body {
   </div>
 </div>
 
+<!-- MODAL SEMAINE -->
+<div id="wk-modal-overlay" onclick="closeWeekModal(event)">
+  <div id="wk-modal">
+    <div class="wkm-header">
+      <div>
+        <div class="wkm-title" id="wkm-title">Semaine —</div>
+        <div class="wkm-sub" id="wkm-sub">—</div>
+      </div>
+      <button class="wkm-close" onclick="closeWeekModal()">✕</button>
+    </div>
+    <div class="wkm-body">
+      <div class="wkm-kpis">
+        <div class="wkm-kpi"><div class="wkm-kpi-label">Volume des ventes</div><div class="wkm-kpi-val purple" id="wkm-vol">—</div></div>
+        <div class="wkm-kpi"><div class="wkm-kpi-label">CA Global</div><div class="wkm-kpi-val green" id="wkm-ca">—</div></div>
+      </div>
+      <div class="wkm-breakdown">
+        <div class="wkm-bd-item">
+          <div class="wkm-bd-dot" style="background:#2980b9"></div>
+          <div class="wkm-bd-label">Carte bancaire</div>
+          <div class="wkm-bd-val" id="wkm-cb">—</div>
+        </div>
+        <div class="wkm-bd-item">
+          <div class="wkm-bd-dot" style="background:#27ae60"></div>
+          <div class="wkm-bd-label">Espèces</div>
+          <div class="wkm-bd-val" id="wkm-esp">—</div>
+        </div>
+      </div>
+      <div>
+        <div class="wkm-chart-title">Évolution journalière du CA</div>
+        <div class="wkm-chart-wrap"><canvas id="wkm-chart"></canvas></div>
+      </div>
+    </div>
+    <div class="wkm-footer">
+      <div class="wkm-footer-item"><div class="wkm-footer-label">Bénéfice estimé</div><div class="wkm-footer-val green" id="wkm-benef">—</div></div>
+      <div class="wkm-footer-item"><div class="wkm-footer-label">Ticket moyen</div><div class="wkm-footer-val" id="wkm-avg">—</div></div>
+      <div class="wkm-footer-item"><div class="wkm-footer-label">Jours actifs</div><div class="wkm-footer-val" id="wkm-days">—</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PRODUIT CATALOGUE -->
+<div id="cpm-overlay" onclick="closeCatProductModal(event)">
+  <div id="cpm-modal">
+    <div class="cpm-header">
+      <div class="cpm-header-left">
+        <div class="cpm-thumb" id="cpm-thumb">📦</div>
+        <div>
+          <div class="cpm-name" id="cpm-name">—</div>
+          <span class="cpm-cat-badge" id="cpm-cat"></span>
+        </div>
+      </div>
+      <button class="cpm-close" onclick="document.getElementById('cpm-overlay').classList.remove('open');if(catProductChartInstance){catProductChartInstance.destroy();catProductChartInstance=null;}">✕</button>
+    </div>
+    <div class="cpm-body">
+      <div class="cpm-kpis">
+        <div class="cpm-kpi"><div class="cpm-kpi-label">Prix de vente</div><div class="cpm-kpi-val purple" id="cpm-price">—</div></div>
+        <div class="cpm-kpi"><div class="cpm-kpi-label">CA généré</div><div class="cpm-kpi-val green" id="cpm-ca">—</div></div>
+        <div class="cpm-kpi"><div class="cpm-kpi-label">Volume vendu</div><div class="cpm-kpi-val" id="cpm-qty">—</div></div>
+        <div class="cpm-kpi"><div class="cpm-kpi-label">Marge unitaire</div><div class="cpm-kpi-val" id="cpm-benef">—</div></div>
+      </div>
+      <div>
+        <div class="cpm-chart-header">
+          <span class="cpm-chart-title">Évolution des ventes — 12 mois</span>
+          <div class="cpm-chart-legend">
+            <span><em style="background:#8e44ad"></em>CA</span>
+            <span><em style="background:#2ecc71;border-top:2px dashed #2ecc71;height:0"></em>Qté</span>
+          </div>
+        </div>
+        <div class="cpm-chart-wrap">
+          <canvas id="cpm-chart"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="cpm-footer">
+      <div class="cpm-footer-item"><div class="cpm-footer-label">CA total</div><div class="cpm-footer-val green" id="cpm-total-ca">—</div></div>
+      <div class="cpm-footer-item"><div class="cpm-footer-label">Unités vendues</div><div class="cpm-footer-val" id="cpm-total-qty">—</div></div>
+      <div class="cpm-footer-item"><div class="cpm-footer-label">Prix moyen</div><div class="cpm-footer-val purple" id="cpm-avg-price">—</div></div>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -2337,6 +2574,11 @@ let investments = [];
 let hasCostData = false;
 let currentView = 'all';
 let chartInstance = null;
+let hourlyPaymentChartInstance = null;
+let catProductChartInstance = null;
+let weekModalChartInstance  = null;
+let hfSelectedDates = new Set();
+let hfCurrentMonth  = '';
 
 function loadCovoData() {
   // ── Ventes COVO Pro ──────────────────────────
@@ -2427,8 +2669,10 @@ function toYMD(d) {
 }
 function weekNum(date) {
   const d = new Date(date);
-  const first = new Date(d.getFullYear(), 0, 1);
-  return Math.ceil(((d - first) / 86400000 + first.getDay() + 1) / 7);
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+  const yearStart = new Date(d.getFullYear(), 0, 1);
+  return Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
 }
 function fmt(v) {
   const sign = v < 0 ? '−' : '+';
@@ -2690,8 +2934,9 @@ function renderInvestments() {
     const date = i.date ? new Date(i.date).toLocaleDateString('fr-FR') : '—';
     const statusLabel = i.status === 'paid' ? 'Payé' : (i.status === 'partial' ? 'Crédit partiel' : 'Crédit non payé');
     const statusCls = i.status === 'paid' ? 'paid' : (i.status === 'partial' ? 'partial' : 'credit');
-    const rawVal = _labelField && i.raw && i.raw[_labelField] != null ? String(i.raw[_labelField]) : '';
-    const displayName = rawVal || i.name || '—';
+    const rawVal = _labelField && i.raw && i.raw[_labelField] != null && String(i.raw[_labelField]).trim() !== ''
+      ? String(i.raw[_labelField]).trim() : null;
+    const displayName = rawVal !== null ? rawVal : (_labelField ? (i.name !== 'Investissement' ? i.name : '—') : (i.name || '—'));
     return '<div class="invest-row clickable" onclick="openInvestmentDetail(' + idx + ')" title="Cliquer pour voir les informations">' +
       '<div><div class="invest-name" title="' + escH(displayName) + '">' + escH(displayName) + '</div></div>' +
       '<div class="invest-num">' + fmtCA(i.amount) + '</div>' +
@@ -2820,13 +3065,19 @@ function renderTable() {
     Object.keys(byMonth[mk]).sort().reverse().forEach(wk => {
       const wSales = Object.values(byMonth[mk][wk]).flat();
       const wBenef = wSales.reduce((a,s)=>a+getTicketBenef(s),0);
-      const wId = mId + wk;
+      const wCA    = wSales.filter(s=>!s.cancelled).reduce((a,s)=>a+parseFloat(s.total||0),0);
+      const wId    = mId + wk;
+      const wkKey  = wk + '|' + mk;
+      if (!window._weekSalesMap) window._weekSalesMap = {};
+      window._weekSalesMap[wkKey] = wSales;
       html += `<div class="week-group">
-        <div class="week-header" onclick="toggle('${wId}','')">
-          <span class="week-name">▸ ${wk} — Semaine</span>
+        <div class="week-header" onclick="openWeekModal('${wkKey}')" style="cursor:pointer">
+          <span class="week-name">▸ ${wk}</span>
+          <span style="font-size:11px;color:#666;flex:1;margin-left:8px">${wSales.length} ticket${wSales.length>1?'s':''}</span>
+          <span style="font-size:11px;color:#888;margin-right:10px">${fmtCA(wCA)}</span>
           <span class="week-total">${fmt(wBenef)}</span>
         </div>
-        <div id="${wId}">`;
+        <div id="${wId}" style="display:none">`;
 
       Object.keys(byMonth[mk][wk]).sort().reverse().forEach(dk => {
         const dSales = byMonth[mk][wk][dk];
@@ -2911,6 +3162,194 @@ function renderChart() {
       scales:{
         x:{ ticks:{color:'#666',font:{size:10}}, grid:{color:'rgba(255,255,255,0.04)'} },
         y:{ ticks:{color:'#666',font:{size:10},callback:v=>v.toLocaleString('fr-FR')+'€'}, grid:{color:'rgba(255,255,255,0.06)'} }
+      }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════
+//  FILTRE DATES CHART HORAIRE
+// ═══════════════════════════════════════════════
+function populateHourlyDateFilter() {
+  // Déterminer le mois courant du calendrier (dernier mois avec données, ou mois actuel)
+  const workedDays = new Set(sales.filter(s => !s.cancelled).map(s => toYMD(saleDate(s))));
+  if (!hfCurrentMonth) {
+    const months = [...new Set([...workedDays].map(d => d.substring(0,7)))].sort();
+    hfCurrentMonth = months[months.length - 1] || toYMD(new Date()).substring(0,7);
+  }
+  buildHfCalendar();
+}
+
+function buildHfCalendar() {
+  const grid  = document.getElementById('hf-cal-grid');
+  const title = document.getElementById('hf-cal-title');
+  if (!grid || !title) return;
+
+  const [y, m] = hfCurrentMonth.split('-').map(Number);
+  const monthDate = new Date(y, m - 1, 1);
+  title.textContent = monthDate.toLocaleDateString('fr-FR', {month:'long', year:'numeric'});
+
+  // Jours travaillés ce mois
+  const workedDays = new Set(
+    sales.filter(s => !s.cancelled)
+         .map(s => toYMD(saleDate(s)))
+         .filter(d => d.startsWith(hfCurrentMonth))
+  );
+
+  const todayStr = toYMD(new Date());
+  const daysInMonth = new Date(y, m, 0).getDate();
+  // Lundi = 0 … Dimanche = 6
+  let startDow = (new Date(y, m - 1, 1).getDay() + 6) % 7;
+
+  const dows = ['L','M','M','J','V','S','D'];
+  let html = dows.map(d => `<div class="hf-cal-dow">${d}</div>`).join('');
+
+  // Cases vides avant le 1er
+  for (let i = 0; i < startDow; i++) html += '<div class="hf-cal-cell blank"></div>';
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dateStr = `${hfCurrentMonth}-${String(day).padStart(2,'0')}`;
+    const worked  = workedDays.has(dateStr);
+    const sel     = hfSelectedDates.has(dateStr);
+    const isToday = dateStr === todayStr;
+
+    let cls = 'hf-cal-cell';
+    if (!worked)  cls += ' no-data';
+    if (worked)   cls += ' has-data';
+    if (sel)      cls += ' selected';
+    if (isToday)  cls += ' today-mark';
+
+    const dot     = worked ? '<span class="hf-dot"></span>' : '';
+    const onclick = worked ? ` onclick="toggleHfDate('${dateStr}',this)"` : '';
+    html += `<div class="${cls}"${onclick}>${day}${dot}</div>`;
+  }
+
+  grid.innerHTML = html;
+  updateHfCount();
+}
+
+function hfToggleDropdown() {
+  const dd  = document.getElementById('hf-dropdown');
+  const btn = document.getElementById('hf-toggle-btn');
+  if (!dd) return;
+  const open = dd.classList.toggle('open');
+  btn.classList.toggle('open', open);
+}
+
+function hfNavMonth(dir) {
+  const [y, m] = hfCurrentMonth.split('-').map(Number);
+  const d = new Date(y, m - 1 + dir, 1);
+  hfCurrentMonth = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+  buildHfCalendar();
+}
+
+function toggleHfDate(dateStr, el) {
+  if (hfSelectedDates.has(dateStr)) { hfSelectedDates.delete(dateStr); el.classList.remove('selected'); }
+  else { hfSelectedDates.add(dateStr); el.classList.add('selected'); }
+  updateHfCount();
+  renderHourlyPaymentChart();
+}
+
+function hfSelectAll() {
+  document.querySelectorAll('#hf-cal-grid .hf-cal-cell.has-data').forEach(el => {
+    el.classList.add('selected');
+    const oc = el.getAttribute('onclick') || '';
+    const m  = oc.match(/'([^']+)'/);
+    if (m) hfSelectedDates.add(m[1]);
+  });
+  updateHfCount(); renderHourlyPaymentChart();
+}
+
+function hfClearAll() {
+  hfSelectedDates.clear();
+  document.querySelectorAll('#hf-cal-grid .hf-cal-cell').forEach(el => el.classList.remove('selected'));
+  updateHfCount(); renderHourlyPaymentChart();
+}
+
+function updateHfCount() {
+  const el = document.getElementById('hf-count');
+  if (!el) return;
+  const n = hfSelectedDates.size;
+  el.textContent = n > 0 ? n + ' jour' + (n > 1 ? 's' : '') : 'Tous les jours';
+}
+
+// ═══════════════════════════════════════════════
+//  CHART HORAIRE CARTE VS ESPÈCES
+// ═══════════════════════════════════════════════
+function renderHourlyPaymentChart() {
+  const canvas  = document.getElementById('hourlyPaymentChart');
+  const wrap    = document.getElementById('hourly-payment-wrap');
+  const emptyEl = document.getElementById('hourly-payment-empty');
+  if (!canvas) return;
+
+  const cardSum = new Array(24).fill(0), cardCnt = new Array(24).fill(0);
+  const cashSum = new Array(24).fill(0), cashCnt = new Array(24).fill(0);
+
+  const hfActive = hfSelectedDates.size > 0;
+  sales.filter(s => !s.cancelled && (!hfActive || hfSelectedDates.has(toYMD(saleDate(s))))).forEach(s => {
+    const h   = saleDate(s).getHours();
+    const amt = parseFloat(s.total || 0);
+    if (isCardPayment(s))      { cardSum[h] += amt; cardCnt[h]++; }
+    else if (isCashPayment(s)) { cashSum[h] += amt; cashCnt[h]++; }
+  });
+
+  const cardAvg = cardSum.map((v, i) => cardCnt[i] > 0 ? parseFloat((v / cardCnt[i]).toFixed(2)) : null);
+  const cashAvg = cashSum.map((v, i) => cashCnt[i] > 0 ? parseFloat((v / cashCnt[i]).toFixed(2)) : null);
+  const hasData = cardAvg.some(v => v !== null) || cashAvg.some(v => v !== null);
+
+  if (emptyEl) emptyEl.style.display = hasData ? 'none' : 'block';
+  if (wrap)    wrap.style.display    = hasData ? 'block' : 'none';
+
+  if (!hasData) {
+    if (hourlyPaymentChartInstance) { hourlyPaymentChartInstance.destroy(); hourlyPaymentChartInstance = null; }
+    return;
+  }
+
+  const labels = Array.from({length: 24}, (_, i) => i + 'h');
+  if (hourlyPaymentChartInstance) hourlyPaymentChartInstance.destroy();
+  hourlyPaymentChartInstance = new Chart(canvas.getContext('2d'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Carte bancaire (moy.)',
+          data: cardAvg,
+          borderColor: '#2980b9',
+          backgroundColor: 'rgba(41,128,185,0.10)',
+          borderWidth: 2, tension: 0.35,
+          pointRadius: 4, pointBackgroundColor: '#2980b9',
+          fill: true, spanGaps: false
+        },
+        {
+          label: 'Espèces (moy.)',
+          data: cashAvg,
+          borderColor: '#27ae60',
+          backgroundColor: 'rgba(39,174,96,0.10)',
+          borderWidth: 2, tension: 0.35,
+          pointRadius: 4, pointBackgroundColor: '#27ae60',
+          fill: true, spanGaps: false
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ctx.dataset.label + ' : ' + (ctx.parsed.y !== null ? ctx.parsed.y.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €' : '—'),
+            afterLabel: ctx => {
+              const i = ctx.dataIndex;
+              const cnt = ctx.datasetIndex === 0 ? cardCnt[i] : cashCnt[i];
+              return cnt > 0 ? cnt + ' transaction' + (cnt > 1 ? 's' : '') : '';
+            }
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#666', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+        y: { beginAtZero: true, ticks: { color: '#666', font: { size: 10 }, callback: v => v.toLocaleString('fr-FR') + ' €' }, grid: { color: 'rgba(255,255,255,0.06)' } }
       }
     }
   });
@@ -3432,7 +3871,7 @@ async function autoLoadLatestBackup(isInitial) {
     loadCovoData();
     updateKPIs();
     renderInvestments();
-    renderChart();
+    renderChart(); populateHourlyDateFilter(); renderHourlyPaymentChart();
     renderTable();
     if (window._reloadCatalogue) window._reloadCatalogue();
     if (window._reloadWorkHours) window._reloadWorkHours();
@@ -3631,7 +4070,7 @@ async function loadSelectedBackup() {
       closeModal('backup-modal');
       const summary = savedItems.slice(0,3).join(' · ') + (savedItems.length > 3 ? ' …' : '');
       toast('✓ Chargé : ' + summary, 'ok');
-      loadCovoData(); updateKPIs(); renderInvestments(); renderChart(); renderTable();
+      loadCovoData(); updateKPIs(); renderInvestments(); renderChart(); populateHourlyDateFilter(); renderHourlyPaymentChart(); renderTable();
       if (window._reloadCatalogue) window._reloadCatalogue();
       if (window._reloadWorkHours) window._reloadWorkHours();
       if (typeof updateSettingsPanel === 'function') updateSettingsPanel();
@@ -4040,7 +4479,7 @@ function init() {
   loadCovoData();
   updateKPIs();
   renderInvestments();
-  renderChart();
+  renderChart(); populateHourlyDateFilter(); renderHourlyPaymentChart();
   renderTable();
   // Initialiser le FAB (cacher si déjà installé)
   if (typeof updateFabVisibility === 'function') updateFabVisibility();
@@ -4544,7 +4983,7 @@ function confirmClearData() {
   if (!confirm('Supprimer le cache local ? Les données Drive ne sont pas affectées.')) return;
   localStorage.removeItem('covo_sales_history');
   sales = [];
-  loadCovoData(); updateKPIs(); renderInvestments(); renderChart(); renderTable();
+  loadCovoData(); updateKPIs(); renderInvestments(); renderChart(); populateHourlyDateFilter(); renderHourlyPaymentChart(); renderTable();
   updateSettingsPanel();
   toast('Cache local vidé', '');
 }
@@ -5384,7 +5823,8 @@ function renderCatalogue() {
 
   document.getElementById('cat-count').textContent = `${list.length} article${list.length>1?'s':''}`;
 
-  document.getElementById('cat-grid').innerHTML = list.map(p => {
+  window._catProductModalList = list;
+  document.getElementById('cat-grid').innerHTML = list.map((p, idx) => {
     const stat = getProductSalesStat(p, salesStats.aliases);
     const avgSoldPrice = stat && stat.qty > 0 ? stat.amount / stat.qty : 0;
     const price = parseFloat(p.price || p.pricePerKg || p.unitPrice || avgSoldPrice || 0);
@@ -5416,7 +5856,7 @@ function renderCatalogue() {
       ? '<div class="cat-stock" style="color:' + (stkVal<5?'#e74c3c':stkVal<20?'#f39c12':'#555') + '">Stock : ' + stkVal + ' ' + (p.unitType==='kg'?'kg':'u.') + '</div>'
       : '';
 
-    return '<div class="cat-card">'
+    return '<div class="cat-card" onclick="openCatProductModal(' + idx + ')" style="cursor:pointer">'
       + '<div class="cat-img">' + imgHtml + '</div>'
       + '<div class="cat-info">'
       + (catBadge ? '<div>' + catBadge + '</div>' : '')
@@ -5430,6 +5870,214 @@ function renderCatalogue() {
       + benefHtml + stockHtml
       + '</div></div>';
   }).join('') || '<div style="grid-column:1/-1;padding:40px;text-align:center;color:#555">Aucun résultat</div>';
+}
+
+// ═══════════════════════════════════════════════
+//  MODAL SEMAINE
+// ═══════════════════════════════════════════════
+function openWeekModal(wkKey) {
+  const wSales = (window._weekSalesMap || {})[wkKey];
+  if (!wSales || !wSales.length) return;
+
+  const valid     = wSales.filter(s => !s.cancelled);
+  const ca        = valid.reduce((a, s) => a + parseFloat(s.total || 0), 0);
+  const benef     = wSales.reduce((a, s) => a + getTicketBenef(s), 0);
+  const caCard    = valid.filter(isCardPayment).reduce((a, s) => a + parseFloat(s.total || 0), 0);
+  const caEsp     = valid.filter(isCashPayment).reduce((a, s) => a + parseFloat(s.total || 0), 0);
+  const avgTicket = valid.length > 0 ? ca / valid.length : 0;
+
+  // Plage de dates de la semaine
+  const dates = [...new Set(wSales.map(s => toYMD(saleDate(s))))].sort();
+  const d0 = new Date(dates[0] + 'T00:00:00');
+  const d1 = new Date(dates[dates.length - 1] + 'T00:00:00');
+  const fmtD = d => d.toLocaleDateString('fr-FR', {day:'2-digit', month:'short'});
+  const [wNum] = wkKey.split('|');
+
+  document.getElementById('wkm-title').textContent = wNum;
+  document.getElementById('wkm-sub').textContent   = fmtD(d0) + (d1 > d0 ? ' → ' + fmtD(d1) : '');
+  document.getElementById('wkm-vol').textContent   = valid.length + ' vente' + (valid.length > 1 ? 's' : '');
+  document.getElementById('wkm-ca').textContent    = fmtCA(ca);
+  document.getElementById('wkm-cb').textContent    = fmtCA(caCard);
+  document.getElementById('wkm-esp').textContent   = fmtCA(caEsp);
+  document.getElementById('wkm-benef').textContent = fmt(benef);
+  document.getElementById('wkm-avg').textContent   = fmtCA(avgTicket);
+  document.getElementById('wkm-days').textContent  = dates.length + ' j.';
+
+  buildWeekChart(wSales, dates);
+  document.getElementById('wk-modal-overlay').classList.add('open');
+}
+
+function closeWeekModal(e) {
+  if (e && e.target !== document.getElementById('wk-modal-overlay')) return;
+  document.getElementById('wk-modal-overlay').classList.remove('open');
+  if (weekModalChartInstance) { weekModalChartInstance.destroy(); weekModalChartInstance = null; }
+}
+
+function buildWeekChart(wSales, dates) {
+  const canvas = document.getElementById('wkm-chart');
+  if (!canvas) return;
+
+  // 7 jours Lun→Dim autour des dates de la semaine
+  const d0 = new Date(dates[0] + 'T00:00:00');
+  const mon = new Date(d0);
+  mon.setDate(d0.getDate() - ((d0.getDay() + 6) % 7));
+
+  const labels = [], dataCA = [], dataCard = [], dataCash = [];
+  for (let i = 0; i < 7; i++) {
+    const day = new Date(mon);
+    day.setDate(mon.getDate() + i);
+    const dk = toYMD(day);
+    labels.push(day.toLocaleDateString('fr-FR', {weekday:'short', day:'numeric'}));
+    const dSales = wSales.filter(s => toYMD(saleDate(s)) === dk && !s.cancelled);
+    const dCA    = dSales.reduce((a, s) => a + parseFloat(s.total || 0), 0);
+    const dCard  = dSales.filter(isCardPayment).reduce((a, s) => a + parseFloat(s.total || 0), 0);
+    const dCash  = dSales.filter(isCashPayment).reduce((a, s) => a + parseFloat(s.total || 0), 0);
+    dataCA.push(parseFloat(dCA.toFixed(2)));
+    dataCard.push(parseFloat(dCard.toFixed(2)));
+    dataCash.push(parseFloat(dCash.toFixed(2)));
+  }
+
+  if (weekModalChartInstance) weekModalChartInstance.destroy();
+  weekModalChartInstance = new Chart(canvas.getContext('2d'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: 'CA', data: dataCA, borderColor: '#8e44ad', backgroundColor: 'rgba(142,68,173,0.10)', borderWidth: 2, tension: 0.3, pointRadius: 3, pointBackgroundColor: '#8e44ad', fill: true },
+        { label: 'Carte', data: dataCard, borderColor: '#2980b9', backgroundColor: 'transparent', borderWidth: 1.5, tension: 0.3, pointRadius: 2, borderDash: [4,3] },
+        { label: 'Espèces', data: dataCash, borderColor: '#27ae60', backgroundColor: 'transparent', borderWidth: 1.5, tension: 0.3, pointRadius: 2, borderDash: [4,3] }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#666', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+        y: { beginAtZero: true, ticks: { color: '#666', font: { size: 9 }, callback: v => v + '€' }, grid: { color: 'rgba(255,255,255,0.06)' } }
+      }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════
+//  MODAL PRODUIT CATALOGUE
+// ═══════════════════════════════════════════════
+function openCatProductModal(idx) {
+  const p = (window._catProductModalList || [])[idx];
+  if (!p) return;
+
+  const salesStats = buildCatalogueSalesStats();
+  const stat = getProductSalesStat(p, salesStats.aliases);
+  const avgSoldPrice = stat && stat.qty > 0 ? stat.amount / stat.qty : 0;
+  const price  = parseFloat(p.price || p.pricePerKg || p.unitPrice || avgSoldPrice || 0);
+  const cost   = parseFloat(p.costPrice || p.cost || 0);
+  const benef  = cost > 0 ? price - cost : null;
+  const marge  = (benef !== null && price > 0) ? Math.round(benef / price * 100) : null;
+  const soldQty  = stat ? stat.qty  : 0;
+  const received = stat ? stat.amount : 0;
+
+  // Header
+  document.getElementById('cpm-name').textContent = p.name || 'Article';
+  const catEl = document.getElementById('cpm-cat');
+  const cat = p.category || p.categorie || p.cat || p.type || '';
+  catEl.textContent = cat || ''; catEl.style.display = cat ? '' : 'none';
+
+  // Thumb
+  const thumbEl = document.getElementById('cpm-thumb');
+  const imgSrc = p.image || p.img || p.imageUrl || p.photo || '';
+  thumbEl.innerHTML = imgSrc
+    ? '<img src="' + escH(imgSrc) + '" onerror="this.parentElement.innerHTML=\'📦\'">'
+    : '📦';
+
+  // KPIs
+  document.getElementById('cpm-price').textContent = fmtCA(price);
+  document.getElementById('cpm-ca').textContent    = fmtCA(received);
+  document.getElementById('cpm-qty').textContent   = fmtQty(soldQty);
+  const benefEl = document.getElementById('cpm-benef');
+  if (benef !== null) {
+    benefEl.textContent  = (benef >= 0 ? '+' : '') + fmtCA(benef) + (marge !== null ? ' (' + marge + '%)' : '');
+    benefEl.className    = 'cpm-kpi-val ' + (benef > 0 ? 'green' : 'red');
+  } else {
+    benefEl.textContent  = '—';
+    benefEl.className    = 'cpm-kpi-val';
+  }
+
+  // Footer
+  document.getElementById('cpm-total-ca').textContent  = fmtCA(received);
+  document.getElementById('cpm-total-qty').textContent  = fmtQty(soldQty);
+  document.getElementById('cpm-avg-price').textContent  = soldQty > 0 ? fmtCA(received / soldQty) : '—';
+
+  buildCatProductChart(p);
+  document.getElementById('cpm-overlay').classList.add('open');
+}
+
+function closeCatProductModal(e) {
+  if (e && e.target !== document.getElementById('cpm-overlay')) return;
+  document.getElementById('cpm-overlay').classList.remove('open');
+  if (catProductChartInstance) { catProductChartInstance.destroy(); catProductChartInstance = null; }
+}
+
+function buildCatProductChart(p) {
+  const canvas = document.getElementById('cpm-chart');
+  if (!canvas) return;
+
+  const mNames = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+  const now = new Date();
+  const labels = [], dataCA = [], dataQty = [];
+  const pKeys = new Set(productKeys(p));
+
+  for (let i = 11; i >= 0; i--) {
+    const d  = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const ym = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+    labels.push(mNames[d.getMonth()] + ' ' + String(d.getFullYear()).slice(-2));
+    let mCA = 0, mQty = 0;
+    sales.filter(s => !s.cancelled && toYMD(saleDate(s)).startsWith(ym)).forEach(s => {
+      (s.items || []).forEach(it => {
+        const itKeys = [it.id, it.articleId, it.productId, it.name, it.label, it.nom]
+          .filter(Boolean).map(catKey);
+        if (!itKeys.some(k => pKeys.has(k))) return;
+        const qty = parseFloat(it.qty ?? it.quantity ?? it.qte ?? it.quantite ?? 1) || 1;
+        const unit = parseFloat(it.price ?? it.unitPrice ?? it.prix ?? it.prixVente ?? 0) || 0;
+        const lineRaw = parseFloat(it.total ?? it.amount ?? it.subtotal ?? '');
+        mCA  += !isNaN(lineRaw) ? lineRaw : unit * qty;
+        mQty += qty;
+      });
+    });
+    dataCA.push(parseFloat(mCA.toFixed(2)));
+    dataQty.push(parseFloat(mQty.toFixed(2)));
+  }
+
+  if (catProductChartInstance) catProductChartInstance.destroy();
+  catProductChartInstance = new Chart(canvas.getContext('2d'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'CA (€)', data: dataCA,
+          borderColor: '#8e44ad', backgroundColor: 'rgba(142,68,173,0.10)',
+          borderWidth: 2, tension: 0.35, pointRadius: 3,
+          pointBackgroundColor: '#8e44ad', fill: true, yAxisID: 'yCA'
+        },
+        {
+          label: 'Qté', data: dataQty,
+          borderColor: '#2ecc71', backgroundColor: 'transparent',
+          borderWidth: 2, tension: 0.35, pointRadius: 3,
+          pointBackgroundColor: '#2ecc71', borderDash: [4, 3],
+          fill: false, yAxisID: 'yQty'
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#666', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+        yCA:  { position: 'left',  beginAtZero: true, ticks: { color: '#666', font: { size: 9 }, callback: v => v + '€' }, grid: { color: 'rgba(255,255,255,0.06)' } },
+        yQty: { position: 'right', beginAtZero: true, ticks: { color: '#555', font: { size: 9 } }, grid: { display: false } }
+      }
+    }
+  });
 }
 
 // Exposer pour Drive restore
