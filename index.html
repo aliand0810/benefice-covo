@@ -5245,4 +5245,124 @@ function loadCatalogueData() {
 
   document.getElementById('cat-kpis').innerHTML = `
     <div class="kpi-card purple"><div class="kpi-label">Articles</div><div class="kpi-value">${total}</div><div class="kpi-meta">${withCost} avec prix d'achat</div><div class="kpi-icon">📦</div></div>
-    <div class="kpi-card green"><div class="kpi-label">Quantité vendue</div><div class="kpi-value">${fmtQty(tot
+    <div class="kpi-card green"><div class="kpi-label">Quantité vendue</div><div class="kpi-value">${fmtQty(totalSoldQty)}</div><div class="kpi-meta">Total articles sortis</div><div class="kpi-icon">🛒</div></div>
+    <div class="kpi-card red"><div class="kpi-label">Montant reçu</div><div class="kpi-value">${fmtCA(totalReceived)}</div><div class="kpi-meta">CA articles vendus</div><div class="kpi-icon">💳</div></div>
+  `;
+}
+
+function setCatFilter(f, btn) {
+  _catFilter = f;
+  document.querySelectorAll('.cat-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCatalogue();
+}
+
+function renderCatalogue() {
+  const search = (document.getElementById('cat-search')?.value || '').toLowerCase();
+  let list = catalogueProducts;
+  const salesStats = buildCatalogueSalesStats();
+  renderCatalogueTopSales(salesStats.top);
+
+  if (!list.length) {
+    const board = document.getElementById('cat-sales-board');
+    if (board) board.innerHTML = '';
+    document.getElementById('cat-grid').innerHTML = `<div style="grid-column:1/-1;padding:60px 0;text-align:center;color:#555">
+      <div style="font-size:40px;margin-bottom:12px">📦</div>
+      <div style="font-size:13px">Aucun article trouvé dans COVO Pro.<br>
+      <span style="font-size:11px;color:#444">Clés cherchées : products, covo_products, covo_articles</span></div>
+    </div>`;
+    document.getElementById('cat-count').textContent = '0 article';
+    return;
+  }
+
+  const catFilter = document.getElementById('cat-category-filter')?.value || '';
+  if (search)     list = list.filter(p => (p.name||'').toLowerCase().includes(search) || (p.category||p.categorie||p.cat||'').toLowerCase().includes(search));
+  if (catFilter)  list = list.filter(p => (p.category||p.categorie||p.cat||'') === catFilter);
+  if (_catFilter === 'withcost')  list = list.filter(p => parseFloat(p.costPrice||p.cost||0) > 0);
+  if (_catFilter === 'nocost')    list = list.filter(p => !parseFloat(p.costPrice||p.cost||0));
+  if (_catFilter === 'lowstock')  list = list.filter(p => p.stock != null && parseFloat(p.stock) < 10);
+  list = [...list].sort((a,b) => {
+    const sa = getProductSalesStat(a, salesStats.aliases);
+    const sb = getProductSalesStat(b, salesStats.aliases);
+    return (sb?.amount || 0) - (sa?.amount || 0) || (sb?.qty || 0) - (sa?.qty || 0) || String(a.name||'').localeCompare(String(b.name||''), 'fr');
+  });
+
+  document.getElementById('cat-count').textContent = `${list.length} article${list.length>1?'s':''}`;
+
+  document.getElementById('cat-grid').innerHTML = list.map(p => {
+    const stat = getProductSalesStat(p, salesStats.aliases);
+    const avgSoldPrice = stat && stat.qty > 0 ? stat.amount / stat.qty : 0;
+    const price = parseFloat(p.price || p.pricePerKg || p.unitPrice || avgSoldPrice || 0);
+    const cost  = parseFloat(p.costPrice || p.cost || 0);
+    const benef = cost > 0 ? price - cost : null;
+    const marge = (benef !== null && price > 0) ? Math.round(benef/price*100) : null;
+
+    const imgSrc = p.image || p.img || p.imageUrl || p.photo || '';
+    const imgHtml = imgSrc
+      ? '<img src="' + escH(imgSrc) + '" alt="' + escH(p.name||'') + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'
+        + '<div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:36px;background:#fff">📦</div>'
+      : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:36px;background:#fff">📦</div>';
+
+    const cat = p.category || p.categorie || p.cat || p.type || '';
+    const catBadge = cat
+      ? '<span style="font-size:9px;background:rgba(142,68,173,0.15);color:#c39bd3;border:1px solid rgba(142,68,173,0.3);border-radius:20px;padding:1px 7px;margin-bottom:4px;display:inline-block">' + escH(cat) + '</span>'
+      : '';
+
+    const unitLabel = p.unitType === 'kg' ? ' /kg' : '';
+    const soldQty = stat ? stat.qty : 0;
+    const received = stat ? stat.amount : 0;
+
+    const benefHtml = benef !== null
+      ? '<span class="cat-benef ' + (benef>=0?'pos':'neg') + '">' + (benef>=0?'+':'') + fmtCA(benef) + (marge!==null?' · '+marge+'%':'') + '</span>'
+      : '<span class="cat-benef" style="background:rgba(255,255,255,0.04);color:#444;border:1px dashed #2e2e50;font-size:10px">prix achat manquant</span>';
+
+    const stkVal = parseFloat(p.stock ?? p.qty ?? '');
+    const stockHtml = !isNaN(stkVal)
+      ? '<div class="cat-stock" style="color:' + (stkVal<5?'#e74c3c':stkVal<20?'#f39c12':'#555') + '">Stock : ' + stkVal + ' ' + (p.unitType==='kg'?'kg':'u.') + '</div>'
+      : '';
+
+    return '<div class="cat-card">'
+      + '<div class="cat-img">' + imgHtml + '</div>'
+      + '<div class="cat-info">'
+      + (catBadge ? '<div>' + catBadge + '</div>' : '')
+      + '<div class="cat-name" title="' + escH(p.name||'') + '">' + escH(p.name||'Sans nom') + '</div>'
+      + '<div class="cat-card-price-row"><span>Prix</span><strong>' + fmtCA(price) + unitLabel + '</strong></div>'
+      + '<div class="cat-card-sales">'
+      + '<div class="cat-card-sale-stat"><div class="cat-card-sale-label">Vendu</div><div class="cat-card-sale-val">' + fmtQty(soldQty) + '</div></div>'
+      + '<div class="cat-card-sale-stat"><div class="cat-card-sale-label">Montant reçu</div><div class="cat-card-sale-val green">' + fmtCA(received) + '</div></div>'
+      + '</div>'
+      + '<div class="cat-cost">' + (cost>0 ? 'Achat : ' + fmtCA(cost) : '—') + '</div>'
+      + benefHtml + stockHtml
+      + '</div></div>';
+  }).join('') || '<div style="grid-column:1/-1;padding:40px;text-align:center;color:#555">Aucun résultat</div>';
+}
+
+// Exposer pour Drive restore
+window._reloadCatalogue  = function() { if (document.getElementById('tc-catalogue')?.classList.contains('active')) initCatalogue(); };
+window._reloadWorkHours  = function() { if (document.getElementById('tc-workhours')?.classList.contains('active')) renderWorkHours(); };
+
+// Démarrage : SW d'abord (avant splash), puis app
+// SW enregistré immédiatement pour une activation plus rapide
+try { registerSW(); } catch(e) { console.warn('[SW]', e); }
+
+// Rafraîchir périodiquement le statut SW pendant les premières 30 secondes
+// (résout le cas iOS où le SW met quelques secondes à s'activer)
+let _swCheckCount = 0;
+const _swCheckInterval = setInterval(() => {
+  _swCheckCount++;
+  // Vérifier si le SW est passé en état actif
+  if (navigator.serviceWorker && (navigator.serviceWorker.controller || (window._swRegistration && window._swRegistration.active))) {
+    window._swState = 'active';
+    if (typeof refreshSwStatus === 'function') refreshSwStatus();
+    clearInterval(_swCheckInterval);
+  } else if (_swCheckCount > 30) {
+    clearInterval(_swCheckInterval);
+  }
+}, 1000);
+
+// Lancer le splash puis l'app
+runSplash(() => init());
+</script>
+
+</body>
+</html>
