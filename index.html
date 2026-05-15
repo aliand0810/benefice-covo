@@ -410,6 +410,52 @@ padding: 20px 24px; margin-bottom: 24px;
 .totaux-value.gold { color: #f39c12; }
 .totaux-divider { width: 1px; background: #2e2e50; }
 
+/* ─── INVESTISSEMENTS ─── */
+.invest-card {
+background: #1e1e35; border: 1px solid #2e2e50; border-radius: 12px;
+padding: 20px; margin-bottom: 24px; overflow: hidden;
+}
+.invest-head { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:16px; }
+.invest-title { font-size:15px; font-weight:700; color:#fff; }
+.invest-sub { font-size:11px; color:#666; margin-top:3px; }
+.invest-signal {
+min-width:210px; background:linear-gradient(135deg,rgba(142,68,173,0.22),rgba(39,174,96,0.12));
+border:1px solid rgba(142,68,173,0.30); border-radius:10px; padding:11px 13px;
+}
+.invest-signal-label { font-size:9px; color:#888; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px; }
+.invest-signal-value { font-size:13px; font-weight:800; color:#fff; line-height:1.3; }
+.invest-kpis { display:grid; grid-template-columns:repeat(4,minmax(130px,1fr)); gap:10px; margin-bottom:16px; }
+.invest-kpi { background:#13131f; border:1px solid #2e2e50; border-radius:9px; padding:12px; }
+.invest-kpi-label { font-size:10px; color:#666; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:5px; }
+.invest-kpi-val { font-size:18px; font-weight:800; color:#fff; }
+.invest-kpi-val.green { color:#2ecc71; }
+.invest-kpi-val.red { color:#e74c3c; }
+.invest-kpi-val.purple { color:#c39bd3; }
+.invest-table-wrap { overflow-x:auto; border:1px solid #2e2e50; border-radius:10px; }
+.invest-table { min-width:760px; }
+.invest-row { display:grid; grid-template-columns:1.3fr 110px 110px 110px 120px 100px; gap:12px; align-items:center; padding:12px 14px; border-bottom:1px solid #252540; }
+.invest-row:last-child { border-bottom:0; }
+.invest-row.head { background:#17172a; color:#666; font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; }
+.invest-name { font-size:12px; font-weight:700; color:#ddd; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.invest-meta { font-size:10px; color:#666; margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.invest-num { font-size:12px; font-weight:800; color:#fff; text-align:right; }
+.invest-num.green { color:#2ecc71; }
+.invest-num.red { color:#e74c3c; }
+.invest-status { justify-self:start; font-size:10px; font-weight:800; border-radius:20px; padding:4px 9px; white-space:nowrap; }
+.invest-status.paid { color:#2ecc71; background:rgba(39,174,96,0.14); border:1px solid rgba(39,174,96,0.25); }
+.invest-status.credit { color:#e74c3c; background:rgba(231,76,60,0.12); border:1px solid rgba(231,76,60,0.22); }
+.invest-status.partial { color:#f39c12; background:rgba(243,156,18,0.12); border:1px solid rgba(243,156,18,0.24); }
+.invest-empty { padding:34px 18px; text-align:center; color:#666; font-size:12px; }
+
+@media (max-width: 860px) {
+.invest-head { flex-direction:column; }
+.invest-signal { width:100%; min-width:0; }
+.invest-kpis { grid-template-columns:repeat(2,1fr); }
+}
+@media (max-width: 560px) {
+.invest-kpis { grid-template-columns:1fr; }
+}
+
 /* ─── TOAST ─── */
 .toast {
 position: fixed; bottom: 24px; right: 24px;
@@ -430,6 +476,8 @@ background: rgba(0,0,0,0.7); z-index: 8000;
 align-items: center; justify-content: center; padding: 16px;
 }
 .modal-overlay.open { display: flex; }
+#clientid-modal { z-index: 10050; }
+#clientid-modal .modal-box { position: relative; z-index: 10051; }
 .modal-box {
 background: #1e1e35; border: 1px solid #8e44ad;
 border-radius: 16px; padding: 28px; max-width: 500px; width: 100%;
@@ -756,8 +804,8 @@ align-items: center; gap: 8px;
 .cat-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; }
 .cat-card { background:#1e1e35; border:1px solid #2e2e50; border-radius:12px; overflow:hidden; transition:border-color 0.2s,transform 0.15s; }
 .cat-card:hover { border-color:#8e44ad; transform:translateY(-2px); }
-.cat-img { width:100%; height:130px; object-fit:cover; background:#13131f; display:flex; align-items:center; justify-content:center; font-size:40px; color:#333; }
-.cat-img img { width:100%; height:100%; object-fit:cover; }
+.cat-img { width:100%; height:150px; background:#fff; display:flex; align-items:center; justify-content:center; font-size:40px; color:#333; overflow:hidden; border-bottom:1px solid rgba(0,0,0,0.04); }
+.cat-img img { width:100%; height:100%; object-fit:contain; object-position:center; display:block; padding:8px; }
 .cat-info { padding:12px; }
 .cat-name { font-size:13px; font-weight:700; color:#ddd; margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .cat-price { font-size:12px; color:#c39bd3; }
@@ -768,6 +816,43 @@ align-items: center; gap: 8px;
 .cat-stock { font-size:10px; color:#555; margin-top:4px; }
 .cat-filter-btn { background:#1e1e35; border:1px solid #2e2e50; border-radius:8px; color:#666; font-size:12px; padding:7px 14px; cursor:pointer; font-family:‘Poppins’,sans-serif; transition:all 0.2s; }
 .cat-filter-btn.active { background:#8e44ad; border-color:#8e44ad; color:#fff; font-weight:600; }
+.cat-sales-board { display:grid; grid-template-columns:minmax(260px,1.05fr) minmax(280px,2fr); gap:16px; margin-bottom:20px; }
+.cat-top-card { background:#1e1e35; border:1px solid #2e2e50; border-radius:12px; padding:18px; overflow:hidden; }
+.cat-top-title { font-size:14px; font-weight:700; color:#fff; margin-bottom:4px; }
+.cat-top-sub { font-size:11px; color:#666; margin-bottom:14px; }
+.cat-podium { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; align-items:end; }
+.cat-podium-item { background:#13131f; border:1px solid #2e2e50; border-radius:10px; padding:12px 10px; min-height:118px; display:flex; flex-direction:column; justify-content:space-between; }
+.cat-podium-item.first { min-height:142px; border-color:#8e44ad; background:linear-gradient(135deg,rgba(142,68,173,0.30),#13131f); }
+.cat-rank { width:26px; height:26px; border-radius:8px; display:flex; align-items:center; justify-content:center; background:#8e44ad; color:#fff; font-size:12px; font-weight:800; margin-bottom:8px; }
+.cat-top-name { font-size:12px; font-weight:700; color:#ddd; line-height:1.25; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.cat-top-metrics { display:grid; gap:4px; margin-top:10px; }
+.cat-top-metric { display:flex; justify-content:space-between; gap:8px; font-size:10px; color:#777; }
+.cat-top-metric strong { color:#2ecc71; font-size:11px; }
+.cat-sales-list { display:flex; flex-direction:column; gap:8px; max-height:320px; overflow:auto; }
+.cat-sales-row { display:grid; grid-template-columns:32px minmax(120px,1fr) 86px 88px 98px; gap:10px; align-items:center; background:#13131f; border:1px solid #2e2e50; border-radius:9px; padding:10px 12px; }
+.cat-sales-rank { width:24px; height:24px; border-radius:7px; display:flex; align-items:center; justify-content:center; background:rgba(142,68,173,0.18); color:#c39bd3; font-size:11px; font-weight:800; }
+.cat-sales-name { font-size:12px; font-weight:700; color:#ddd; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.cat-sales-value { text-align:right; }
+.cat-sales-label { display:block; font-size:9px; color:#666; text-transform:uppercase; letter-spacing:0.04em; }
+.cat-sales-num { display:block; font-size:12px; color:#fff; font-weight:700; }
+.cat-card-sales { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
+.cat-card-sale-stat { background:#13131f; border:1px solid #2e2e50; border-radius:8px; padding:8px 9px; }
+.cat-card-sale-label { font-size:9px; color:#666; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:3px; }
+.cat-card-sale-val { font-size:13px; font-weight:800; color:#fff; }
+.cat-card-sale-val.green { color:#2ecc71; }
+.cat-card-price-row { display:flex; justify-content:space-between; gap:8px; align-items:center; margin-top:8px; }
+.cat-card-price-row span { font-size:10px; color:#666; }
+.cat-card-price-row strong { font-size:13px; color:#c39bd3; }
+
+@media (max-width: 860px) {
+.cat-sales-board { grid-template-columns:1fr; }
+.cat-sales-row { grid-template-columns:28px minmax(110px,1fr) 70px 74px 86px; }
+}
+@media (max-width: 560px) {
+.cat-podium { grid-template-columns:1fr; }
+.cat-sales-row { grid-template-columns:28px 1fr; }
+.cat-sales-value { text-align:left; }
+}
 
 /* ─── BOUTON RÉGLAGES ─── */
 .btn-settings {
@@ -922,6 +1007,414 @@ body.no-animations *::before,
 body.no-animations *::after {
 animation-duration: 0.001s !important;
 transition-duration: 0.001s !important;
+}
+
+/* ─── RELOOK DASHBOARD INSPIRE SHOPALL ─── */
+:root {
+  --dash-bg: #f5f6fb;
+  --dash-panel: #ffffff;
+  --dash-panel-soft: #fafbff;
+  --dash-border: #e7e9f4;
+  --dash-text: #151827;
+  --dash-muted: #7a8091;
+  --dash-primary: #5b4df0;
+  --dash-primary-dark: #4438ca;
+  --dash-danger: #df3f5c;
+  --dash-success: #16b88f;
+  --dash-shadow: 0 18px 45px rgba(33, 40, 70, 0.08);
+}
+body {
+  background: radial-gradient(circle at top right, rgba(91,77,240,0.10), transparent 34%), var(--dash-bg);
+  color: var(--dash-text);
+}
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 5000;
+  height: 72px;
+  background: rgba(255,255,255,0.92);
+  border-bottom: 1px solid var(--dash-border);
+  box-shadow: 0 8px 28px rgba(28, 35, 65, 0.06);
+  backdrop-filter: blur(18px);
+}
+.logo-text { color: var(--dash-text); letter-spacing: -0.01em; }
+.logo-text span { color: var(--dash-primary); }
+.logo::before {
+  content: "☰";
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: linear-gradient(135deg, var(--dash-primary), #7a5cff);
+  box-shadow: 0 10px 24px rgba(91,77,240,0.28);
+  font-size: 17px;
+}
+.logo-badge {
+  background: #eef0ff;
+  color: var(--dash-primary);
+  border: 1px solid #dfe2ff;
+}
+#sync-indicator {
+  background: #f7f8ff !important;
+  border-color: #e3e6ff !important;
+}
+#sync-last { color: var(--dash-primary) !important; }
+#sync-countdown, .drive-label { color: var(--dash-muted) !important; }
+.btn-settings {
+  background: #f7f8ff !important;
+  color: var(--dash-primary) !important;
+  border: 1px solid #e3e6ff !important;
+  box-shadow: none !important;
+}
+.main-tabs {
+  position: fixed;
+  top: 72px;
+  left: 0;
+  bottom: 0;
+  width: 232px;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 22px 14px;
+  background: rgba(255,255,255,0.94);
+  border-right: 1px solid var(--dash-border);
+  border-bottom: 0;
+  box-shadow: 12px 0 34px rgba(28, 35, 65, 0.05);
+  backdrop-filter: blur(18px);
+}
+.main-tabs::before {
+  content: "GENERAL";
+  color: #a2a7b8;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 2px 10px 8px;
+}
+.main-tab {
+  width: 100%;
+  border: 0;
+  border-radius: 8px;
+  color: #687084;
+  text-align: left;
+  padding: 12px 14px;
+  background: transparent;
+  border-left: 3px solid transparent;
+}
+.main-tab:hover {
+  color: var(--dash-primary);
+  background: #f3f4ff;
+}
+.main-tab.active {
+  color: var(--dash-primary);
+  background: #f0efff;
+  border-left-color: var(--dash-primary);
+  border-bottom-color: transparent;
+}
+.tab-content { margin-left: 232px; }
+.page {
+  max-width: 1320px;
+  padding: 26px 28px 34px;
+}
+.dashboard-command {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(220px, 420px) auto;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.dash-breadcrumb {
+  color: var(--dash-muted);
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+.dash-title {
+  color: var(--dash-text);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.dash-search {
+  width: 100%;
+  height: 42px;
+  border: 1px solid var(--dash-border);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--dash-text);
+  padding: 0 14px;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 8px 22px rgba(33, 40, 70, 0.04);
+}
+.dash-search:focus {
+  outline: none;
+  border-color: var(--dash-primary);
+  box-shadow: 0 0 0 4px rgba(91,77,240,0.10);
+}
+.dash-action {
+  height: 42px;
+  border: 0;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--dash-primary), var(--dash-primary-dark));
+  color: #fff;
+  padding: 0 18px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 12px 24px rgba(91,77,240,0.22);
+  white-space: nowrap;
+}
+.kpi-grid { grid-template-columns: repeat(3, minmax(190px, 1fr)); gap: 16px; }
+.kpi-card,
+.chart-card,
+.table-card,
+.totaux-card,
+.wh-kpi,
+.wh-mini-stat,
+.cat-card,
+.cat-top-card,
+.cat-podium-item,
+.cat-sales-row,
+.cat-card-sale-stat {
+  background: var(--dash-panel) !important;
+  border: 1px solid var(--dash-border) !important;
+  border-radius: 8px !important;
+  box-shadow: var(--dash-shadow);
+}
+.kpi-card {
+  min-height: 116px;
+  padding: 18px 20px 16px;
+}
+.kpi-card::before { display: none; }
+.kpi-card.purple {
+  background: linear-gradient(135deg, #6557f4 0%, #4e42d9 100%) !important;
+  color: #fff;
+  border-color: transparent !important;
+}
+.kpi-card.purple .kpi-label,
+.kpi-card.purple .kpi-meta,
+.kpi-card.purple .kpi-value { color: #fff !important; }
+.kpi-card.red .kpi-value { color: var(--dash-danger); }
+.kpi-card.green .kpi-value,
+.kpi-value.green,
+.totaux-value.green,
+.month-total,
+.week-total,
+.day-total,
+.ticket-benef.pos,
+.wh-ca,
+.wh-benef.pos { color: var(--dash-success) !important; }
+.kpi-label,
+.totaux-label,
+.tm-kpi-label,
+.wh-kpi-label,
+.wh-mini-stat-label {
+  color: var(--dash-muted) !important;
+  letter-spacing: 0;
+}
+.kpi-value,
+.totaux-value,
+.table-top-title,
+.section-title,
+.month-name,
+.ticket-desc,
+.wh-kpi-val,
+.wh-mini-stat-val,
+.wh-day-label,
+.cat-name,
+.cat-top-title,
+.cat-top-name,
+.cat-sales-name,
+.cat-card-sale-val,
+.cat-sales-num {
+  color: var(--dash-text) !important;
+}
+.kpi-meta,
+.ticket-items,
+.table-top span,
+.wh-day-sub,
+.cat-stock,
+.cat-top-sub,
+.cat-sales-label,
+.cat-card-sale-label,
+.cat-top-metric { color: var(--dash-muted) !important; }
+.kpi-icon {
+  opacity: 0.10;
+  color: var(--dash-primary);
+}
+.kpi-card.purple .kpi-icon {
+  color: #fff;
+  opacity: 0.18;
+}
+.chart-card,
+.table-card { padding: 20px; }
+.table-card { padding: 0; overflow: hidden; }
+.totaux-card { background: #fff !important; }
+.totaux-grid { grid-template-columns: repeat(6, minmax(120px, 1fr)); }
+.totaux-item {
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--dash-panel-soft);
+}
+.invest-card,
+.invest-kpi,
+.invest-table-wrap,
+.invest-row,
+.invest-signal {
+  background: var(--dash-panel) !important;
+  border-color: var(--dash-border) !important;
+  box-shadow: var(--dash-shadow);
+}
+.invest-kpi,
+.invest-signal { box-shadow: none; }
+.invest-row.head {
+  background: var(--dash-panel-soft) !important;
+}
+.invest-title,
+.invest-signal-value,
+.invest-kpi-val,
+.invest-name,
+.invest-num {
+  color: var(--dash-text) !important;
+}
+.invest-sub,
+.invest-signal-label,
+.invest-kpi-label,
+.invest-row.head,
+.invest-meta {
+  color: var(--dash-muted) !important;
+}
+.invest-kpi-val.green,
+.invest-num.green { color: var(--dash-success) !important; }
+.invest-kpi-val.red,
+.invest-num.red { color: var(--dash-danger) !important; }
+.invest-kpi-val.purple { color: var(--dash-primary) !important; }
+.section-title {
+  text-transform: none;
+  font-size: 15px;
+}
+.section-title::before { background: var(--dash-primary); }
+.f-btn,
+.f-select,
+.search-box,
+.cat-search,
+.cat-filter-btn {
+  background: #fff !important;
+  border: 1px solid var(--dash-border) !important;
+  color: #687084 !important;
+  border-radius: 8px !important;
+}
+.f-btn:hover,
+.cat-filter-btn:hover {
+  color: var(--dash-primary) !important;
+  border-color: #cfd3ff !important;
+}
+.f-btn.active,
+.cat-filter-btn.active {
+  background: #f0efff !important;
+  color: var(--dash-primary) !important;
+  border-color: #d9dcff !important;
+}
+.table-top,
+.month-header,
+.week-header,
+.day-header,
+.wh-header-row,
+.wh-footer-row {
+  background: #fff !important;
+  border-color: var(--dash-border) !important;
+}
+.month-header:hover,
+.week-header:hover,
+.ticket-row:hover,
+.wh-day-row:hover,
+.wh-ticket-mini:hover { background: #f7f8ff !important; }
+.ticket-row,
+.wh-day-row,
+.wh-ticket-mini,
+.tm-item { border-color: #eef0f7 !important; }
+.badge-purple,
+.wh-trend.flat,
+.cat-sales-rank {
+  background: #f0efff !important;
+  color: var(--dash-primary) !important;
+  border-color: #d9dcff !important;
+}
+.badge-green,
+.t-status.ok,
+.wh-trend.up {
+  background: #eafaf6 !important;
+  color: var(--dash-success) !important;
+  border-color: #c8f0e6 !important;
+}
+.badge-red,
+.t-status.ko,
+.wh-trend.down {
+  background: #fff0f3 !important;
+  color: var(--dash-danger) !important;
+  border-color: #ffd5de !important;
+}
+.cat-podium-item.first {
+  background: linear-gradient(135deg, #6557f4 0%, #4e42d9 100%) !important;
+  border-color: transparent !important;
+}
+.cat-podium-item.first .cat-rank {
+  background: rgba(255,255,255,0.20);
+}
+.cat-podium-item.first .cat-top-name,
+.cat-podium-item.first .cat-top-metric,
+.cat-podium-item.first .cat-top-metric strong {
+  color: #fff !important;
+}
+.cat-card-sale-val.green,
+.cat-top-metric strong {
+  color: var(--dash-success) !important;
+}
+.info-banner {
+  background: #eef6ff;
+  border-color: #d8eaff;
+  color: #3176b8;
+}
+
+@media (max-width: 1080px) {
+  .main-tabs {
+    position: sticky;
+    top: 72px;
+    width: auto;
+    bottom: auto;
+    flex-direction: row;
+    padding: 10px 16px 0;
+    overflow-x: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--dash-border);
+  }
+  .main-tabs::before { display: none; }
+  .main-tab {
+    width: auto;
+    border-left: 0;
+    border-bottom: 3px solid transparent;
+    border-radius: 8px 8px 0 0;
+  }
+  .main-tab.active { border-bottom-color: var(--dash-primary); }
+  .tab-content { margin-left: 0; }
+  .dashboard-command { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  .header {
+    height: auto;
+    min-height: 72px;
+    padding: 12px 14px;
+  }
+  .main-tabs { top: 72px; }
+  .page { padding: 18px 14px 28px; }
+  .kpi-grid,
+  .totaux-grid { grid-template-columns: 1fr; }
+  .chart-card,
+  .table-card { padding: 14px; }
+  .table-card { padding: 0; }
 }
 </style>
 
@@ -1440,6 +1933,15 @@ transition-duration: 0.001s !important;
 <div class="tab-content active" id="tc-dashboard">
 <div class="page">
 
+  <div class="dashboard-command">
+    <div>
+      <div class="dash-breadcrumb">Pages › COVO Pro</div>
+      <div class="dash-title">Tableau de bord bénéfices</div>
+    </div>
+    <input type="text" class="dash-search" placeholder="Rechercher ticket, article, période..." oninput="document.getElementById('search-box').value=this.value;renderTable()">
+    <button class="dash-action" onclick="exportData()">Exporter rapport</button>
+  </div>
+
   <!-- KPI CARDS -->
 
   <div class="kpi-grid">
@@ -1492,6 +1994,30 @@ transition-duration: 0.001s !important;
       <div class="totaux-item"><div class="totaux-label">Bénéfice / ticket</div><div class="totaux-value green" id="t-benef-avg">—</div></div>
       <div class="totaux-item"><div class="totaux-label">Meilleur mois</div><div class="totaux-value purple" id="t-best-month">—</div></div>
       <div class="totaux-item"><div class="totaux-label">Moy. journalière</div><div class="totaux-value green" id="t-avg-day">—</div></div>
+    </div>
+  </div>
+
+  <!-- INVESTISSEMENTS -->
+
+  <div class="invest-card" id="invest-card">
+    <div class="invest-head">
+      <div>
+        <div class="invest-title">Investissements</div>
+        <div class="invest-sub">Récupérés depuis Google Drive, classés entre payé et crédit non payé.</div>
+      </div>
+      <div class="invest-signal">
+        <div class="invest-signal-label">Signal prioritaire</div>
+        <div class="invest-signal-value" id="invest-signal">—</div>
+      </div>
+    </div>
+    <div class="invest-kpis">
+      <div class="invest-kpi"><div class="invest-kpi-label">Total investi</div><div class="invest-kpi-val purple" id="inv-total">—</div></div>
+      <div class="invest-kpi"><div class="invest-kpi-label">Déjà payé</div><div class="invest-kpi-val green" id="inv-paid">—</div></div>
+      <div class="invest-kpi"><div class="invest-kpi-label">Crédit non payé</div><div class="invest-kpi-val red" id="inv-credit">—</div></div>
+      <div class="invest-kpi"><div class="invest-kpi-label">Lignes suivies</div><div class="invest-kpi-val" id="inv-count">—</div></div>
+    </div>
+    <div class="invest-table-wrap">
+      <div class="invest-table" id="invest-table"></div>
     </div>
   </div>
 
@@ -1661,6 +2187,8 @@ transition-duration: 0.001s !important;
 
   <div class="kpi-grid" style="margin-bottom:20px" id="cat-kpis"></div>
 
+  <div class="cat-sales-board" id="cat-sales-board"></div>
+
   <div class="cat-grid" id="cat-grid"></div>
 
 </div><!-- /.page -->
@@ -1754,6 +2282,7 @@ transition-duration: 0.001s !important;
 // ═══════════════════════════════════════════════
 let sales = [];
 let articles = {};
+let investments = [];
 let hasCostData = false;
 let currentView = 'all';
 let chartInstance = null;
@@ -1788,6 +2317,18 @@ function loadCovoData() {
   try {
     window._covoCategories = JSON.parse(localStorage.getItem('covo_categories') || localStorage.getItem('categories') || '[]');
   } catch(e) { window._covoCategories = []; }
+
+  // ── Investissements ──────────────────────────
+  investments = [];
+  const invKeys = ['covo_investments','covo_investissements','investments','investissements','investment_history','covo_investment_history'];
+  for (const k of invKeys) {
+    try {
+      const raw = localStorage.getItem(k);
+      if (!raw) continue;
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr) && arr.length) { investments = arr; break; }
+    } catch(e) {}
+  }
 
   // ── Données de coût disponibles ? ────────────
   hasCostData = sales.some(s => s.items && s.items.some(it => it.cost != null && it.cost !== ''))
@@ -1846,6 +2387,66 @@ function fmt(v) {
 }
 function fmtCA(v) {
   return v.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+}
+
+function firstVal(obj, keys, fallback) {
+  for (const k of keys) {
+    if (obj && obj[k] !== undefined && obj[k] !== null && obj[k] !== '') return obj[k];
+  }
+  return fallback;
+}
+
+function normMoney(v) {
+  if (typeof v === 'string') v = v.replace(/\s/g,'').replace(',', '.').replace(/[^\d.-]/g, '');
+  const n = parseFloat(v);
+  return isNaN(n) ? 0 : n;
+}
+
+function investmentKey(inv) {
+  return String(firstVal(inv, ['id','investmentId','uuid','ref','reference'], '') || [
+    firstVal(inv, ['name','nom','title','libelle','label','description'], ''),
+    firstVal(inv, ['date','createdAt','timestamp','purchaseDate','dueDate'], ''),
+    firstVal(inv, ['amount','montant','total','price','prix','cost','cout'], '')
+  ].join('|')).toLowerCase();
+}
+
+function normalizeInvestment(inv, idx) {
+  const amount = normMoney(firstVal(inv, ['amount','montant','total','price','prix','cost','cout','value'], 0));
+  let paidAmount = normMoney(firstVal(inv, ['paidAmount','amountPaid','montantPaye','montant_payé','paye','paid_value'], 0));
+  const rawPaid = firstVal(inv, ['paid','isPaid','paye','payé','settled'], null);
+  const rawCredit = firstVal(inv, ['credit','isCredit','onCredit','aCredit','enCredit'], null);
+  const rawStatus = String(firstVal(inv, ['status','statut','etat','paymentStatus','state'], '')).toLowerCase();
+  if ((rawPaid === true || rawPaid === 'true') && !paidAmount) paidAmount = amount;
+
+  let remaining = normMoney(firstVal(inv, ['remaining','reste','restant','resteAPayer','reste_a_payer','amountDue','due','creditAmount','montantCredit'], ''));
+  if (!remaining && paidAmount > 0 && amount > paidAmount) remaining = amount - paidAmount;
+
+  const saysPaid = rawStatus.includes('pay') || rawStatus.includes('paye') || rawStatus.includes('payé') || rawStatus.includes('settled') || rawStatus.includes('régl') || rawStatus.includes('regl');
+  const saysCredit = rawStatus.includes('credit') || rawStatus.includes('crédit') || rawStatus.includes('impay') || rawStatus.includes('non pay') || rawStatus.includes('unpaid') || rawStatus.includes('pending') || rawCredit === true || rawCredit === 'true';
+  const isPaid = saysPaid || ((rawPaid === true || rawPaid === 'true') && remaining <= 0) || (amount > 0 && paidAmount >= amount);
+  const status = isPaid ? 'paid' : (paidAmount > 0 && remaining > 0 ? 'partial' : (saysCredit || remaining > 0 ? 'credit' : 'credit'));
+
+  return {
+    id: investmentKey(inv) || String(idx),
+    name: firstVal(inv, ['name','nom','title','libelle','label','description'], 'Investissement'),
+    category: firstVal(inv, ['category','categorie','cat','type'], 'Général'),
+    supplier: firstVal(inv, ['supplier','fournisseur','vendor','provider','source'], ''),
+    date: firstVal(inv, ['date','createdAt','timestamp','purchaseDate','dueDate'], ''),
+    amount,
+    paidAmount: isPaid ? amount : paidAmount,
+    remaining: isPaid ? 0 : (remaining || Math.max(amount - paidAmount, amount)),
+    status
+  };
+}
+
+function mergeInvestments(existing, incoming) {
+  const map = new Map();
+  (existing || []).concat(incoming || []).forEach((inv, idx) => {
+    const key = investmentKey(inv) || String(idx);
+    const prev = map.get(key) || {};
+    map.set(key, { ...prev, ...inv });
+  });
+  return [...map.values()];
 }
 
 // ── FILTER ────────────────────────────────────────
@@ -1962,6 +2563,56 @@ function updateFilterOptions() {
   const curM = mSel.value;
   const mNames2 = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
   mSel.innerHTML = '<option value="">Tous les mois</option>' + mNames2.map((n,i)=>`<option value="${String(i+1).padStart(2,'0')}"${String(i+1).padStart(2,'0')===curM?'selected':''}>${n}</option>`).join('');
+}
+
+function renderInvestments() {
+  const table = document.getElementById('invest-table');
+  if (!table) return;
+  const normalized = (investments || []).map(normalizeInvestment).filter(i => i.amount > 0 || i.paidAmount > 0 || i.remaining > 0);
+  const paid = normalized.filter(i => i.status === 'paid');
+  const credits = normalized.filter(i => i.status !== 'paid');
+  const total = normalized.reduce((a,i) => a + i.amount, 0);
+  const paidTotal = normalized.reduce((a,i) => a + i.paidAmount, 0);
+  const creditTotal = credits.reduce((a,i) => a + i.remaining, 0);
+  set('inv-total', fmtCA(total));
+  set('inv-paid', fmtCA(paidTotal));
+  set('inv-credit', fmtCA(creditTotal));
+  set('inv-count', String(normalized.length));
+
+  const signal = document.getElementById('invest-signal');
+  if (signal) {
+    const biggest = [...credits].sort((a,b) => b.remaining - a.remaining)[0];
+    signal.textContent = biggest
+      ? `${biggest.name} · ${fmtCA(biggest.remaining)} à solder`
+      : (normalized.length ? 'Tous les investissements sont soldés' : 'En attente des investissements Drive');
+  }
+
+  if (!normalized.length) {
+    table.innerHTML = '<div class="invest-empty">Aucun investissement trouvé. À la prochaine synchronisation Drive, les clés investments / investissements seront récupérées automatiquement.</div>';
+    return;
+  }
+
+  const rows = [...credits, ...paid].sort((a,b) => {
+    if (a.status !== b.status) return a.status === 'paid' ? 1 : -1;
+    return b.remaining - a.remaining || b.amount - a.amount;
+  }).map(i => {
+    const date = i.date ? new Date(i.date).toLocaleDateString('fr-FR') : '—';
+    const statusLabel = i.status === 'paid' ? 'Payé' : (i.status === 'partial' ? 'Crédit partiel' : 'Crédit non payé');
+    const statusCls = i.status === 'paid' ? 'paid' : (i.status === 'partial' ? 'partial' : 'credit');
+    return '<div class="invest-row">' +
+      '<div><div class="invest-name" title="' + escH(i.name) + '">' + escH(i.name) + '</div><div class="invest-meta">' + escH(i.category) + (i.supplier ? ' · ' + escH(i.supplier) : '') + '</div></div>' +
+      '<div class="invest-num">' + fmtCA(i.amount) + '</div>' +
+      '<div class="invest-num green">' + fmtCA(i.paidAmount) + '</div>' +
+      '<div class="invest-num red">' + fmtCA(i.remaining) + '</div>' +
+      '<span class="invest-status ' + statusCls + '">' + statusLabel + '</span>' +
+      '<div class="invest-meta" style="text-align:right">' + date + '</div>' +
+    '</div>';
+  }).join('');
+
+  table.innerHTML =
+    '<div class="invest-row head">' +
+      '<div>Investissement</div><div style="text-align:right">Montant</div><div style="text-align:right">Payé</div><div style="text-align:right">Reste</div><div>Statut</div><div style="text-align:right">Date</div>' +
+    '</div>' + rows;
 }
 
 // ═══════════════════════════════════════════════
@@ -2170,7 +2821,12 @@ function openClientIdModal() {
     }
   }
 
-  document.getElementById('clientid-modal').classList.add('open');
+  const modal = document.getElementById('clientid-modal');
+  if (modal) {
+    modal.style.zIndex = '10050';
+    modal.classList.add('open');
+    setTimeout(() => (emailInp || input)?.focus(), 0);
+  }
 }
 
 function forgetClientId() {
@@ -2356,7 +3012,9 @@ async function fetchDriveFiles() {
     "name contains 'covo' and mimeType='application/json' and trashed=false",
     "name contains 'Covo' and mimeType='application/json' and trashed=false",
     "name contains 'backup' and mimeType='application/json' and trashed=false",
-    "name contains 'benefices' and mimeType='application/json' and trashed=false"
+    "name contains 'benefices' and mimeType='application/json' and trashed=false",
+    "name contains 'invest' and mimeType='application/json' and trashed=false",
+    "name contains 'investissement' and mimeType='application/json' and trashed=false"
   ];
   const seenIds = new Set(), files = [];
   for (const q of queries) {
@@ -2412,6 +3070,8 @@ function extractCovoData(data) {
     retours: d.covo_retours || null,
     // Marchandise
     marchandise: d.covo_marchandise || null,
+    // Investissements
+    investments: d.investments || d.covo_investments || d.investissements || d.covo_investissements || d.investment_history || d.covo_investment_history || d.investmentHistory || null,
     // Historique connexions
     loginHistory: d.covo_login_history || null,
     // Messages
@@ -2446,6 +3106,13 @@ function applyCovoData(extracted, report) {
   if (extracted.products && extracted.products.length) {
     localStorage.setItem('products', JSON.stringify(extracted.products));
     saved.push(extracted.products.length + ' articles');
+  }
+  if (extracted.investments && extracted.investments.length) {
+    const mergedInvestments = mergeInvestments(investments, extracted.investments);
+    investments = mergedInvestments;
+    localStorage.setItem('covo_investments', JSON.stringify(mergedInvestments));
+    localStorage.setItem('investments', JSON.stringify(mergedInvestments));
+    saved.push(mergedInvestments.length + ' investissements');
   }
   if (extracted.users && extracted.users.length) {
     localStorage.setItem('covo_users', JSON.stringify(extracted.users));
@@ -2557,7 +3224,10 @@ async function autoLoadLatestBackup(isInitial) {
     let filesToLoad;
     let mergeMode;
     if (isInitial && files.length > 1) {
-      filesToLoad = files.slice(0, Math.min(3, files.length));
+      const coreFiles = files.slice(0, Math.min(3, files.length));
+      const investmentFiles = files.filter(f => /invest|investissement/i.test(f.name || '')).slice(0, 12);
+      const byId = new Map([...coreFiles, ...investmentFiles].map(f => [f.id, f]));
+      filesToLoad = [...byId.values()];
       mergeMode = true;
       setSyncLabel('Fusion ' + filesToLoad.length + ' fichiers…', '', 'checking');
     } else {
@@ -2572,6 +3242,7 @@ async function autoLoadLatestBackup(isInitial) {
 
     // Extraire et fusionner
     let allSales = [];
+    let allInvestments = [];
     let bestExtracted = null;
     let successCount = 0;
     let errorCount = 0;
@@ -2586,13 +3257,16 @@ async function autoLoadLatestBackup(isInitial) {
       if (ex.sales && Array.isArray(ex.sales)) {
         allSales = allSales.concat(ex.sales);
       }
+      if (ex.investments && Array.isArray(ex.investments)) {
+        allInvestments = allInvestments.concat(ex.investments);
+      }
       // Le meilleur = celui du fichier le plus récent avec le plus de contenu
       if (!bestExtracted || (ex.products && ex.products.length > (bestExtracted.products||[]).length)) {
         bestExtracted = ex;
       }
     }
 
-    if (!bestExtracted || !allSales.length) {
+    if (!bestExtracted || (!allSales.length && !allInvestments.length)) {
       setSyncLabel('Format inconnu', '', 'error');
       if (isInitial) toast('Format non reconnu dans les fichiers Drive', 'err');
       return;
@@ -2601,6 +3275,7 @@ async function autoLoadLatestBackup(isInitial) {
     // Fusion intelligente avec les ventes locales
     const { merged, added, updated } = mergeSales(existingSales, allSales);
     bestExtracted.sales = merged;
+    if (allInvestments.length) bestExtracted.investments = mergeInvestments(investments, allInvestments);
 
     const savedItems = applyCovoData(bestExtracted, true);
     sales = merged; // s'assurer que la variable globale est synchro
@@ -2612,6 +3287,7 @@ async function autoLoadLatestBackup(isInitial) {
     // Rafraîchir tout
     loadCovoData();
     updateKPIs();
+    renderInvestments();
     renderChart();
     renderTable();
     if (window._reloadCatalogue) window._reloadCatalogue();
@@ -2804,13 +3480,14 @@ async function loadSelectedBackup() {
     const data      = await fetchFileData(selectedBackupId);
     const extracted = extractCovoData(data);
 
-    if (extracted.sales && Array.isArray(extracted.sales) && extracted.sales.length) {
+    if ((extracted.sales && Array.isArray(extracted.sales) && extracted.sales.length) ||
+        (extracted.investments && Array.isArray(extracted.investments) && extracted.investments.length)) {
       const savedItems = applyCovoData(extracted, true);
       _lastFileId = selectedBackupId;
       closeModal('backup-modal');
       const summary = savedItems.slice(0,3).join(' · ') + (savedItems.length > 3 ? ' …' : '');
       toast('✓ Chargé : ' + summary, 'ok');
-      loadCovoData(); updateKPIs(); renderChart(); renderTable();
+      loadCovoData(); updateKPIs(); renderInvestments(); renderChart(); renderTable();
       if (window._reloadCatalogue) window._reloadCatalogue();
       if (window._reloadWorkHours) window._reloadWorkHours();
       if (typeof updateSettingsPanel === 'function') updateSettingsPanel();
@@ -2836,7 +3513,7 @@ async function saveDrive() {
       fid = cr.result.id;
     }
     const token = gapi.client.getToken().access_token;
-    const payload = JSON.stringify({ covo_sales_history: sales, savedAt: new Date().toISOString(), version: '2.0' }, null, 2);
+    const payload = JSON.stringify({ covo_sales_history: sales, covo_investments: investments, savedAt: new Date().toISOString(), version: '2.1' }, null, 2);
     await fetch(`https://www.googleapis.com/upload/drive/v3/files/${fid}?uploadType=media`, {
       method: 'PATCH', headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }, body: payload
     });
@@ -3218,6 +3895,7 @@ function runSplash(onDone) {
 function init() {
   loadCovoData();
   updateKPIs();
+  renderInvestments();
   renderChart();
   renderTable();
   // Initialiser le FAB (cacher si déjà installé)
@@ -3672,7 +4350,7 @@ function showImportLog() {
 }
 
 function exportData() {
-  const payload = JSON.stringify({ covo_sales_history: sales, exportedAt: new Date().toISOString() }, null, 2);
+  const payload = JSON.stringify({ covo_sales_history: sales, covo_investments: investments, exportedAt: new Date().toISOString() }, null, 2);
   const blob = new Blob([payload], { type: 'application/json' });
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
@@ -3687,7 +4365,7 @@ function confirmClearData() {
   if (!confirm('Supprimer le cache local ? Les données Drive ne sont pas affectées.')) return;
   localStorage.removeItem('covo_sales_history');
   sales = [];
-  loadCovoData(); updateKPIs(); renderChart(); renderTable();
+  loadCovoData(); updateKPIs(); renderInvestments(); renderChart(); renderTable();
   updateSettingsPanel();
   toast('Cache local vidé', '');
 }
@@ -4246,6 +4924,105 @@ function toggleWhSort(btn) {
 let catalogueProducts = [];
 let _catFilter = 'all';
 
+function catKey(v) {
+  return String(v ?? '').trim().toLowerCase();
+}
+
+function productKeys(p) {
+  return [p.id, p.articleId, p.name, p.label, p.nom].filter(Boolean).map(catKey);
+}
+
+function buildCatalogueSalesStats() {
+  const stats = {};
+  (sales || []).forEach(s => {
+    if (s.cancelled) return;
+    (s.items || []).forEach(it => {
+      const name = it.name || it.label || it.nom || it.id || it.articleId || 'Article';
+      const keys = [it.id, it.articleId, it.productId, name].filter(Boolean).map(catKey);
+      const mainKey = keys[0] || catKey(name);
+      const qty = parseFloat(it.qty ?? it.quantity ?? it.qte ?? it.quantite ?? 1) || 1;
+      const unit = parseFloat(it.price ?? it.unitPrice ?? it.prix ?? it.prixVente ?? it.sellPrice ?? 0) || 0;
+      const lineTotalRaw = parseFloat(it.total ?? it.amount ?? it.subtotal ?? it.lineTotal ?? '');
+      const amount = !isNaN(lineTotalRaw) ? lineTotalRaw : unit * qty;
+
+      if (!stats[mainKey]) {
+        stats[mainKey] = { key: mainKey, keys: new Set(keys), name, qty: 0, amount: 0, unitSum: 0, lines: 0 };
+      }
+      const st = stats[mainKey];
+      keys.forEach(k => st.keys.add(k));
+      st.qty += qty;
+      st.amount += amount;
+      if (unit > 0) {
+        st.unitSum += unit;
+        st.lines += 1;
+      }
+    });
+  });
+
+  const aliases = {};
+  Object.values(stats).forEach(st => st.keys.forEach(k => aliases[k] = st));
+  return { stats, aliases, top: Object.values(stats).sort((a,b) => b.amount - a.amount || b.qty - a.qty) };
+}
+
+function getProductSalesStat(p, aliases) {
+  for (const k of productKeys(p)) {
+    if (aliases[k]) return aliases[k];
+  }
+  return null;
+}
+
+function fmtQty(v) {
+  const n = parseFloat(v || 0);
+  return Number.isInteger(n) ? String(n) : n.toLocaleString('fr-FR', { maximumFractionDigits: 2 });
+}
+
+function renderCatalogueTopSales(top) {
+  const board = document.getElementById('cat-sales-board');
+  if (!board) return;
+  const sold = top.filter(st => st.qty > 0 || st.amount > 0);
+  if (!sold.length) {
+    board.innerHTML = '<div class="cat-top-card" style="grid-column:1/-1;text-align:center;color:#777">Aucune vente trouvée pour construire le top des articles.</div>';
+    return;
+  }
+
+  const podiumItems = sold.slice(0, 3);
+  const podium = podiumItems.map((st, i) =>
+    '<div class="cat-podium-item ' + (i === 0 ? 'first' : '') + '">' +
+      '<div>' +
+        '<div class="cat-rank">' + (i + 1) + '</div>' +
+        '<div class="cat-top-name" title="' + escH(st.name) + '">' + escH(st.name) + '</div>' +
+      '</div>' +
+      '<div class="cat-top-metrics">' +
+        '<div class="cat-top-metric"><span>Prix</span><strong>' + fmtCA(st.qty > 0 ? st.amount / st.qty : 0) + '</strong></div>' +
+        '<div class="cat-top-metric"><span>Vendu</span><strong>' + fmtQty(st.qty) + '</strong></div>' +
+        '<div class="cat-top-metric"><span>Reçu</span><strong>' + fmtCA(st.amount) + '</strong></div>' +
+      '</div>' +
+    '</div>'
+  ).join('');
+
+  const rows = sold.slice(0, 10).map((st, i) =>
+    '<div class="cat-sales-row">' +
+      '<div class="cat-sales-rank">' + (i + 1) + '</div>' +
+      '<div class="cat-sales-name" title="' + escH(st.name) + '">' + escH(st.name) + '</div>' +
+      '<div class="cat-sales-value"><span class="cat-sales-label">Prix</span><span class="cat-sales-num">' + fmtCA(st.qty > 0 ? st.amount / st.qty : 0) + '</span></div>' +
+      '<div class="cat-sales-value"><span class="cat-sales-label">Vendu</span><span class="cat-sales-num">' + fmtQty(st.qty) + '</span></div>' +
+      '<div class="cat-sales-value"><span class="cat-sales-label">Reçu</span><span class="cat-sales-num">' + fmtCA(st.amount) + '</span></div>' +
+    '</div>'
+  ).join('');
+
+  board.innerHTML =
+    '<div class="cat-top-card">' +
+      '<div class="cat-top-title">Top des ventes</div>' +
+      '<div class="cat-top-sub">Les articles qui génèrent le plus de montant reçu.</div>' +
+      '<div class="cat-podium">' + podium + '</div>' +
+    '</div>' +
+    '<div class="cat-top-card">' +
+      '<div class="cat-top-title">Classement articles</div>' +
+      '<div class="cat-top-sub">Prix moyen, quantité vendue et montant encaissé par article.</div>' +
+      '<div class="cat-sales-list">' + rows + '</div>' +
+    '</div>';
+}
+
 function initCatalogue() {
   loadCatalogueData();
   renderCatalogue();
@@ -4286,6 +5063,23 @@ function loadCatalogueData() {
     raw = Object.values(artMap);
   }
 
+  const salesStats = buildCatalogueSalesStats();
+  const known = new Set();
+  raw.forEach(p => productKeys(p).forEach(k => known.add(k)));
+  salesStats.top.forEach(st => {
+    const exists = [...st.keys].some(k => known.has(k));
+    if (!exists) {
+      raw.push({
+        id: st.key,
+        name: st.name,
+        price: st.qty > 0 ? st.amount / st.qty : 0,
+        unitType: 'unit',
+        _fromTickets: true
+      });
+      st.keys.forEach(k => known.add(k));
+    }
+  });
+
   catalogueProducts = raw;
 
   // ── Catégories (pour le filtre) ──────────────
@@ -4304,11 +5098,13 @@ function loadCatalogueData() {
   const withCost = raw.filter(p => p.costPrice > 0).length;
   const totalCA = raw.reduce((a,p) => a + parseFloat(p.price||0), 0);
   const totalBenef = raw.filter(p=>p.costPrice>0).reduce((a,p)=>a+(parseFloat(p.price||0)-parseFloat(p.costPrice||0)),0);
+  const totalSoldQty = salesStats.top.reduce((a,s) => a + s.qty, 0);
+  const totalReceived = salesStats.top.reduce((a,s) => a + s.amount, 0);
 
   document.getElementById('cat-kpis').innerHTML = `
     <div class="kpi-card purple"><div class="kpi-label">Articles</div><div class="kpi-value">${total}</div><div class="kpi-meta">${withCost} avec prix d'achat</div><div class="kpi-icon">📦</div></div>
-    <div class="kpi-card green"><div class="kpi-label">Marge moy. / article</div><div class="kpi-value">${withCost?fmtCA(totalBenef/withCost):'—'}</div><div class="kpi-meta">Bénéfice estimé par article</div><div class="kpi-icon">💰</div></div>
-    <div class="kpi-card red"><div class="kpi-label">Sans prix d'achat</div><div class="kpi-value">${total-withCost}</div><div class="kpi-meta">Bénéfice non calculable</div><div class="kpi-icon">⚠</div></div>
+    <div class="kpi-card green"><div class="kpi-label">Quantité vendue</div><div class="kpi-value">${fmtQty(totalSoldQty)}</div><div class="kpi-meta">Total articles sortis</div><div class="kpi-icon">🛒</div></div>
+    <div class="kpi-card red"><div class="kpi-label">Montant reçu</div><div class="kpi-value">${fmtCA(totalReceived)}</div><div class="kpi-meta">CA articles vendus</div><div class="kpi-icon">💳</div></div>
   `;
 }
 
@@ -4322,8 +5118,12 @@ function setCatFilter(f, btn) {
 function renderCatalogue() {
   const search = (document.getElementById('cat-search')?.value || '').toLowerCase();
   let list = catalogueProducts;
+  const salesStats = buildCatalogueSalesStats();
+  renderCatalogueTopSales(salesStats.top);
 
   if (!list.length) {
+    const board = document.getElementById('cat-sales-board');
+    if (board) board.innerHTML = '';
     document.getElementById('cat-grid').innerHTML = `<div style="grid-column:1/-1;padding:60px 0;text-align:center;color:#555">
       <div style="font-size:40px;margin-bottom:12px">📦</div>
       <div style="font-size:13px">Aucun article trouvé dans COVO Pro.<br>
@@ -4339,20 +5139,27 @@ function renderCatalogue() {
   if (_catFilter === 'withcost')  list = list.filter(p => parseFloat(p.costPrice||p.cost||0) > 0);
   if (_catFilter === 'nocost')    list = list.filter(p => !parseFloat(p.costPrice||p.cost||0));
   if (_catFilter === 'lowstock')  list = list.filter(p => p.stock != null && parseFloat(p.stock) < 10);
+  list = [...list].sort((a,b) => {
+    const sa = getProductSalesStat(a, salesStats.aliases);
+    const sb = getProductSalesStat(b, salesStats.aliases);
+    return (sb?.amount || 0) - (sa?.amount || 0) || (sb?.qty || 0) - (sa?.qty || 0) || String(a.name||'').localeCompare(String(b.name||''), 'fr');
+  });
 
   document.getElementById('cat-count').textContent = `${list.length} article${list.length>1?'s':''}`;
 
   document.getElementById('cat-grid').innerHTML = list.map(p => {
-    const price = parseFloat(p.price || p.pricePerKg || 0);
+    const stat = getProductSalesStat(p, salesStats.aliases);
+    const avgSoldPrice = stat && stat.qty > 0 ? stat.amount / stat.qty : 0;
+    const price = parseFloat(p.price || p.pricePerKg || p.unitPrice || avgSoldPrice || 0);
     const cost  = parseFloat(p.costPrice || p.cost || 0);
     const benef = cost > 0 ? price - cost : null;
     const marge = (benef !== null && price > 0) ? Math.round(benef/price*100) : null;
 
     const imgSrc = p.image || p.img || p.imageUrl || p.photo || '';
     const imgHtml = imgSrc
-      ? '<img src="' + escH(imgSrc) + '" alt="' + escH(p.name||'') + '" style="width:100%;height:130px;object-fit:cover" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'
-        + '<div style="display:none;width:100%;height:130px;align-items:center;justify-content:center;font-size:36px;background:#13131f">📦</div>'
-      : '<div style="width:100%;height:130px;display:flex;align-items:center;justify-content:center;font-size:36px;background:#13131f">📦</div>';
+      ? '<img src="' + escH(imgSrc) + '" alt="' + escH(p.name||'') + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'
+        + '<div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:36px;background:#fff">📦</div>'
+      : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:36px;background:#fff">📦</div>';
 
     const cat = p.category || p.categorie || p.cat || p.type || '';
     const catBadge = cat
@@ -4360,6 +5167,8 @@ function renderCatalogue() {
       : '';
 
     const unitLabel = p.unitType === 'kg' ? ' /kg' : '';
+    const soldQty = stat ? stat.qty : 0;
+    const received = stat ? stat.amount : 0;
 
     const benefHtml = benef !== null
       ? '<span class="cat-benef ' + (benef>=0?'pos':'neg') + '">' + (benef>=0?'+':'') + fmtCA(benef) + (marge!==null?' · '+marge+'%':'') + '</span>'
@@ -4375,7 +5184,11 @@ function renderCatalogue() {
       + '<div class="cat-info">'
       + (catBadge ? '<div>' + catBadge + '</div>' : '')
       + '<div class="cat-name" title="' + escH(p.name||'') + '">' + escH(p.name||'Sans nom') + '</div>'
-      + '<div class="cat-price">Vente : ' + fmtCA(price) + unitLabel + '</div>'
+      + '<div class="cat-card-price-row"><span>Prix</span><strong>' + fmtCA(price) + unitLabel + '</strong></div>'
+      + '<div class="cat-card-sales">'
+      + '<div class="cat-card-sale-stat"><div class="cat-card-sale-label">Vendu</div><div class="cat-card-sale-val">' + fmtQty(soldQty) + '</div></div>'
+      + '<div class="cat-card-sale-stat"><div class="cat-card-sale-label">Montant reçu</div><div class="cat-card-sale-val green">' + fmtCA(received) + '</div></div>'
+      + '</div>'
       + '<div class="cat-cost">' + (cost>0 ? 'Achat : ' + fmtCA(cost) : '—') + '</div>'
       + benefHtml + stockHtml
       + '</div></div>';
