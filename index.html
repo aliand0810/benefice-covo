@@ -448,6 +448,8 @@ border:1px solid rgba(142,68,173,0.30); border-radius:10px; padding:11px 13px;
 .invest-status.credit { color:#e74c3c; background:rgba(231,76,60,0.12); border:1px solid rgba(231,76,60,0.22); }
 .invest-status.partial { color:#f39c12; background:rgba(243,156,18,0.12); border:1px solid rgba(243,156,18,0.24); }
 .invest-empty { padding:34px 18px; text-align:center; color:#666; font-size:12px; }
+.invest-alert { background:rgba(231,76,60,0.10); border:1px solid rgba(231,76,60,0.30); border-radius:8px; padding:10px 16px; font-size:12px; color:#e74c3c; margin-bottom:14px; display:flex; align-items:center; gap:8px; font-weight:600; }
+.invest-all-clear { background:rgba(39,174,96,0.10); border:1px solid rgba(39,174,96,0.25); border-radius:8px; padding:10px 16px; font-size:12px; color:#2ecc71; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
 
 @media (max-width: 860px) {
 .invest-head { flex-direction:column; }
@@ -1894,6 +1896,45 @@ body {
     </div>
   </div>
 
+  <!-- ── SECTION INVESTISSEMENTS ── -->
+  <div class="sp-section">
+    <div class="sp-section-header" style="cursor:default">
+      <span class="sp-section-icon">💼</span>
+      <span class="sp-section-title">Investissements</span>
+    </div>
+    <div class="sp-section-body">
+      <div class="sp-row" style="flex-direction:column;align-items:flex-start;gap:8px">
+        <div>
+          <div class="sp-row-label">Champ affiché comme désignation</div>
+          <div class="sp-row-sub">Colonne affichée dans le tableau des crédits non payés</div>
+        </div>
+        <select id="sp-invest-label" onchange="saveInvestLabelField(this.value)" style="width:100%;background:#13131f;border:1px solid #2e2e50;border-radius:8px;color:#ddd;padding:8px 10px;font-size:12px;font-family:'Poppins',sans-serif;cursor:pointer">
+          <option value="">— Automatique (nom détecté) —</option>
+          <option value="name">name</option>
+          <option value="nom">nom</option>
+          <option value="title">title</option>
+          <option value="libelle">libelle</option>
+          <option value="label">label</option>
+          <option value="description">description</option>
+          <option value="reference">reference</option>
+          <option value="ref">ref</option>
+          <option value="id">id</option>
+          <option value="category">category</option>
+          <option value="categorie">categorie</option>
+          <option value="supplier">supplier</option>
+          <option value="fournisseur">fournisseur</option>
+        </select>
+        <button class="sp-action" style="width:100%;margin-top:2px" onclick="detectInvestFields()">
+          <span class="sp-action-icon">🔍</span>
+          <div class="sp-action-text">
+            <div>Détecter les champs disponibles</div>
+            <div class="sp-action-sub">Recharge la liste depuis les données en mémoire</div>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- ── SECTION RÉINITIALISATION ── -->
   <div class="sp-section">
     <div class="sp-section-header" style="cursor:default">
@@ -2010,7 +2051,7 @@ body {
     <div class="invest-head">
       <div>
         <div class="invest-title">Investissements</div>
-        <div class="invest-sub">Récupérés depuis Google Drive, classés entre payé et crédit non payé.</div>
+        <div class="invest-sub">Seuls les crédits non payés sont remontés. Les investissements soldés ne s'affichent pas.</div>
       </div>
       <div class="invest-signal">
         <div class="invest-signal-label">Signal prioritaire</div>
@@ -2023,6 +2064,7 @@ body {
       <div class="invest-kpi"><div class="invest-kpi-label">Crédit non payé</div><div class="invest-kpi-val red" id="inv-credit">—</div></div>
       <div class="invest-kpi"><div class="invest-kpi-label">Lignes suivies</div><div class="invest-kpi-val" id="inv-count">—</div></div>
     </div>
+    <div id="invest-alert-banner" style="display:none"></div>
     <div class="invest-table-wrap">
       <div class="invest-table" id="invest-table"></div>
     </div>
@@ -2608,7 +2650,7 @@ function renderInvestments() {
   set('inv-total', fmtCA(total));
   set('inv-paid', fmtCA(paidTotal));
   set('inv-credit', fmtCA(creditTotal));
-  set('inv-count', String(normalized.length));
+  set('inv-count', String(credits.length));
 
   const signal = document.getElementById('invest-signal');
   if (signal) {
@@ -2623,17 +2665,35 @@ function renderInvestments() {
     return;
   }
 
-  const rows = [...credits, ...paid].sort((a,b) => {
-    if (a.status !== b.status) return a.status === 'paid' ? 1 : -1;
-    return b.remaining - a.remaining || b.amount - a.amount;
-  });
+  // Bannière Attention — seulement crédits non payés
+  const alertEl = document.getElementById('invest-alert-banner');
+  if (alertEl) {
+    alertEl.style.display = '';
+    if (credits.length > 0) {
+      alertEl.className = 'invest-alert';
+      alertEl.innerHTML = '⚠️ <span><strong>Attention</strong> — ' + credits.length + ' crédit' + (credits.length > 1 ? 's' : '') + ' non payé' + (credits.length > 1 ? 's' : '') + ' · ' + fmtCA(creditTotal) + ' à solder</span>';
+    } else {
+      alertEl.className = 'invest-all-clear';
+      alertEl.innerHTML = '✓ <span>Tous les investissements sont soldés</span>';
+    }
+  }
+
+  if (!credits.length) {
+    table.innerHTML = '<div class="invest-empty">Aucun crédit non payé — tous les investissements sont soldés.</div>';
+    return;
+  }
+
+  const rows = [...credits].sort((a,b) => b.remaining - a.remaining || b.amount - a.amount);
   window._investRows = rows;
+  const _labelField = getStrPref('invest_label_field', '');
   const rowsHtml = rows.map((i, idx) => {
     const date = i.date ? new Date(i.date).toLocaleDateString('fr-FR') : '—';
     const statusLabel = i.status === 'paid' ? 'Payé' : (i.status === 'partial' ? 'Crédit partiel' : 'Crédit non payé');
     const statusCls = i.status === 'paid' ? 'paid' : (i.status === 'partial' ? 'partial' : 'credit');
+    const rawVal = _labelField && i.raw && i.raw[_labelField] != null ? String(i.raw[_labelField]) : '';
+    const displayName = rawVal || i.name || '—';
     return '<div class="invest-row clickable" onclick="openInvestmentDetail(' + idx + ')" title="Cliquer pour voir les informations">' +
-      '<div><div class="invest-name" title="' + escH(i.name) + '">' + escH(i.name) + '</div><div class="invest-meta">' + escH(i.category) + (i.supplier ? ' · ' + escH(i.supplier) : '') + '</div></div>' +
+      '<div><div class="invest-name" title="' + escH(displayName) + '">' + escH(displayName) + '</div></div>' +
       '<div class="invest-num">' + fmtCA(i.amount) + '</div>' +
       '<div class="invest-num green">' + fmtCA(i.paidAmount) + '</div>' +
       '<div class="invest-num red">' + fmtCA(i.remaining) + '</div>' +
@@ -4049,6 +4109,12 @@ function setPref(key, val) {
   try { localStorage.setItem('covo_pref_' + key, val ? 'true' : 'false'); } catch(e) {}
 }
 function saveTogglePref(key, val) { setPref(key, val); }
+function getStrPref(key, def) {
+  try { const v = localStorage.getItem('covo_pref_' + key); return (v !== null && v !== '') ? v : def; } catch(e) { return def; }
+}
+function setStrPref(key, val) {
+  try { localStorage.setItem('covo_pref_' + key, val); } catch(e) {}
+}
 
 function loadPreferencesToToggles() {
   // FAB : par défaut FAUX (caché) une fois installé, mais respecte la préférence utilisateur
@@ -4070,6 +4136,9 @@ function loadPreferencesToToggles() {
   // Son : par défaut FAUX
   const soundEl = document.getElementById('sp-pref-sound');
   if (soundEl) soundEl.checked = getPref('sound', false);
+  // Champ désignation investissements
+  const investLabelEl = document.getElementById('sp-invest-label');
+  if (investLabelEl) investLabelEl.value = getStrPref('invest_label_field', '');
 }
 
 // Toggles d'interface
@@ -4114,6 +4183,32 @@ function toggleAnimations(enabled) {
     document.body.classList.add('no-animations');
   }
   toast(enabled ? '✓ Animations activées' : 'Animations désactivées', '');
+}
+
+function saveInvestLabelField(val) {
+  setStrPref('invest_label_field', val);
+  renderInvestments();
+  toast(val ? '✓ Désignation : champ "' + val + '"' : '✓ Désignation automatique', 'ok');
+}
+
+function detectInvestFields() {
+  const sel = document.getElementById('sp-invest-label');
+  if (!sel) return;
+  const sample = (investments || [])[0];
+  if (!sample) { toast('Aucune donnée investissement en mémoire', ''); return; }
+  const keys = Object.keys(sample).filter(k => !['raw'].includes(k) && typeof sample[k] !== 'object');
+  const existing = new Set([...sel.options].map(o => o.value));
+  let added = 0;
+  keys.forEach(k => {
+    if (!existing.has(k)) {
+      const opt = document.createElement('option');
+      opt.value = k; opt.textContent = k;
+      sel.appendChild(opt); added++;
+    }
+  });
+  const saved = getStrPref('invest_label_field', '');
+  sel.value = saved;
+  toast(added > 0 ? '✓ ' + added + ' champ(s) ajouté(s) depuis les données' : '✓ Liste déjà à jour', 'ok');
 }
 
 function resetPreferences() {
