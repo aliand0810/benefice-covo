@@ -2705,21 +2705,61 @@ function investmentKey(inv) {
   ].join('|')).toLowerCase();
 }
 
-function normalizeInvestment(inv, idx) {
-  const amount = normMoney(firstVal(inv, ['amount','montant','total','price','prix','cost','cout','value'], 0));
-  let paidAmount = normMoney(firstVal(inv, ['paidAmount','amountPaid','montantPaye','montant_payé','paye','paid_value'], 0));
-  const rawPaid = firstVal(inv, ['paid','isPaid','paye','payé','settled'], null);
-  const rawCredit = firstVal(inv, ['credit','isCredit','onCredit','aCredit','enCredit'], null);
-  const rawStatus = String(firstVal(inv, ['status','statut','etat','paymentStatus','state'], '')).toLowerCase();
-  if ((rawPaid === true || rawPaid === 'true') && !paidAmount) paidAmount = amount;
+function _invCI(obj, keys, def) {
+  // Case-insensitive field lookup
+  const low = {};
+  Object.keys(obj).forEach(k => { low[k.toLowerCase()] = obj[k]; });
+  for (const k of keys) {
+    if (obj[k]  !== undefined && obj[k]  !== null) return obj[k];
+    if (low[k]  !== undefined && low[k]  !== null) return low[k];
+  }
+  return def;
+}
 
-  let remaining = normMoney(firstVal(inv, ['remaining','reste','restant','resteAPayer','reste_a_payer','amountDue','due','creditAmount','montantCredit'], ''));
+function _isTruthy(v) {
+  if (v === null || v === undefined) return false;
+  if (typeof v === 'boolean') return v;
+  if (typeof v === 'number')  return v === 1;
+  const s = String(v).toLowerCase().trim();
+  return ['true','1','oui','yes','✓','ok','payé','paye','paid','soldé','solde'].includes(s);
+}
+
+function normalizeInvestment(inv, idx) {
+  // Appliquer override manuel si présent
+  const invKey0 = investmentKey(inv) || String(idx);
+  const overrides = JSON.parse(localStorage.getItem('covo_invest_overrides') || '{}');
+  const manualStatus = overrides[invKey0] || null;
+
+  const amount = normMoney(_invCI(inv, ['amount','montant','total','price','prix','cost','cout','value'], 0));
+  let paidAmount = normMoney(_invCI(inv, ['paidAmount','amountPaid','montantPaye','montant_paye','montant_payé','montantPayé','paye','paid_value','montant_verse'], 0));
+  const rawPaid   = _invCI(inv, ['paid','isPaid','paye','payé','payee','settled','regle','réglé','solde','soldé'], null);
+  const rawCredit = _invCI(inv, ['credit','isCredit','onCredit','aCredit','enCredit','impaye','impayé'], null);
+  const rawStatus = String(_invCI(inv, ['status','statut','etat','état','paymentStatus','payment_status','state','situation'], '')).toLowerCase().trim();
+
+  if (_isTruthy(rawPaid) && !paidAmount) paidAmount = amount;
+
+  let remaining = normMoney(_invCI(inv, ['remaining','reste','restant','resteAPayer','reste_a_payer','amountDue','due','creditAmount','montantCredit','solde_restant'], ''));
   if (!remaining && paidAmount > 0 && amount > paidAmount) remaining = amount - paidAmount;
 
-  const saysPaid = rawStatus.includes('pay') || rawStatus.includes('paye') || rawStatus.includes('payé') || rawStatus.includes('settled') || rawStatus.includes('régl') || rawStatus.includes('regl');
-  const saysCredit = rawStatus.includes('credit') || rawStatus.includes('crédit') || rawStatus.includes('impay') || rawStatus.includes('non pay') || rawStatus.includes('unpaid') || rawStatus.includes('pending') || rawCredit === true || rawCredit === 'true';
-  const isPaid = saysPaid || ((rawPaid === true || rawPaid === 'true') && remaining <= 0) || (amount > 0 && paidAmount >= amount);
-  const status = isPaid ? 'paid' : (paidAmount > 0 && remaining > 0 ? 'partial' : (saysCredit || remaining > 0 ? 'credit' : 'credit'));
+  // Mots exacts indiquant payé — évite faux positifs ("impayé", "non payé", "à payer")
+  const PAID_EXACT = ['payé','paye','paid','settled','réglé','reglé','regle','soldé','solde','acquitté','acquitte','versé','verse','ok'];
+  const saysPaid = PAID_EXACT.includes(rawStatus)
+    || PAID_EXACT.some(w => rawStatus.startsWith(w + ' ') || rawStatus.endsWith(' ' + w))
+    || rawStatus.startsWith('régl') || rawStatus.startsWith('regl');
+
+  // Mots indiquant crédit/impayé
+  const CREDIT_WORDS = ['credit','crédit','impayé','impaye','non payé','non paye','à payer','a payer','unpaid','pending','en attente','dette'];
+  const saysCredit = CREDIT_WORDS.some(w => rawStatus.includes(w)) || _isTruthy(rawCredit);
+
+  const isPaidRaw = saysPaid && !saysCredit;
+  const isPaid = manualStatus === 'paid'
+    || (manualStatus !== 'credit' && (
+        isPaidRaw
+        || (_isTruthy(rawPaid) && !saysCredit && remaining <= 0)
+        || (amount > 0 && paidAmount >= amount && !saysCredit)
+       ));
+
+  const status = isPaid ? 'paid' : (paidAmount > 0 && remaining > 0 ? 'partial' : 'credit');
 
   return {
     id: investmentKey(inv) || String(idx),
@@ -2957,11 +2997,18 @@ function openInvestmentDetail(idx) {
   const inv = (window._investRows || [])[idx];
   if (!inv) return;
   const raw = inv.raw || {};
+  const overrides  = JSON.parse(localStorage.getItem('covo_invest_overrides') || '{}');
+  const hasOverride = overrides[inv.id] !== undefined;
   const statusLabel = inv.status === 'paid' ? 'Payé' : (inv.status === 'partial' ? 'Crédit partiel' : 'Crédit non payé');
+  const statusColor = inv.status === 'paid' ? '#2ecc71' : '#e74c3c';
   const date = inv.date ? new Date(inv.date).toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' }) : '—';
 
   document.getElementById('tm-title').textContent = 'Investissement';
-  document.getElementById('tm-sub').innerHTML = escH(inv.name) + ' · <strong style="color:#8e44ad">' + escH(statusLabel) + '</strong>';
+  document.getElementById('tm-sub').innerHTML =
+    escH(inv.name) +
+    ' · <strong style="color:' + statusColor + '">' + escH(statusLabel) + '</strong>' +
+    (hasOverride ? ' <span style="font-size:9px;background:rgba(243,156,18,0.2);color:#f39c12;border:1px solid rgba(243,156,18,0.4);border-radius:10px;padding:1px 6px;vertical-align:middle">override</span>' : '');
+
   document.getElementById('tm-kpis').innerHTML =
     tmkpi('Montant', fmtCA(inv.amount), 'purple') +
     tmkpi('Payé', fmtCA(inv.paidAmount), 'green') +
@@ -2970,7 +3017,7 @@ function openInvestmentDetail(idx) {
     tmkpi('Catégorie', escH(inv.category || '—'), '') +
     tmkpi('Date', date, '');
 
-  document.getElementById('tm-items-title').textContent = 'Informations liées';
+  document.getElementById('tm-items-title').textContent = 'Données brutes';
   const known = new Set(['raw']);
   const infoRows = [
     ['Nom', inv.name],
@@ -2980,28 +3027,55 @@ function openInvestmentDetail(idx) {
     ['Montant', fmtCA(inv.amount)],
     ['Montant payé', fmtCA(inv.paidAmount)],
     ['Reste à payer', fmtCA(inv.remaining)],
-    ['Statut', statusLabel],
-    ['Référence', firstVal(raw, ['id','investmentId','uuid','ref','reference'], '—')],
-    ['Note', firstVal(raw, ['note','notes','comment','commentaire','description'], '—')]
+    ['Statut (calculé)', statusLabel],
+    ['Référence', _invCI(raw, ['id','investmentId','uuid','ref','reference'], '—')],
+    ['Note', _invCI(raw, ['note','notes','comment','commentaire','description'], '—')]
   ];
   const extraRows = Object.entries(raw)
     .filter(([k,v]) => v !== null && v !== undefined && v !== '' && !known.has(k))
     .filter(([k]) => !['name','nom','title','libelle','label','amount','montant','total','price','prix','cost','cout','paidAmount','amountPaid','montantPaye','remaining','reste','restant','status','statut','etat','category','categorie','supplier','fournisseur','date','createdAt','timestamp'].includes(k))
-    .slice(0, 10)
-    .map(([k,v]) => [k, typeof v === 'object' ? JSON.stringify(v) : v]);
+    .slice(0, 12)
+    .map(([k,v]) => [k, typeof v === 'object' ? JSON.stringify(v) : String(v)]);
 
   document.getElementById('tm-items').innerHTML = infoRows.concat(extraRows).map(([label, val]) =>
     '<div class="tm-item" style="grid-template-columns:140px 1fr">' +
       '<span class="tm-item-qty" style="text-align:left;color:#666">' + escH(label) + '</span>' +
       '<span class="tm-item-name">' + escH(String(val)) + '</span>' +
     '</div>'
-  ).join('');
+  ).join('') +
+  // Bouton override
+  '<div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">' +
+    (inv.status !== 'paid'
+      ? '<button onclick="setInvestOverride(\'' + escH(inv.id) + '\',\'paid\')" style="flex:1;padding:9px;background:rgba(39,174,96,0.15);border:1px solid #27ae60;border-radius:8px;color:#2ecc71;font-size:12px;font-weight:700;cursor:pointer;font-family:\'Poppins\',sans-serif">✓ Marquer comme soldé</button>'
+      : '<button onclick="setInvestOverride(\'' + escH(inv.id) + '\',\'credit\')" style="flex:1;padding:9px;background:rgba(231,76,60,0.12);border:1px solid #e74c3c;border-radius:8px;color:#e74c3c;font-size:12px;font-weight:700;cursor:pointer;font-family:\'Poppins\',sans-serif">⚠ Marquer comme non soldé</button>') +
+    (hasOverride
+      ? '<button onclick="clearInvestOverride(\'' + escH(inv.id) + '\')" style="padding:9px 14px;background:rgba(243,156,18,0.12);border:1px solid #f39c12;border-radius:8px;color:#f39c12;font-size:11px;font-weight:600;cursor:pointer;font-family:\'Poppins\',sans-serif">↺ Réinitialiser</button>'
+      : '') +
+  '</div>';
 
   document.getElementById('tm-total').textContent = fmtCA(inv.amount);
   const bEl = document.getElementById('tm-benef-total');
   bEl.textContent = inv.remaining > 0 ? fmtCA(inv.remaining) : 'Soldé';
   bEl.className = 'tm-benef-total ' + (inv.remaining > 0 ? 'neg' : 'pos');
   document.getElementById('ticket-modal-overlay').classList.add('open');
+}
+
+function setInvestOverride(id, status) {
+  const overrides = JSON.parse(localStorage.getItem('covo_invest_overrides') || '{}');
+  overrides[id] = status;
+  localStorage.setItem('covo_invest_overrides', JSON.stringify(overrides));
+  document.getElementById('ticket-modal-overlay').classList.remove('open');
+  renderInvestments();
+  toast(status === 'paid' ? '✓ Investissement marqué soldé' : '✓ Investissement marqué non soldé', 'ok');
+}
+
+function clearInvestOverride(id) {
+  const overrides = JSON.parse(localStorage.getItem('covo_invest_overrides') || '{}');
+  delete overrides[id];
+  localStorage.setItem('covo_invest_overrides', JSON.stringify(overrides));
+  document.getElementById('ticket-modal-overlay').classList.remove('open');
+  renderInvestments();
+  toast('↺ Override supprimé — statut recalculé depuis les données', '');
 }
 
 // ═══════════════════════════════════════════════
@@ -5188,9 +5262,12 @@ function initWorkHours() {
     _whCashiers.forEach(u => {
       const role = whRoleOf(u);
       const icon = role === 'admin' ? '🛡' : '💼';
-      const label = role === 'admin' ? 'Admin' : 'Caissier';
-      const id = whPersonId(u);
-      cSel.innerHTML += `<option value="user:${escH(id)}">${icon} ${label} · ${escH(whPersonName(u))}</option>`;
+      const id   = whPersonId(u);
+      const name = whPersonName(u);
+      // Évite "Admin · Admin" — n'affiche que le nom si différent du label de rôle générique
+      const roleLabel = role === 'admin' ? 'Admin' : 'Caissier';
+      const display = name.toLowerCase() === roleLabel.toLowerCase() ? name : `${roleLabel} · ${name}`;
+      cSel.innerHTML += `<option value="user:${escH(id)}">${icon} ${escH(display)}</option>`;
     });
     if ([...cSel.options].some(o => o.value === prev)) cSel.value = prev;
   }
