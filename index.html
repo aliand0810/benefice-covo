@@ -6239,4 +6239,360 @@ function loadCatalogueData() {
         unitType: 'unit',
         _fromTickets: true
       });
-      st.keys.forEach(k => known.add(
+      st.keys.forEach(k => known.add(k));
+    }
+  });
+
+  catalogueProducts = raw;
+
+  // ── Catégories (pour le filtre) ──────────────
+  const cats = window._covoCategories || [];
+  const catSel = document.getElementById('cat-category-filter');
+  if (catSel) {
+    catSel.innerHTML = '<option value="">Toutes catégories</option>' +
+      cats.map(cat => {
+        const name = typeof cat === 'string' ? cat : (cat.name || cat.label || '');
+        return `<option value="${name}">${name}</option>`;
+      }).join('');
+  }
+
+  // KPIs catalogue
+  const total = raw.length;
+  const withCost = raw.filter(p => p.costPrice > 0).length;
+  const totalCA = raw.reduce((a,p) => a + parseFloat(p.price||0), 0);
+  const totalBenef = raw.filter(p=>p.costPrice>0).reduce((a,p)=>a+(parseFloat(p.price||0)-parseFloat(p.costPrice||0)),0);
+  const totalSoldQty = salesStats.top.reduce((a,s) => a + s.qty, 0);
+  const totalReceived = salesStats.top.reduce((a,s) => a + s.amount, 0);
+
+  document.getElementById('cat-kpis').innerHTML = `
+    <div class="kpi-card purple"><div class="kpi-label">Articles</div><div class="kpi-value">${total}</div><div class="kpi-meta">${withCost} avec prix d'achat</div><div class="kpi-icon">📦</div></div>
+    <div class="kpi-card green"><div class="kpi-label">Quantité vendue</div><div class="kpi-value">${fmtQty(totalSoldQty)}</div><div class="kpi-meta">Total articles sortis</div><div class="kpi-icon">🛒</div></div>
+    <div class="kpi-card red"><div class="kpi-label">Montant reçu</div><div class="kpi-value">${fmtCA(totalReceived)}</div><div class="kpi-meta">CA articles vendus</div><div class="kpi-icon">💳</div></div>
+  `;
+}
+
+function setCatFilter(f, btn) {
+  _catFilter = f;
+  document.querySelectorAll('.cat-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCatalogue();
+}
+
+function renderCatalogue() {
+  const search = (document.getElementById('cat-search')?.value || '').toLowerCase();
+  let list = catalogueProducts;
+  const salesStats = buildCatalogueSalesStats();
+  renderCatalogueTopSales(salesStats.top);
+
+  if (!list.length) {
+    const board = document.getElementById('cat-sales-board');
+    if (board) board.innerHTML = '';
+    document.getElementById('cat-grid').innerHTML = `<div style="grid-column:1/-1;padding:60px 0;text-align:center;color:#555">
+      <div style="font-size:40px;margin-bottom:12px">📦</div>
+      <div style="font-size:13px">Aucun article trouvé dans COVO Pro.<br>
+      <span style="font-size:11px;color:#444">Clés cherchées : products, covo_products, covo_articles</span></div>
+    </div>`;
+    document.getElementById('cat-count').textContent = '0 article';
+    return;
+  }
+
+  const catFilter = document.getElementById('cat-category-filter')?.value || '';
+  if (search)     list = list.filter(p => (p.name||'').toLowerCase().includes(search) || (p.category||p.categorie||p.cat||'').toLowerCase().includes(search));
+  if (catFilter)  list = list.filter(p => (p.category||p.categorie||p.cat||'') === catFilter);
+  if (_catFilter === 'withcost')  list = list.filter(p => parseFloat(p.costPrice||p.cost||0) > 0);
+  if (_catFilter === 'nocost')    list = list.filter(p => !parseFloat(p.costPrice||p.cost||0));
+  if (_catFilter === 'lowstock')  list = list.filter(p => p.stock != null && parseFloat(p.stock) < 10);
+  list = [...list].sort((a,b) => {
+    const sa = getProductSalesStat(a, salesStats.aliases);
+    const sb = getProductSalesStat(b, salesStats.aliases);
+    return (sb?.amount || 0) - (sa?.amount || 0) || (sb?.qty || 0) - (sa?.qty || 0) || String(a.name||'').localeCompare(String(b.name||''), 'fr');
+  });
+
+  document.getElementById('cat-count').textContent = `${list.length} article${list.length>1?'s':''}`;
+
+  window._catProductModalList = list;
+  document.getElementById('cat-grid').innerHTML = list.map((p, idx) => {
+    const stat = getProductSalesStat(p, salesStats.aliases);
+    const avgSoldPrice = stat && stat.qty > 0 ? stat.amount / stat.qty : 0;
+    const price = parseFloat(p.price || p.pricePerKg || p.unitPrice || avgSoldPrice || 0);
+    const cost  = parseFloat(p.costPrice || p.cost || 0);
+    const benef = cost > 0 ? price - cost : null;
+    const marge = (benef !== null && price > 0) ? Math.round(benef/price*100) : null;
+
+    const imgSrc = p.image || p.img || p.imageUrl || p.photo || '';
+    const imgHtml = imgSrc
+      ? '<img src="' + escH(imgSrc) + '" alt="' + escH(p.name||'') + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'
+        + '<div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:36px;background:#fff">📦</div>'
+      : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:36px;background:#fff">📦</div>';
+
+    const cat = p.category || p.categorie || p.cat || p.type || '';
+    const catBadge = cat
+      ? '<span style="font-size:9px;background:rgba(142,68,173,0.15);color:#c39bd3;border:1px solid rgba(142,68,173,0.3);border-radius:20px;padding:1px 7px;margin-bottom:4px;display:inline-block">' + escH(cat) + '</span>'
+      : '';
+
+    const unitLabel = p.unitType === 'kg' ? ' /kg' : '';
+    const soldQty = stat ? stat.qty : 0;
+    const received = stat ? stat.amount : 0;
+
+    const benefHtml = benef !== null
+      ? '<span class="cat-benef ' + (benef>=0?'pos':'neg') + '">' + (benef>=0?'+':'') + fmtCA(benef) + (marge!==null?' · '+marge+'%':'') + '</span>'
+      : '<span class="cat-benef" style="background:rgba(255,255,255,0.04);color:#444;border:1px dashed #2e2e50;font-size:10px">prix achat manquant</span>';
+
+    const stkVal = parseFloat(p.stock ?? p.qty ?? '');
+    const stockHtml = !isNaN(stkVal)
+      ? '<div class="cat-stock" style="color:' + (stkVal<5?'#e74c3c':stkVal<20?'#f39c12':'#555') + '">Stock : ' + stkVal + ' ' + (p.unitType==='kg'?'kg':'u.') + '</div>'
+      : '';
+
+    return '<div class="cat-card" onclick="openCatProductModal(' + idx + ')" style="cursor:pointer">'
+      + '<div class="cat-img">' + imgHtml + '</div>'
+      + '<div class="cat-info">'
+      + (catBadge ? '<div>' + catBadge + '</div>' : '')
+      + '<div class="cat-name" title="' + escH(p.name||'') + '">' + escH(p.name||'Sans nom') + '</div>'
+      + '<div class="cat-card-price-row"><span>Prix</span><strong>' + fmtCA(price) + unitLabel + '</strong></div>'
+      + '<div class="cat-card-sales">'
+      + '<div class="cat-card-sale-stat"><div class="cat-card-sale-label">Vendu</div><div class="cat-card-sale-val">' + fmtQty(soldQty) + '</div></div>'
+      + '<div class="cat-card-sale-stat"><div class="cat-card-sale-label">Montant reçu</div><div class="cat-card-sale-val green">' + fmtCA(received) + '</div></div>'
+      + '</div>'
+      + '<div class="cat-cost">' + (cost>0 ? 'Achat : ' + fmtCA(cost) : '—') + '</div>'
+      + benefHtml + stockHtml
+      + '</div></div>';
+  }).join('') || '<div style="grid-column:1/-1;padding:40px;text-align:center;color:#555">Aucun résultat</div>';
+}
+
+// ═══════════════════════════════════════════════
+//  MODAL SEMAINE
+// ═══════════════════════════════════════════════
+function openWeekModal(wkKey) {
+  const wSales = (window._weekSalesMap || {})[wkKey];
+  if (!wSales || !wSales.length) return;
+
+  const valid     = wSales.filter(s => !s.cancelled);
+  const ca        = valid.reduce((a, s) => a + parseFloat(s.total || 0), 0);
+  const benef     = wSales.reduce((a, s) => a + getTicketBenef(s), 0);
+  const caCard    = valid.filter(isCardPayment).reduce((a, s) => a + parseFloat(s.total || 0), 0);
+  const caEsp     = valid.filter(isCashPayment).reduce((a, s) => a + parseFloat(s.total || 0), 0);
+  const avgTicket = valid.length > 0 ? ca / valid.length : 0;
+
+  // Plage de dates de la semaine
+  const dates = [...new Set(wSales.map(s => toYMD(saleDate(s))))].sort();
+  const d0 = new Date(dates[0] + 'T00:00:00');
+  const d1 = new Date(dates[dates.length - 1] + 'T00:00:00');
+  const fmtD = d => d.toLocaleDateString('fr-FR', {day:'2-digit', month:'short'});
+  const [wNum] = wkKey.split('|');
+
+  document.getElementById('wkm-title').textContent = wNum;
+  document.getElementById('wkm-sub').textContent   = fmtD(d0) + (d1 > d0 ? ' → ' + fmtD(d1) : '');
+  document.getElementById('wkm-vol').textContent   = valid.length + ' vente' + (valid.length > 1 ? 's' : '');
+  document.getElementById('wkm-ca').textContent    = fmtCA(ca);
+  document.getElementById('wkm-cb').textContent    = fmtCA(caCard);
+  document.getElementById('wkm-esp').textContent   = fmtCA(caEsp);
+  document.getElementById('wkm-benef').textContent = fmt(benef);
+  document.getElementById('wkm-avg').textContent   = fmtCA(avgTicket);
+  document.getElementById('wkm-days').textContent  = dates.length + ' j.';
+
+  buildWeekChart(wSales, dates);
+  document.getElementById('wk-modal-overlay').classList.add('open');
+}
+
+function closeWeekModal(e) {
+  if (e && e.target !== document.getElementById('wk-modal-overlay')) return;
+  document.getElementById('wk-modal-overlay').classList.remove('open');
+  if (weekModalChartInstance) { weekModalChartInstance.destroy(); weekModalChartInstance = null; }
+}
+
+function buildWeekChart(wSales, dates) {
+  const canvas = document.getElementById('wkm-chart');
+  if (!canvas) return;
+
+  // 7 jours Lun→Dim autour des dates de la semaine
+  const d0 = new Date(dates[0] + 'T00:00:00');
+  const mon = new Date(d0);
+  mon.setDate(d0.getDate() - ((d0.getDay() + 6) % 7));
+
+  const labels = [], dataCA = [], dataCard = [], dataCash = [];
+  for (let i = 0; i < 7; i++) {
+    const day = new Date(mon);
+    day.setDate(mon.getDate() + i);
+    const dk = toYMD(day);
+    labels.push(day.toLocaleDateString('fr-FR', {weekday:'short', day:'numeric'}));
+    const dSales = wSales.filter(s => toYMD(saleDate(s)) === dk && !s.cancelled);
+    const dCA    = dSales.reduce((a, s) => a + parseFloat(s.total || 0), 0);
+    const dCard  = dSales.filter(isCardPayment).reduce((a, s) => a + parseFloat(s.total || 0), 0);
+    const dCash  = dSales.filter(isCashPayment).reduce((a, s) => a + parseFloat(s.total || 0), 0);
+    dataCA.push(parseFloat(dCA.toFixed(2)));
+    dataCard.push(parseFloat(dCard.toFixed(2)));
+    dataCash.push(parseFloat(dCash.toFixed(2)));
+  }
+
+  if (weekModalChartInstance) weekModalChartInstance.destroy();
+  weekModalChartInstance = new Chart(canvas.getContext('2d'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: 'CA', data: dataCA, borderColor: '#8e44ad', backgroundColor: 'rgba(142,68,173,0.10)', borderWidth: 2, tension: 0.3, pointRadius: 3, pointBackgroundColor: '#8e44ad', fill: true },
+        { label: 'Carte', data: dataCard, borderColor: '#2980b9', backgroundColor: 'transparent', borderWidth: 1.5, tension: 0.3, pointRadius: 2, borderDash: [4,3] },
+        { label: 'Espèces', data: dataCash, borderColor: '#27ae60', backgroundColor: 'transparent', borderWidth: 1.5, tension: 0.3, pointRadius: 2, borderDash: [4,3] }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#666', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+        y: { beginAtZero: true, ticks: { color: '#666', font: { size: 9 }, callback: v => v + '€' }, grid: { color: 'rgba(255,255,255,0.06)' } }
+      }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════
+//  MODAL PRODUIT CATALOGUE
+// ═══════════════════════════════════════════════
+function openCatProductModal(idx) {
+  const p = (window._catProductModalList || [])[idx];
+  if (!p) return;
+
+  const salesStats = buildCatalogueSalesStats();
+  const stat = getProductSalesStat(p, salesStats.aliases);
+  const avgSoldPrice = stat && stat.qty > 0 ? stat.amount / stat.qty : 0;
+  const price  = parseFloat(p.price || p.pricePerKg || p.unitPrice || avgSoldPrice || 0);
+  const cost   = parseFloat(p.costPrice || p.cost || 0);
+  const benef  = cost > 0 ? price - cost : null;
+  const marge  = (benef !== null && price > 0) ? Math.round(benef / price * 100) : null;
+  const soldQty  = stat ? stat.qty  : 0;
+  const received = stat ? stat.amount : 0;
+
+  // Header
+  document.getElementById('cpm-name').textContent = p.name || 'Article';
+  const catEl = document.getElementById('cpm-cat');
+  const cat = p.category || p.categorie || p.cat || p.type || '';
+  catEl.textContent = cat || ''; catEl.style.display = cat ? '' : 'none';
+
+  // Thumb
+  const thumbEl = document.getElementById('cpm-thumb');
+  const imgSrc = p.image || p.img || p.imageUrl || p.photo || '';
+  thumbEl.innerHTML = imgSrc
+    ? '<img src="' + escH(imgSrc) + '" onerror="this.parentElement.innerHTML=\'📦\'">'
+    : '📦';
+
+  // KPIs
+  document.getElementById('cpm-price').textContent = fmtCA(price);
+  document.getElementById('cpm-ca').textContent    = fmtCA(received);
+  document.getElementById('cpm-qty').textContent   = fmtQty(soldQty);
+  const benefEl = document.getElementById('cpm-benef');
+  if (benef !== null) {
+    benefEl.textContent  = (benef >= 0 ? '+' : '') + fmtCA(benef) + (marge !== null ? ' (' + marge + '%)' : '');
+    benefEl.className    = 'cpm-kpi-val ' + (benef > 0 ? 'green' : 'red');
+  } else {
+    benefEl.textContent  = '—';
+    benefEl.className    = 'cpm-kpi-val';
+  }
+
+  // Footer
+  document.getElementById('cpm-total-ca').textContent  = fmtCA(received);
+  document.getElementById('cpm-total-qty').textContent  = fmtQty(soldQty);
+  document.getElementById('cpm-avg-price').textContent  = soldQty > 0 ? fmtCA(received / soldQty) : '—';
+
+  buildCatProductChart(p);
+  document.getElementById('cpm-overlay').classList.add('open');
+}
+
+function closeCatProductModal(e) {
+  if (e && e.target !== document.getElementById('cpm-overlay')) return;
+  document.getElementById('cpm-overlay').classList.remove('open');
+  if (catProductChartInstance) { catProductChartInstance.destroy(); catProductChartInstance = null; }
+}
+
+function buildCatProductChart(p) {
+  const canvas = document.getElementById('cpm-chart');
+  if (!canvas) return;
+
+  const mNames = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+  const now = new Date();
+  const labels = [], dataCA = [], dataQty = [];
+  const pKeys = new Set(productKeys(p));
+
+  for (let i = 11; i >= 0; i--) {
+    const d  = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const ym = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+    labels.push(mNames[d.getMonth()] + ' ' + String(d.getFullYear()).slice(-2));
+    let mCA = 0, mQty = 0;
+    sales.filter(s => !s.cancelled && toYMD(saleDate(s)).startsWith(ym)).forEach(s => {
+      (s.items || []).forEach(it => {
+        const itKeys = [it.id, it.articleId, it.productId, it.name, it.label, it.nom]
+          .filter(Boolean).map(catKey);
+        if (!itKeys.some(k => pKeys.has(k))) return;
+        const qty = parseFloat(it.qty ?? it.quantity ?? it.qte ?? it.quantite ?? 1) || 1;
+        const unit = parseFloat(it.price ?? it.unitPrice ?? it.prix ?? it.prixVente ?? 0) || 0;
+        const lineRaw = parseFloat(it.total ?? it.amount ?? it.subtotal ?? '');
+        mCA  += !isNaN(lineRaw) ? lineRaw : unit * qty;
+        mQty += qty;
+      });
+    });
+    dataCA.push(parseFloat(mCA.toFixed(2)));
+    dataQty.push(parseFloat(mQty.toFixed(2)));
+  }
+
+  if (catProductChartInstance) catProductChartInstance.destroy();
+  catProductChartInstance = new Chart(canvas.getContext('2d'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'CA (€)', data: dataCA,
+          borderColor: '#8e44ad', backgroundColor: 'rgba(142,68,173,0.10)',
+          borderWidth: 2, tension: 0.35, pointRadius: 3,
+          pointBackgroundColor: '#8e44ad', fill: true, yAxisID: 'yCA'
+        },
+        {
+          label: 'Qté', data: dataQty,
+          borderColor: '#2ecc71', backgroundColor: 'transparent',
+          borderWidth: 2, tension: 0.35, pointRadius: 3,
+          pointBackgroundColor: '#2ecc71', borderDash: [4, 3],
+          fill: false, yAxisID: 'yQty'
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#666', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+        yCA:  { position: 'left',  beginAtZero: true, ticks: { color: '#666', font: { size: 9 }, callback: v => v + '€' }, grid: { color: 'rgba(255,255,255,0.06)' } },
+        yQty: { position: 'right', beginAtZero: true, ticks: { color: '#555', font: { size: 9 } }, grid: { display: false } }
+      }
+    }
+  });
+}
+
+// Exposer pour Drive restore
+window._reloadCatalogue  = function() { if (document.getElementById('tc-catalogue')?.classList.contains('active')) initCatalogue(); };
+window._reloadWorkHours  = function() { if (document.getElementById('tc-workhours')?.classList.contains('active')) renderWorkHours(); };
+
+// Démarrage : SW d'abord (avant splash), puis app
+// SW enregistré immédiatement pour une activation plus rapide
+try { registerSW(); } catch(e) { console.warn('[SW]', e); }
+
+// Rafraîchir périodiquement le statut SW pendant les premières 30 secondes
+// (résout le cas iOS où le SW met quelques secondes à s'activer)
+let _swCheckCount = 0;
+const _swCheckInterval = setInterval(() => {
+  _swCheckCount++;
+  // Vérifier si le SW est passé en état actif
+  if (navigator.serviceWorker && (navigator.serviceWorker.controller || (window._swRegistration && window._swRegistration.active))) {
+    window._swState = 'active';
+    if (typeof refreshSwStatus === 'function') refreshSwStatus();
+    clearInterval(_swCheckInterval);
+  } else if (_swCheckCount > 30) {
+    clearInterval(_swCheckInterval);
+  }
+}, 1000);
+
+// Lancer le splash puis l'app
+runSplash(() => init());
+</script>
+
+</body>
+</html>
