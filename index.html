@@ -665,14 +665,62 @@ border:1px solid rgba(142,68,173,0.30); border-radius:10px; padding:11px 13px;
 .invest-kpi-val.red { color:#e74c3c; }
 .invest-kpi-val.purple { color:#c39bd3; }
 .invest-table-wrap { overflow-x:auto; border:1px solid #2e2e50; border-radius:10px; }
-.invest-table { min-width:760px; }
-.invest-row { display:grid; grid-template-columns:1.3fr 110px 110px 110px 120px 100px; gap:12px; align-items:center; padding:12px 14px; border-bottom:1px solid #252540; }
+.invest-table { min-width:800px; }
+.invest-row { display:grid; grid-template-columns:30px 1.3fr 110px 110px 110px 120px 100px; gap:12px; align-items:center; padding:12px 14px; border-bottom:1px solid #252540; }
 .invest-row:last-child { border-bottom:0; }
 .invest-row.head { background:#17172a; color:#666; font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; }
 .invest-row.clickable { cursor:pointer; transition:background 0.15s, transform 0.15s; }
 .invest-row.clickable:hover { background:#252540; transform:translateX(2px); }
+.invest-row.selected { background:rgba(142,68,173,0.10); }
+.invest-cb { width:16px; height:16px; accent-color:#8e44ad; cursor:pointer; flex-shrink:0; }
+.invest-cb-all { width:14px; height:14px; accent-color:#8e44ad; cursor:pointer; }
+/* Barre bulk */
+.invest-bulk-bar {
+  display:none; align-items:center; gap:10px; flex-wrap:wrap;
+  background:#1a1a30; border:1px solid rgba(142,68,173,0.4); border-radius:10px;
+  padding:10px 14px; margin-bottom:10px;
+}
+.invest-bulk-bar.visible { display:flex; animation:modal-pop 0.2s ease; }
+.invest-bulk-count { font-size:12px; font-weight:700; color:#c39bd3; flex:1; }
+.invest-bulk-btn { display:flex; align-items:center; gap:5px; font-size:11px; font-weight:700; border-radius:8px; padding:7px 13px; cursor:pointer; font-family:'Poppins',sans-serif; border:none; }
+.invest-bulk-btn.green { background:rgba(39,174,96,0.15); border:1px solid rgba(39,174,96,0.4); color:#2ecc71; }
+.invest-bulk-btn.grey  { background:rgba(255,255,255,0.06); border:1px solid #2e2e50; color:#666; }
+.invest-bulk-btn.clear { background:none; border:1px solid #2e2e50; color:#444; }
+/* Section masqués */
+.invest-hidden-toggle {
+  display:flex; align-items:center; gap:8px; cursor:pointer;
+  padding:9px 14px; background:#13131f; border:1px solid #2e2e50;
+  border-radius:8px; margin-top:10px; user-select:none;
+  font-size:11px; color:#555; font-weight:600;
+  transition:background 0.15s;
+}
+.invest-hidden-toggle:hover { background:#1a1a2e; color:#888; }
+.invest-hidden-toggle .iht-chevron { font-size:10px; transition:transform 0.2s; }
+.invest-hidden-toggle.open .iht-chevron { transform:rotate(90deg); }
+.invest-hidden-toggle .iht-badge {
+  background:rgba(255,255,255,0.07); border:1px solid #2e2e50;
+  border-radius:20px; padding:1px 8px; font-size:10px; color:#555;
+}
+.invest-hidden-list { display:none; border:1px solid #2e2e50; border-radius:8px; margin-top:6px; overflow:hidden; }
+.invest-hidden-list.open { display:block; }
+.invest-hidden-row {
+  display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center;
+  padding:10px 14px; border-bottom:1px solid #1e1e3a; font-size:12px;
+}
+.invest-hidden-row:last-child { border-bottom:0; }
+.invest-hidden-name { color:#555; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.invest-hidden-amt  { font-size:11px; color:#444; }
+.invest-unhide-btn {
+  font-size:10px; font-weight:700; color:#8e44ad; background:rgba(142,68,173,0.12);
+  border:1px solid rgba(142,68,173,0.3); border-radius:6px; padding:4px 10px;
+  cursor:pointer; font-family:'Poppins',sans-serif; white-space:nowrap;
+}
 .invest-name { font-size:12px; font-weight:700; color:#ddd; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .invest-meta { font-size:10px; color:#666; margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.invest-pay-chip { display:inline-flex; align-items:center; gap:3px; font-size:9px; font-weight:700; border-radius:20px; padding:2px 7px; margin-top:3px; }
+.invest-pay-chip.cb   { background:rgba(142,68,173,0.15); color:#c39bd3; border:1px solid rgba(142,68,173,0.3); }
+.invest-pay-chip.cash { background:rgba(39,174,96,0.12);  color:#2ecc71;  border:1px solid rgba(39,174,96,0.3); }
+.invest-pay-chip.other{ background:rgba(255,255,255,0.05); color:#666;    border:1px solid #2e2e50; }
 .invest-num { font-size:12px; font-weight:800; color:#fff; text-align:right; }
 .invest-num.green { color:#2ecc71; }
 .invest-num.red { color:#e74c3c; }
@@ -2342,9 +2390,16 @@ body {
       <div class="invest-kpi"><div class="invest-kpi-label">Lignes suivies</div><div class="invest-kpi-val" id="inv-count">—</div></div>
     </div>
     <div id="invest-alert-banner" style="display:none"></div>
+    <div class="invest-bulk-bar" id="invest-bulk-bar">
+      <span class="invest-bulk-count" id="invest-bulk-count">0 sélectionné</span>
+      <button class="invest-bulk-btn green" onclick="investBulkPaid()">✓ Marquer soldé</button>
+      <button class="invest-bulk-btn grey"  onclick="investBulkHide()">🙈 Masquer</button>
+      <button class="invest-bulk-btn clear" onclick="investClearSel()">✕ Désélectionner</button>
+    </div>
     <div class="invest-table-wrap">
       <div class="invest-table" id="invest-table"></div>
     </div>
+    <div id="invest-hidden-section"></div>
   </div>
 
   <!-- CHART -->
@@ -2994,7 +3049,9 @@ function normalizeInvestment(inv, idx) {
         || (amount > 0 && paidAmount >= amount && !saysCredit)
        ));
 
-  const status = isPaid ? 'paid' : (paidAmount > 0 && remaining > 0 ? 'partial' : 'credit');
+  const status = manualStatus === 'hidden' ? 'hidden'
+    : isPaid ? 'paid'
+    : (paidAmount > 0 && remaining > 0 ? 'partial' : 'credit');
 
   return {
     id: investmentKey(inv) || String(idx),
@@ -3202,8 +3259,14 @@ function renderInvestments() {
     return;
   }
 
+  // Les masqués ont status='hidden' — déjà exclus du filtre credits
+  const hiddenCount = normalized.filter(i => i.status === 'hidden').length;
   const rows = [...credits].sort((a,b) => b.remaining - a.remaining || b.amount - a.amount);
   window._investRows = rows;
+  if (!window._investSelected) window._investSelected = new Set();
+  // Nettoyer sélection si IDs disparus
+  window._investSelected.forEach(id => { if (!rows.find(r => r.id === id)) window._investSelected.delete(id); });
+
   const _labelField = getStrPref('invest_label_field', '');
   const rowsHtml = rows.map((i, idx) => {
     const date = i.date ? new Date(i.date).toLocaleDateString('fr-FR') : '—';
@@ -3212,8 +3275,21 @@ function renderInvestments() {
     const rawVal = _labelField && i.raw && i.raw[_labelField] != null && String(i.raw[_labelField]).trim() !== ''
       ? String(i.raw[_labelField]).trim() : null;
     const displayName = rawVal !== null ? rawVal : (_labelField ? (i.name !== 'Investissement' ? i.name : '—') : (i.name || '—'));
-    return '<div class="invest-row clickable" onclick="openInvestmentDetail(' + idx + ')" title="Cliquer pour voir les informations">' +
-      '<div><div class="invest-name" title="' + escH(displayName) + '">' + escH(displayName) + '</div></div>' +
+    // Payment mode chip
+    const rawMode = String(_invCI(i.raw || {}, ['paymentMode','modePaiement','payment','mode','modeReglement','paiement','reglement','typePaiement','modeDepaiement','modePay'], '')).trim();
+    let payChip = '';
+    if (rawMode) {
+      const m = rawMode.toLowerCase();
+      const isCB   = m.includes('cb') || m.includes('carte') || m.includes('card') || m.includes('visa') || m.includes('master') || m.includes('tpe') || m.includes('bancontact');
+      const isCash = m.includes('esp') || m.includes('cash') || m.includes('liquid') || m.includes('comptant');
+      if (isCB)        payChip = '<span class="invest-pay-chip cb">💳 ' + escH(rawMode) + '</span>';
+      else if (isCash) payChip = '<span class="invest-pay-chip cash">💵 ' + escH(rawMode) + '</span>';
+      else             payChip = '<span class="invest-pay-chip other">' + escH(rawMode.length > 18 ? rawMode.slice(0,18) + '…' : rawMode) + '</span>';
+    }
+    const isSel = window._investSelected.has(i.id);
+    return '<div class="invest-row clickable' + (isSel ? ' selected' : '') + '" onclick="investRowClick(event,' + idx + ')" title="Cliquer pour voir les informations">' +
+      '<input type="checkbox" class="invest-cb" ' + (isSel ? 'checked' : '') + ' onclick="investToggleCb(event,\'' + escH(i.id) + '\')" title="Sélectionner">' +
+      '<div><div class="invest-name" title="' + escH(displayName) + '">' + escH(displayName) + '</div>' + payChip + '</div>' +
       '<div class="invest-num">' + fmtCA(i.amount) + '</div>' +
       '<div class="invest-num green">' + fmtCA(i.paidAmount) + '</div>' +
       '<div class="invest-num red">' + fmtCA(i.remaining) + '</div>' +
@@ -3222,10 +3298,62 @@ function renderInvestments() {
     '</div>';
   }).join('');
 
+  const allSel = rows.length > 0 && rows.every(r => window._investSelected.has(r.id));
+  const hiddenNote = hiddenCount > 0 ? ' <span style="font-size:9px;color:#555;font-weight:400;margin-left:4px">(' + hiddenCount + ' masqué' + (hiddenCount>1?'s':'') + ')</span>' : '';
   table.innerHTML =
     '<div class="invest-row head">' +
-      '<div>Investissement</div><div style="text-align:right">Montant</div><div style="text-align:right">Payé</div><div style="text-align:right">Reste</div><div>Statut</div><div style="text-align:right">Date</div>' +
+      '<input type="checkbox" class="invest-cb-all" ' + (allSel ? 'checked' : '') + ' onclick="investToggleAll(this)" title="Tout sélectionner">' +
+      '<div>Investissement' + hiddenNote + '</div><div style="text-align:right">Montant</div><div style="text-align:right">Payé</div><div style="text-align:right">Reste</div><div>Statut</div><div style="text-align:right">Date</div>' +
     '</div>' + rowsHtml;
+
+  _investUpdateBulkBar();
+  _renderHiddenSection(normalized);
+}
+
+function _renderHiddenSection(normalized) {
+  const sec = document.getElementById('invest-hidden-section');
+  if (!sec) return;
+  const hidden = (normalized || []).filter(i => i.status === 'hidden');
+  if (!hidden.length) { sec.innerHTML = ''; return; }
+
+  const wasOpen = sec.querySelector('.invest-hidden-list.open') !== null;
+  const rows = hidden.map(i => {
+    const _labelField = getStrPref('invest_label_field', '');
+    const rawVal = _labelField && i.raw && i.raw[_labelField] != null ? String(i.raw[_labelField]).trim() : null;
+    const displayName = rawVal || (i.name !== 'Investissement' ? i.name : '—');
+    return '<div class="invest-hidden-row">' +
+      '<div>' +
+        '<div class="invest-hidden-name" title="' + escH(displayName) + '">' + escH(displayName) + '</div>' +
+        '<div class="invest-hidden-amt">' + fmtCA(i.amount) + ' · ' + (i.date ? new Date(i.date).toLocaleDateString('fr-FR') : '—') + '</div>' +
+      '</div>' +
+      '<button class="invest-unhide-btn" onclick="investUnhide(\'' + escH(i.id) + '\')">↩ Restaurer</button>' +
+    '</div>';
+  }).join('');
+
+  sec.innerHTML =
+    '<div class="invest-hidden-toggle' + (wasOpen ? ' open' : '') + '" onclick="investToggleHiddenList(this)">' +
+      '<span class="iht-chevron">▶</span>' +
+      '<span>Investissements masqués</span>' +
+      '<span class="iht-badge">' + hidden.length + '</span>' +
+      '<span style="flex:1"></span>' +
+      '<span style="font-size:10px;color:#3a3a5a">Cliquer pour déployer</span>' +
+    '</div>' +
+    '<div class="invest-hidden-list' + (wasOpen ? ' open' : '') + '">' + rows + '</div>';
+}
+
+function investToggleHiddenList(el) {
+  el.classList.toggle('open');
+  const list = el.nextElementSibling;
+  if (list) list.classList.toggle('open');
+}
+
+function investUnhide(id) {
+  const overrides = JSON.parse(localStorage.getItem('covo_invest_overrides') || '{}');
+  delete overrides[id];
+  localStorage.setItem('covo_invest_overrides', JSON.stringify(overrides));
+  _schedPrefSave();
+  renderInvestments();
+  toast('↩ Investissement restauré', 'ok');
 }
 
 function openInvestmentDetail(idx) {
@@ -3279,13 +3407,15 @@ function openInvestmentDetail(idx) {
   fill.className = 'idm-progress-fill' + (pct >= 100 ? ' full' : '');
 
   // fields grid
+  const rawPayMode = String(_invCI(raw, ['paymentMode','modePaiement','payment','mode','modeReglement','paiement','reglement','typePaiement','modeDepaiement','modePay'], '')).trim();
   const fieldDefs = [
-    ['Catégorie',     inv.category || '—'],
-    ['Fournisseur',   inv.supplier  || '—'],
-    ['Référence',     _invCI(raw, ['id','investmentId','uuid','ref','reference'], '—')],
-    ['Montant total', fmtCA(inv.amount)],
-    ['Payé (données)',fmtCA(inv.paidAmount)],
-    ['Reste à payer', fmtCA(effectiveRest)],
+    ['Catégorie',        inv.category || '—'],
+    ['Fournisseur',      inv.supplier  || '—'],
+    ['Mode de paiement', rawPayMode  || '—'],
+    ['Référence',        _invCI(raw, ['id','investmentId','uuid','ref','reference'], '—')],
+    ['Montant total',    fmtCA(inv.amount)],
+    ['Payé (données)',   fmtCA(inv.paidAmount)],
+    ['Reste à payer',    fmtCA(effectiveRest)],
   ];
   const note = _invCI(raw, ['note','notes','comment','commentaire','description'], '');
   const extraRaw = Object.entries(raw)
@@ -3315,6 +3445,7 @@ function openInvestmentDetail(idx) {
   let actHtml = st !== 'paid'
     ? '<button class="idm-btn green" onclick="setInvestOverride(\'' + eid + '\',\'paid\')">✓ Marquer comme soldé</button>'
     : '<button class="idm-btn red"   onclick="setInvestOverride(\'' + eid + '\',\'credit\')">⚠ Marquer comme non soldé</button>';
+  actHtml += '<button class="idm-btn grey" style="background:rgba(255,255,255,0.05);border:1px solid #2e2e50;color:#555;flex:0;padding:11px 14px;font-size:11px" onclick="setInvestOverride(\'' + eid + '\',\'hidden\')">🙈 Masquer</button>';
   if (hasOverride)
     actHtml += '<button class="idm-btn amber" onclick="clearInvestOverride(\'' + eid + '\')">↺ Réinitialiser</button>';
   document.getElementById('idm-actions').innerHTML = actHtml;
@@ -3325,6 +3456,85 @@ function openInvestmentDetail(idx) {
 function closeInvDetail(e) {
   if (e && e.target !== document.getElementById('inv-detail-overlay')) return;
   document.getElementById('inv-detail-overlay').classList.remove('open');
+}
+
+/* ── Sélection multiple investissements ── */
+window._investSelected = window._investSelected || new Set();
+
+function investRowClick(e, idx) {
+  // Si clic sur checkbox → géré par investToggleCb, ne pas ouvrir modal
+  if (e.target && e.target.classList.contains('invest-cb')) return;
+  openInvestmentDetail(idx);
+}
+
+function investToggleCb(e, id) {
+  e.stopPropagation();
+  if (window._investSelected.has(id)) window._investSelected.delete(id);
+  else window._investSelected.add(id);
+  // Màj visuellement la ligne et la barre sans re-render complet
+  const rows = window._investRows || [];
+  const idx  = rows.findIndex(r => r.id === id);
+  if (idx >= 0) {
+    const rowEl = document.querySelectorAll('#invest-table .invest-row.clickable')[idx];
+    if (rowEl) rowEl.classList.toggle('selected', window._investSelected.has(id));
+  }
+  // Màj case "tout"
+  const allSel = rows.length > 0 && rows.every(r => window._investSelected.has(r.id));
+  const allCb  = document.querySelector('.invest-cb-all');
+  if (allCb) allCb.checked = allSel;
+  _investUpdateBulkBar();
+}
+
+function investToggleAll(cbEl) {
+  const rows = window._investRows || [];
+  if (cbEl.checked) rows.forEach(r => window._investSelected.add(r.id));
+  else              window._investSelected.clear();
+  // Màj cases et classes
+  document.querySelectorAll('#invest-table .invest-row.clickable').forEach((rowEl, idx) => {
+    const cb = rowEl.querySelector('.invest-cb');
+    const sel = cbEl.checked;
+    if (cb) cb.checked = sel;
+    rowEl.classList.toggle('selected', sel);
+  });
+  _investUpdateBulkBar();
+}
+
+function _investUpdateBulkBar() {
+  const n   = window._investSelected.size;
+  const bar = document.getElementById('invest-bulk-bar');
+  const cnt = document.getElementById('invest-bulk-count');
+  if (!bar) return;
+  bar.classList.toggle('visible', n > 0);
+  if (cnt) cnt.textContent = n + ' sélectionné' + (n > 1 ? 's' : '');
+}
+
+function investClearSel() {
+  window._investSelected.clear();
+  renderInvestments();
+}
+
+function investBulkPaid() {
+  if (!window._investSelected.size) return;
+  const overrides = JSON.parse(localStorage.getItem('covo_invest_overrides') || '{}');
+  window._investSelected.forEach(id => { overrides[id] = 'paid'; });
+  localStorage.setItem('covo_invest_overrides', JSON.stringify(overrides));
+  const n = window._investSelected.size;
+  window._investSelected.clear();
+  _schedPrefSave();
+  renderInvestments();
+  toast('✓ ' + n + ' investissement' + (n>1?'s':'') + ' marqué' + (n>1?'s':'') + ' soldé' + (n>1?'s':''), 'ok');
+}
+
+function investBulkHide() {
+  if (!window._investSelected.size) return;
+  const overrides = JSON.parse(localStorage.getItem('covo_invest_overrides') || '{}');
+  window._investSelected.forEach(id => { overrides[id] = 'hidden'; });
+  localStorage.setItem('covo_invest_overrides', JSON.stringify(overrides));
+  const n = window._investSelected.size;
+  window._investSelected.clear();
+  _schedPrefSave();
+  renderInvestments();
+  toast('🙈 ' + n + ' investissement' + (n>1?'s':'') + ' masqué' + (n>1?'s':''), 'ok');
 }
 
 /* ── Payment history helpers ── */
@@ -3413,7 +3623,9 @@ function setInvestOverride(id, status) {
   localStorage.setItem('covo_invest_overrides', JSON.stringify(overrides));
   document.getElementById('inv-detail-overlay').classList.remove('open');
   renderInvestments();
-  toast(status === 'paid' ? '✓ Investissement marqué soldé' : '✓ Investissement marqué non soldé', 'ok');
+  const msg = status === 'paid' ? '✓ Investissement marqué soldé' : status === 'hidden' ? '🙈 Investissement masqué' : '✓ Investissement marqué non soldé';
+  _schedPrefSave();
+  toast(msg, 'ok');
 }
 
 function clearInvestOverride(id) {
