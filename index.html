@@ -388,6 +388,143 @@ display:flex; align-items:center; justify-content:space-between;
 .tm-benef-total.pos { color:#2ecc71; }
 .tm-benef-total.neg { color:#e74c3c; }
 
+/* ─── MODAL INVESTISSEMENT DÉTAIL ─── */
+#inv-detail-overlay {
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,0.72);
+  z-index:9900; align-items:center; justify-content:center; padding:16px;
+  backdrop-filter:blur(4px);
+}
+#inv-detail-overlay.open { display:flex; }
+#inv-detail-modal {
+  background:#15152a; border-radius:20px; width:100%; max-width:500px;
+  max-height:92vh; display:flex; flex-direction:column; overflow:hidden;
+  box-shadow:0 24px 80px rgba(0,0,0,0.7);
+  animation:modal-pop 0.28s cubic-bezier(.34,1.56,.64,1);
+}
+.idm-top-bar {
+  height:5px; width:100%; flex-shrink:0;
+  transition:background 0.3s;
+}
+.idm-top-bar.credit  { background:linear-gradient(90deg,#e74c3c,#c0392b); }
+.idm-top-bar.partial { background:linear-gradient(90deg,#f39c12,#e67e22); }
+.idm-top-bar.paid    { background:linear-gradient(90deg,#27ae60,#2ecc71); }
+.idm-hero {
+  padding:20px 22px 14px;
+  display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+  border-bottom:1px solid #1e1e3a;
+}
+.idm-hero-left { flex:1; min-width:0; }
+.idm-badge {
+  display:inline-flex; align-items:center; gap:5px;
+  font-size:10px; font-weight:700; letter-spacing:0.07em; text-transform:uppercase;
+  border-radius:20px; padding:3px 10px; margin-bottom:8px;
+}
+.idm-badge.credit  { background:rgba(231,76,60,0.15); color:#e74c3c; border:1px solid rgba(231,76,60,0.35); }
+.idm-badge.partial { background:rgba(243,156,18,0.15); color:#f39c12; border:1px solid rgba(243,156,18,0.35); }
+.idm-badge.paid    { background:rgba(39,174,96,0.15);  color:#2ecc71; border:1px solid rgba(39,174,96,0.35); }
+.idm-override-chip {
+  display:inline-flex; align-items:center; gap:4px;
+  font-size:9px; font-weight:700; letter-spacing:0.05em;
+  background:rgba(243,156,18,0.18); color:#f39c12; border:1px solid rgba(243,156,18,0.4);
+  border-radius:20px; padding:2px 8px; margin-left:6px; vertical-align:middle;
+}
+.idm-name {
+  font-size:17px; font-weight:800; color:#fff; margin:0;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.idm-date { font-size:11px; color:#555; margin-top:3px; }
+.idm-close {
+  background:rgba(255,255,255,0.06); border:none; border-radius:50%;
+  width:32px; height:32px; display:flex; align-items:center; justify-content:center;
+  color:#555; cursor:pointer; font-size:16px; flex-shrink:0; margin-top:2px;
+}
+.idm-close:hover { background:rgba(255,255,255,0.12); color:#ddd; }
+.idm-kpis {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:1px; background:#1e1e3a;
+  border-bottom:1px solid #1e1e3a;
+}
+.idm-kpi {
+  background:#15152a; padding:14px 10px; text-align:center;
+}
+.idm-kpi-label { font-size:9px; color:#444; text-transform:uppercase; letter-spacing:0.07em; margin-bottom:5px; }
+.idm-kpi-val   { font-size:16px; font-weight:800; color:#fff; }
+.idm-kpi-val.purple { color:#c39bd3; }
+.idm-kpi-val.green  { color:#2ecc71; }
+.idm-kpi-val.red    { color:#e74c3c; }
+.idm-progress-wrap {
+  padding:14px 22px 4px;
+}
+.idm-progress-label {
+  display:flex; justify-content:space-between; align-items:center;
+  font-size:10px; color:#555; margin-bottom:6px;
+}
+.idm-progress-label span:last-child { font-weight:700; color:#c39bd3; }
+.idm-progress-track {
+  width:100%; height:7px; background:#1e1e3a; border-radius:4px; overflow:hidden;
+}
+.idm-progress-fill {
+  height:100%; border-radius:4px;
+  transition:width 0.5s cubic-bezier(.4,0,.2,1);
+  background:linear-gradient(90deg,#8e44ad,#c39bd3);
+}
+.idm-progress-fill.full { background:linear-gradient(90deg,#27ae60,#2ecc71); }
+.idm-body { padding:14px 22px 18px; overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:12px; }
+.idm-section-title {
+  font-size:9px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
+  color:#444; margin-bottom:4px;
+}
+.idm-fields-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:6px;
+}
+.idm-field {
+  background:#1a1a2e; border-radius:8px; padding:9px 12px;
+}
+.idm-field-label { font-size:9px; color:#444; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:3px; }
+.idm-field-val   { font-size:12px; font-weight:600; color:#ccc; word-break:break-word; }
+.idm-field.full  { grid-column:1/-1; }
+.idm-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:4px; }
+.idm-btn {
+  flex:1; padding:11px 10px; border-radius:10px; border:none;
+  font-size:12px; font-weight:700; cursor:pointer;
+  font-family:'Poppins',sans-serif; display:flex; align-items:center;
+  justify-content:center; gap:6px; transition:opacity 0.15s;
+}
+.idm-btn:hover { opacity:0.85; }
+.idm-btn.green  { background:rgba(39,174,96,0.15); border:1px solid #27ae60; color:#2ecc71; }
+.idm-btn.red    { background:rgba(231,76,60,0.12); border:1px solid #e74c3c; color:#e74c3c; }
+.idm-btn.amber  { background:rgba(243,156,18,0.12); border:1px solid #f39c12; color:#f39c12; flex:0; padding:11px 16px; font-size:11px; }
+.idm-pay-list { display:flex; flex-direction:column; gap:5px; margin-bottom:10px; }
+.idm-pay-item {
+  display:flex; align-items:center; gap:8px;
+  background:#1a1a2e; border-radius:8px; padding:9px 12px;
+}
+.idm-pay-item-date { font-size:10px; color:#555; flex-shrink:0; width:80px; }
+.idm-pay-item-note { font-size:11px; color:#666; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.idm-pay-item-amount { font-size:13px; font-weight:700; color:#2ecc71; flex-shrink:0; }
+.idm-pay-del { background:none; border:none; color:#333; cursor:pointer; font-size:14px; padding:0 2px; flex-shrink:0; line-height:1; }
+.idm-pay-del:hover { color:#e74c3c; }
+.idm-pay-empty { font-size:11px; color:#333; text-align:center; padding:8px 0; }
+.idm-pay-form {
+  display:flex; gap:6px; flex-wrap:wrap; align-items:flex-end;
+  background:#1a1a2e; border-radius:10px; padding:10px 12px; margin-top:4px;
+}
+.idm-pay-field { display:flex; flex-direction:column; gap:3px; flex:1; min-width:80px; }
+.idm-pay-field label { font-size:9px; color:#444; text-transform:uppercase; letter-spacing:0.06em; }
+.idm-pay-input {
+  background:#0f0f1e; border:1px solid #2e2e50; border-radius:7px;
+  color:#ddd; font-size:12px; padding:7px 10px; font-family:'Poppins',sans-serif;
+  outline:none; width:100%; box-sizing:border-box;
+}
+.idm-pay-input:focus { border-color:#8e44ad; }
+.idm-pay-add {
+  background:rgba(142,68,173,0.2); border:1px solid #8e44ad; border-radius:8px;
+  color:#c39bd3; font-size:12px; font-weight:700; padding:8px 14px;
+  cursor:pointer; font-family:'Poppins',sans-serif; white-space:nowrap;
+  flex-shrink:0; align-self:flex-end;
+}
+.idm-pay-add:hover { background:rgba(142,68,173,0.35); }
+
 /* ─── MODAL SEMAINE ─── */
 #wk-modal-overlay {
 display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65);
@@ -2028,6 +2165,23 @@ body {
     <div class="sp-section-body">
       <div class="sp-row" style="flex-direction:column;align-items:flex-start;gap:8px">
         <div>
+          <div class="sp-row-label">Mode de paiement → considéré comme soldé</div>
+          <div class="sp-row-sub">Si l'investissement indique ce mode, il est automatiquement marqué payé</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;width:100%">
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;background:#13131f;border:1px solid #2e2e50;border-radius:8px;padding:9px 12px">
+            <input type="checkbox" id="sp-invest-paid-cb" onchange="saveInvestPayMode('cb',this.checked)" style="accent-color:#8e44ad;width:15px;height:15px;flex-shrink:0">
+            <span style="font-size:12px;color:#ccc">💳 Carte Bancaire (CB)</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;background:#13131f;border:1px solid #2e2e50;border-radius:8px;padding:9px 12px">
+            <input type="checkbox" id="sp-invest-paid-cash" onchange="saveInvestPayMode('cash',this.checked)" style="accent-color:#8e44ad;width:15px;height:15px;flex-shrink:0">
+            <span style="font-size:12px;color:#ccc">💵 Espèces / Comptant</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="sp-row" style="flex-direction:column;align-items:flex-start;gap:8px">
+        <div>
           <div class="sp-row-label">Champ affiché comme désignation</div>
           <div class="sp-row-sub">Colonne affichée dans le tableau des crédits non payés</div>
         </div>
@@ -2452,6 +2606,72 @@ body {
   </div>
 </div>
 
+<!-- MODAL INVESTISSEMENT DÉTAIL -->
+<div id="inv-detail-overlay" onclick="closeInvDetail(event)">
+  <div id="inv-detail-modal">
+    <div class="idm-top-bar" id="idm-top-bar"></div>
+    <div class="idm-hero">
+      <div class="idm-hero-left">
+        <div id="idm-badge-row">
+          <span class="idm-badge" id="idm-badge"></span>
+        </div>
+        <p class="idm-name" id="idm-name"></p>
+        <div class="idm-date" id="idm-date"></div>
+      </div>
+      <button class="idm-close" onclick="document.getElementById('inv-detail-overlay').classList.remove('open')">✕</button>
+    </div>
+    <div class="idm-kpis">
+      <div class="idm-kpi">
+        <div class="idm-kpi-label">Montant</div>
+        <div class="idm-kpi-val purple" id="idm-kpi-amount"></div>
+      </div>
+      <div class="idm-kpi">
+        <div class="idm-kpi-label">Payé</div>
+        <div class="idm-kpi-val green" id="idm-kpi-paid"></div>
+      </div>
+      <div class="idm-kpi">
+        <div class="idm-kpi-label">Reste</div>
+        <div class="idm-kpi-val" id="idm-kpi-rest"></div>
+      </div>
+    </div>
+    <div class="idm-progress-wrap">
+      <div class="idm-progress-label">
+        <span>Avancement du règlement</span>
+        <span id="idm-pct">0 %</span>
+      </div>
+      <div class="idm-progress-track">
+        <div class="idm-progress-fill" id="idm-progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="idm-body">
+      <div>
+        <div class="idm-section-title">Détails</div>
+        <div class="idm-fields-grid" id="idm-fields"></div>
+      </div>
+      <div>
+        <div class="idm-section-title">Historique des versements</div>
+        <div class="idm-pay-list" id="idm-pay-list"></div>
+        <div class="idm-pay-form">
+          <div class="idm-pay-field" style="flex:0;min-width:110px">
+            <label>Date</label>
+            <input type="date" class="idm-pay-input" id="idm-pay-date">
+          </div>
+          <div class="idm-pay-field" style="flex:0;min-width:90px">
+            <label>Montant</label>
+            <input type="number" class="idm-pay-input" id="idm-pay-amount" placeholder="0.00" min="0" step="0.01">
+          </div>
+          <div class="idm-pay-field">
+            <label>Note</label>
+            <input type="text" class="idm-pay-input" id="idm-pay-note" placeholder="Optionnel" maxlength="60">
+          </div>
+          <button class="idm-pay-add" onclick="submitInvestPayment()">+ Ajouter</button>
+        </div>
+      </div>
+      <div class="idm-actions" id="idm-actions"></div>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL DÉTAIL TICKET -->
 
 <div id="ticket-modal-overlay" onclick="closeTicketModal(event)">
@@ -2752,7 +2972,22 @@ function normalizeInvestment(inv, idx) {
   const saysCredit = CREDIT_WORDS.some(w => rawStatus.includes(w)) || _isTruthy(rawCredit);
 
   const isPaidRaw = saysPaid && !saysCredit;
+
+  // Pref: si mode de paiement de l'investissement correspond à CB/Espèces → soldé
+  let isPaidByMode = false;
+  if (manualStatus !== 'credit') {
+    const rawMode = String(_invCI(inv, ['paymentMode','modePaiement','payment','mode','modeReglement','paiement','reglement','typePaiement','modeDepaiement','modePay'], '')).toLowerCase().trim();
+    if (rawMode) {
+      const paidIfCB   = getPref('invest_paid_if_cb',   false);
+      const paidIfCash = getPref('invest_paid_if_cash', false);
+      const isModeCB   = rawMode.includes('cb') || rawMode.includes('carte') || rawMode.includes('card') || rawMode.includes('visa') || rawMode.includes('master') || rawMode.includes('tpe') || rawMode.includes('bancontact');
+      const isModeCash = rawMode.includes('esp') || rawMode.includes('cash') || rawMode.includes('liquid') || rawMode.includes('comptant');
+      if ((paidIfCB && isModeCB) || (paidIfCash && isModeCash)) isPaidByMode = true;
+    }
+  }
+
   const isPaid = manualStatus === 'paid'
+    || isPaidByMode
     || (manualStatus !== 'credit' && (
         isPaidRaw
         || (_isTruthy(rawPaid) && !saysCredit && remaining <= 0)
@@ -2927,7 +3162,7 @@ function renderInvestments() {
   if (!table) return;
   const normalized = (investments || []).map(normalizeInvestment).filter(i => i.amount > 0 || i.paidAmount > 0 || i.remaining > 0);
   const paid = normalized.filter(i => i.status === 'paid');
-  const credits = normalized.filter(i => i.status !== 'paid');
+  const credits = normalized.filter(i => i.status === 'credit');
   const total = normalized.reduce((a,i) => a + i.amount, 0);
   const paidTotal = normalized.reduce((a,i) => a + i.paidAmount, 0);
   const creditTotal = credits.reduce((a,i) => a + i.remaining, 0);
@@ -2996,75 +3231,187 @@ function renderInvestments() {
 function openInvestmentDetail(idx) {
   const inv = (window._investRows || [])[idx];
   if (!inv) return;
+  window._currentInvId = inv.id;
   const raw = inv.raw || {};
-  const overrides  = JSON.parse(localStorage.getItem('covo_invest_overrides') || '{}');
+  const overrides   = JSON.parse(localStorage.getItem('covo_invest_overrides') || '{}');
   const hasOverride = overrides[inv.id] !== undefined;
-  const statusLabel = inv.status === 'paid' ? 'Payé' : (inv.status === 'partial' ? 'Crédit partiel' : 'Crédit non payé');
-  const statusColor = inv.status === 'paid' ? '#2ecc71' : '#e74c3c';
+  const st = inv.status;
+  const statusLabel = st === 'paid' ? 'Payé ✓' : (st === 'partial' ? 'Crédit partiel' : 'Crédit non payé');
   const date = inv.date ? new Date(inv.date).toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' }) : '—';
 
-  document.getElementById('tm-title').textContent = 'Investissement';
-  document.getElementById('tm-sub').innerHTML =
-    escH(inv.name) +
-    ' · <strong style="color:' + statusColor + '">' + escH(statusLabel) + '</strong>' +
-    (hasOverride ? ' <span style="font-size:9px;background:rgba(243,156,18,0.2);color:#f39c12;border:1px solid rgba(243,156,18,0.4);border-radius:10px;padding:1px 6px;vertical-align:middle">override</span>' : '');
+  // effective paid = manual payments sum if any, else raw
+  const manualPaid      = getTotalManualPaid(inv.id);
+  const effectivePaid   = manualPaid > 0 ? manualPaid : inv.paidAmount;
+  const effectiveRest   = Math.max(0, inv.amount - effectivePaid);
+  const pct = inv.amount > 0 ? Math.min(100, Math.round(effectivePaid / inv.amount * 100)) : (effectivePaid >= inv.amount ? 100 : 0);
 
-  document.getElementById('tm-kpis').innerHTML =
-    tmkpi('Montant', fmtCA(inv.amount), 'purple') +
-    tmkpi('Payé', fmtCA(inv.paidAmount), 'green') +
-    tmkpi('Reste', fmtCA(inv.remaining), inv.remaining > 0 ? 'red' : 'green') +
-    tmkpi('Statut', statusLabel, inv.status === 'paid' ? 'green' : 'red') +
-    tmkpi('Catégorie', escH(inv.category || '—'), '') +
-    tmkpi('Date', date, '');
+  // top bar + badge
+  document.getElementById('idm-top-bar').className = 'idm-top-bar ' + st;
+  const badge = document.getElementById('idm-badge');
+  badge.textContent = statusLabel;
+  badge.className = 'idm-badge ' + st;
 
-  document.getElementById('tm-items-title').textContent = 'Données brutes';
-  const known = new Set(['raw']);
-  const infoRows = [
-    ['Nom', inv.name],
-    ['Catégorie', inv.category],
-    ['Fournisseur', inv.supplier || '—'],
-    ['Date', date],
-    ['Montant', fmtCA(inv.amount)],
-    ['Montant payé', fmtCA(inv.paidAmount)],
-    ['Reste à payer', fmtCA(inv.remaining)],
-    ['Statut (calculé)', statusLabel],
-    ['Référence', _invCI(raw, ['id','investmentId','uuid','ref','reference'], '—')],
-    ['Note', _invCI(raw, ['note','notes','comment','commentaire','description'], '—')]
+  // override chip
+  const badgeRow = document.getElementById('idm-badge-row');
+  const existingChip = badgeRow.querySelector('.idm-override-chip');
+  if (existingChip) existingChip.remove();
+  if (hasOverride) {
+    const chip = document.createElement('span');
+    chip.className = 'idm-override-chip';
+    chip.textContent = '⚡ override';
+    badgeRow.appendChild(chip);
+  }
+
+  document.getElementById('idm-name').textContent = inv.name || '—';
+  document.getElementById('idm-date').textContent = date;
+
+  // KPIs
+  document.getElementById('idm-kpi-amount').textContent = fmtCA(inv.amount);
+  document.getElementById('idm-kpi-paid').textContent   = fmtCA(effectivePaid);
+  const restEl = document.getElementById('idm-kpi-rest');
+  restEl.textContent = effectiveRest > 0 ? fmtCA(effectiveRest) : 'Soldé';
+  restEl.className   = 'idm-kpi-val ' + (effectiveRest > 0 ? 'red' : 'green');
+
+  // progress bar
+  document.getElementById('idm-pct').textContent = pct + ' %';
+  const fill = document.getElementById('idm-progress-fill');
+  fill.style.width = pct + '%';
+  fill.className = 'idm-progress-fill' + (pct >= 100 ? ' full' : '');
+
+  // fields grid
+  const fieldDefs = [
+    ['Catégorie',     inv.category || '—'],
+    ['Fournisseur',   inv.supplier  || '—'],
+    ['Référence',     _invCI(raw, ['id','investmentId','uuid','ref','reference'], '—')],
+    ['Montant total', fmtCA(inv.amount)],
+    ['Payé (données)',fmtCA(inv.paidAmount)],
+    ['Reste à payer', fmtCA(effectiveRest)],
   ];
-  const extraRows = Object.entries(raw)
-    .filter(([k,v]) => v !== null && v !== undefined && v !== '' && !known.has(k))
-    .filter(([k]) => !['name','nom','title','libelle','label','amount','montant','total','price','prix','cost','cout','paidAmount','amountPaid','montantPaye','remaining','reste','restant','status','statut','etat','category','categorie','supplier','fournisseur','date','createdAt','timestamp'].includes(k))
-    .slice(0, 12)
+  const note = _invCI(raw, ['note','notes','comment','commentaire','description'], '');
+  const extraRaw = Object.entries(raw)
+    .filter(([k,v]) => v !== null && v !== undefined && v !== '')
+    .filter(([k]) => !['name','nom','title','libelle','label','amount','montant','total','price','prix','cost','cout','paidAmount','amountPaid','montantPaye','remaining','reste','restant','status','statut','etat','category','categorie','supplier','fournisseur','date','createdAt','timestamp','id','investmentId','uuid','ref','reference','note','notes','comment','commentaire','description','raw'].includes(k.toLowerCase()))
+    .slice(0, 6)
     .map(([k,v]) => [k, typeof v === 'object' ? JSON.stringify(v) : String(v)]);
 
-  document.getElementById('tm-items').innerHTML = infoRows.concat(extraRows).map(([label, val]) =>
-    '<div class="tm-item" style="grid-template-columns:140px 1fr">' +
-      '<span class="tm-item-qty" style="text-align:left;color:#666">' + escH(label) + '</span>' +
-      '<span class="tm-item-name">' + escH(String(val)) + '</span>' +
-    '</div>'
-  ).join('') +
-  // Bouton override
-  '<div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">' +
-    (inv.status !== 'paid'
-      ? '<button onclick="setInvestOverride(\'' + escH(inv.id) + '\',\'paid\')" style="flex:1;padding:9px;background:rgba(39,174,96,0.15);border:1px solid #27ae60;border-radius:8px;color:#2ecc71;font-size:12px;font-weight:700;cursor:pointer;font-family:\'Poppins\',sans-serif">✓ Marquer comme soldé</button>'
-      : '<button onclick="setInvestOverride(\'' + escH(inv.id) + '\',\'credit\')" style="flex:1;padding:9px;background:rgba(231,76,60,0.12);border:1px solid #e74c3c;border-radius:8px;color:#e74c3c;font-size:12px;font-weight:700;cursor:pointer;font-family:\'Poppins\',sans-serif">⚠ Marquer comme non soldé</button>') +
-    (hasOverride
-      ? '<button onclick="clearInvestOverride(\'' + escH(inv.id) + '\')" style="padding:9px 14px;background:rgba(243,156,18,0.12);border:1px solid #f39c12;border-radius:8px;color:#f39c12;font-size:11px;font-weight:600;cursor:pointer;font-family:\'Poppins\',sans-serif">↺ Réinitialiser</button>'
-      : '') +
-  '</div>';
+  let fieldsHtml = fieldDefs.map(([lbl,val]) =>
+    '<div class="idm-field"><div class="idm-field-label">' + escH(lbl) + '</div><div class="idm-field-val">' + escH(String(val)) + '</div></div>'
+  ).join('');
+  fieldsHtml += extraRaw.map(([lbl,val]) =>
+    '<div class="idm-field"><div class="idm-field-label">' + escH(lbl) + '</div><div class="idm-field-val">' + escH(val) + '</div></div>'
+  ).join('');
+  if (note) fieldsHtml +=
+    '<div class="idm-field full"><div class="idm-field-label">Note</div><div class="idm-field-val">' + escH(note) + '</div></div>';
+  document.getElementById('idm-fields').innerHTML = fieldsHtml;
 
-  document.getElementById('tm-total').textContent = fmtCA(inv.amount);
-  const bEl = document.getElementById('tm-benef-total');
-  bEl.textContent = inv.remaining > 0 ? fmtCA(inv.remaining) : 'Soldé';
-  bEl.className = 'tm-benef-total ' + (inv.remaining > 0 ? 'neg' : 'pos');
-  document.getElementById('ticket-modal-overlay').classList.add('open');
+  // payment history
+  document.getElementById('idm-pay-date').value = new Date().toISOString().slice(0, 10);
+  document.getElementById('idm-pay-amount').value = '';
+  document.getElementById('idm-pay-note').value   = '';
+  renderInvPayments(inv.id);
+
+  // action buttons
+  const eid = escH(inv.id);
+  let actHtml = st !== 'paid'
+    ? '<button class="idm-btn green" onclick="setInvestOverride(\'' + eid + '\',\'paid\')">✓ Marquer comme soldé</button>'
+    : '<button class="idm-btn red"   onclick="setInvestOverride(\'' + eid + '\',\'credit\')">⚠ Marquer comme non soldé</button>';
+  if (hasOverride)
+    actHtml += '<button class="idm-btn amber" onclick="clearInvestOverride(\'' + eid + '\')">↺ Réinitialiser</button>';
+  document.getElementById('idm-actions').innerHTML = actHtml;
+
+  document.getElementById('inv-detail-overlay').classList.add('open');
+}
+
+function closeInvDetail(e) {
+  if (e && e.target !== document.getElementById('inv-detail-overlay')) return;
+  document.getElementById('inv-detail-overlay').classList.remove('open');
+}
+
+/* ── Payment history helpers ── */
+function _getPayments(id) {
+  try { return JSON.parse(localStorage.getItem('covo_invest_payments') || '{}'); } catch(e) { return {}; }
+}
+function _savePayments(all) {
+  localStorage.setItem('covo_invest_payments', JSON.stringify(all));
+}
+function getInvestPayments(id) {
+  return (_getPayments()[id] || []);
+}
+function getTotalManualPaid(id) {
+  return getInvestPayments(id).reduce((s, p) => s + (parseFloat(p.amount) || 0), 0);
+}
+
+function renderInvPayments(id) {
+  const payments = getInvestPayments(id);
+  const list = document.getElementById('idm-pay-list');
+  if (!list) return;
+  if (!payments.length) {
+    list.innerHTML = '<div class="idm-pay-empty">Aucun versement enregistré</div>';
+    return;
+  }
+  list.innerHTML = payments.map((p, i) => {
+    const d = p.date ? new Date(p.date + 'T00:00:00').toLocaleDateString('fr-FR', {day:'2-digit', month:'short', year:'numeric'}) : '—';
+    return '<div class="idm-pay-item">' +
+      '<span class="idm-pay-item-date">' + escH(d) + '</span>' +
+      '<span class="idm-pay-item-note">' + escH(p.note || '') + '</span>' +
+      '<span class="idm-pay-item-amount">+' + fmtCA(parseFloat(p.amount) || 0) + '</span>' +
+      '<button class="idm-pay-del" onclick="deleteInvestPayment(' + escH(JSON.stringify(id)) + ',' + i + ')" title="Supprimer">✕</button>' +
+    '</div>';
+  }).join('');
+}
+
+function submitInvestPayment() {
+  const id  = window._currentInvId;
+  if (!id) return;
+  const amt  = parseFloat(document.getElementById('idm-pay-amount').value);
+  const date = document.getElementById('idm-pay-date').value;
+  const note = document.getElementById('idm-pay-note').value.trim();
+  if (!amt || amt <= 0) { toast('⚠ Montant invalide', 'err'); return; }
+  if (!date)            { toast('⚠ Date requise', 'err'); return; }
+  const all = _getPayments();
+  if (!all[id]) all[id] = [];
+  all[id].push({ date, amount: amt, note });
+  all[id].sort((a, b) => a.date.localeCompare(b.date));
+  _savePayments(all);
+  document.getElementById('idm-pay-amount').value = '';
+  document.getElementById('idm-pay-note').value   = '';
+  _refreshInvKPIs(id);
+  renderInvPayments(id);
+  toast('✓ Versement ajouté', 'ok');
+}
+
+function deleteInvestPayment(id, idx) {
+  const all = _getPayments();
+  if (!all[id]) return;
+  all[id].splice(idx, 1);
+  if (!all[id].length) delete all[id];
+  _savePayments(all);
+  _refreshInvKPIs(id);
+  renderInvPayments(id);
+}
+
+function _refreshInvKPIs(id) {
+  const inv = (window._investRows || []).find(r => r.id === id);
+  if (!inv) return;
+  const manualPaid = getTotalManualPaid(id);
+  const effectivePaid     = manualPaid > 0 ? manualPaid : inv.paidAmount;
+  const effectiveRemaining = Math.max(0, inv.amount - effectivePaid);
+  const pct = inv.amount > 0 ? Math.min(100, Math.round(effectivePaid / inv.amount * 100)) : (effectivePaid >= inv.amount ? 100 : 0);
+  document.getElementById('idm-kpi-paid').textContent = fmtCA(effectivePaid);
+  const restEl = document.getElementById('idm-kpi-rest');
+  restEl.textContent = effectiveRemaining > 0 ? fmtCA(effectiveRemaining) : 'Soldé';
+  restEl.className   = 'idm-kpi-val ' + (effectiveRemaining > 0 ? 'red' : 'green');
+  document.getElementById('idm-pct').textContent = pct + ' %';
+  const fill = document.getElementById('idm-progress-fill');
+  fill.style.width = pct + '%';
+  fill.className = 'idm-progress-fill' + (pct >= 100 ? ' full' : '');
 }
 
 function setInvestOverride(id, status) {
   const overrides = JSON.parse(localStorage.getItem('covo_invest_overrides') || '{}');
   overrides[id] = status;
   localStorage.setItem('covo_invest_overrides', JSON.stringify(overrides));
-  document.getElementById('ticket-modal-overlay').classList.remove('open');
+  document.getElementById('inv-detail-overlay').classList.remove('open');
   renderInvestments();
   toast(status === 'paid' ? '✓ Investissement marqué soldé' : '✓ Investissement marqué non soldé', 'ok');
 }
@@ -3073,7 +3420,7 @@ function clearInvestOverride(id) {
   const overrides = JSON.parse(localStorage.getItem('covo_invest_overrides') || '{}');
   delete overrides[id];
   localStorage.setItem('covo_invest_overrides', JSON.stringify(overrides));
-  document.getElementById('ticket-modal-overlay').classList.remove('open');
+  document.getElementById('inv-detail-overlay').classList.remove('open');
   renderInvestments();
   toast('↺ Override supprimé — statut recalculé depuis les données', '');
 }
@@ -3738,6 +4085,12 @@ function extractCovoData(data) {
     // Version du backup
     version: d._version || d.version || null,
     savedAt: d._savedAt || d.savedAt || null,
+    // Préférences utilisateur
+    prefs: d.covo_prefs || null,
+    // Overrides manuels investissements
+    investOverrides: d.covo_invest_overrides || null,
+    // Historique versements manuels
+    investPayments: d.covo_invest_payments || null,
   };
 }
 
@@ -3808,6 +4161,29 @@ function applyCovoData(extracted, report) {
   }
   if (extracted.modulesConfig) {
     localStorage.setItem('covo_modules_config', JSON.stringify(extracted.modulesConfig));
+  }
+  // Préférences utilisateur (Drive a priorité sur local sauf si local plus récent — merge Drive→local)
+  if (extracted.prefs && typeof extracted.prefs === 'object') {
+    Object.entries(extracted.prefs).forEach(([k, v]) => {
+      if (k.startsWith('covo_pref_') && localStorage.getItem(k) === null) {
+        localStorage.setItem(k, v);
+      }
+    });
+    saved.push('préférences');
+  }
+  // Overrides investissements (Drive complète le local, local a priorité)
+  if (extracted.investOverrides && typeof extracted.investOverrides === 'object') {
+    const local = JSON.parse(localStorage.getItem('covo_invest_overrides') || '{}');
+    localStorage.setItem('covo_invest_overrides', JSON.stringify({ ...extracted.investOverrides, ...local }));
+  }
+  // Historique versements (merge : Drive complète le local)
+  if (extracted.investPayments && typeof extracted.investPayments === 'object') {
+    const local = JSON.parse(localStorage.getItem('covo_invest_payments') || '{}');
+    const merged = { ...extracted.investPayments };
+    Object.entries(local).forEach(([id, pmts]) => {
+      merged[id] = pmts; // local écrase Drive pour chaque investment
+    });
+    localStorage.setItem('covo_invest_payments', JSON.stringify(merged));
   }
 
   if (report) console.log('[COVO Drive] Données importées :', saved.join(', '));
@@ -3942,14 +4318,7 @@ async function autoLoadLatestBackup(isInitial) {
     _lastModified = latest.modifiedTime;
 
     // Rafraîchir tout
-    loadCovoData();
-    updateKPIs();
-    renderInvestments();
-    renderChart(); populateHourlyDateFilter(); renderHourlyPaymentChart();
-    renderTable();
-    if (window._reloadCatalogue) window._reloadCatalogue();
-    if (window._reloadWorkHours) window._reloadWorkHours();
-    if (typeof updateSettingsPanel === 'function') updateSettingsPanel();
+    _refreshAll();
 
     // Log historique d'import (dernières 10 entrées)
     try {
@@ -4144,10 +4513,7 @@ async function loadSelectedBackup() {
       closeModal('backup-modal');
       const summary = savedItems.slice(0,3).join(' · ') + (savedItems.length > 3 ? ' …' : '');
       toast('✓ Chargé : ' + summary, 'ok');
-      loadCovoData(); updateKPIs(); renderInvestments(); renderChart(); populateHourlyDateFilter(); renderHourlyPaymentChart(); renderTable();
-      if (window._reloadCatalogue) window._reloadCatalogue();
-      if (window._reloadWorkHours) window._reloadWorkHours();
-      if (typeof updateSettingsPanel === 'function') updateSettingsPanel();
+      _refreshAll();
     } else {
       toast('Format non reconnu — aucun ticket dans ce fichier', 'err');
     }
@@ -4170,7 +4536,15 @@ async function saveDrive() {
       fid = cr.result.id;
     }
     const token = gapi.client.getToken().access_token;
-    const payload = JSON.stringify({ covo_sales_history: sales, covo_investments: investments, savedAt: new Date().toISOString(), version: '2.1' }, null, 2);
+    const payload = JSON.stringify({
+      covo_sales_history:    sales,
+      covo_investments:      investments,
+      covo_prefs:            _gatherAllPrefs(),
+      covo_invest_overrides: JSON.parse(localStorage.getItem('covo_invest_overrides') || '{}'),
+      covo_invest_payments:  JSON.parse(localStorage.getItem('covo_invest_payments')  || '{}'),
+      savedAt: new Date().toISOString(),
+      version: '2.2'
+    }, null, 2);
     await fetch(`https://www.googleapis.com/upload/drive/v3/files/${fid}?uploadType=media`, {
       method: 'PATCH', headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }, body: payload
     });
@@ -4549,26 +4923,30 @@ function runSplash(onDone) {
 // ═══════════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════════
-function init() {
+function _refreshAll() {
   loadCovoData();
+  if (typeof applyUserPreferences === 'function') applyUserPreferences();
   updateKPIs();
   renderInvestments();
-  renderChart(); populateHourlyDateFilter(); renderHourlyPaymentChart();
+  renderChart();
+  populateHourlyDateFilter();
+  renderHourlyPaymentChart();
   renderTable();
-  // Initialiser le FAB (cacher si déjà installé)
+  if (window._reloadCatalogue)  window._reloadCatalogue();
+  if (window._reloadWorkHours)  window._reloadWorkHours();
+  if (typeof updateSettingsPanel === 'function') updateSettingsPanel();
   if (typeof updateFabVisibility === 'function') updateFabVisibility();
-  // Appliquer les préférences utilisateur sauvegardées
-  if (typeof applyUserPreferences === 'function') applyUserPreferences();
-  // Initialiser l'état visuel de la sync (non connecté au démarrage)
+}
+
+function init() {
+  _refreshAll(); // inclut applyUserPreferences
   updateDriveUI(false);
   if (CLIENT_ID) {
-    // Connexion automatique silencieuse si un compte préféré est mémorisé
     if (PREF_EMAIL) {
-      setSyncLabel('Connexion automatique…', 'patientez', 'checking');
+      setSyncLabel('Restauration automatique…', 'connexion Drive', 'checking');
     }
     loadGAPI();
   } else {
-    // Pas de Client ID configuré
     setSyncLabel('Drive non configuré', 'ouvrez ⚙ réglages', 'error');
   }
 }
@@ -4621,7 +4999,7 @@ function getPref(key, def) {
 function setPref(key, val) {
   try { localStorage.setItem('covo_pref_' + key, val ? 'true' : 'false'); } catch(e) {}
 }
-function saveTogglePref(key, val) { setPref(key, val); }
+function saveTogglePref(key, val) { setPref(key, val); _schedPrefSave(); }
 function getStrPref(key, def) {
   try { const v = localStorage.getItem('covo_pref_' + key); return (v !== null && v !== '') ? v : def; } catch(e) { return def; }
 }
@@ -4652,6 +5030,11 @@ function loadPreferencesToToggles() {
   // Champ désignation investissements
   const investLabelEl = document.getElementById('sp-invest-label');
   if (investLabelEl) investLabelEl.value = getStrPref('invest_label_field', '');
+  // Modes de paiement → soldé
+  const cbEl   = document.getElementById('sp-invest-paid-cb');
+  const cashEl = document.getElementById('sp-invest-paid-cash');
+  if (cbEl)   cbEl.checked   = getPref('invest_paid_if_cb',   false);
+  if (cashEl) cashEl.checked = getPref('invest_paid_if_cash', false);
 }
 
 // Toggles d'interface
@@ -4701,7 +5084,34 @@ function toggleAnimations(enabled) {
 function saveInvestLabelField(val) {
   setStrPref('invest_label_field', val);
   renderInvestments();
+  _schedPrefSave();
   toast(val ? '✓ Désignation : champ "' + val + '"' : '✓ Désignation automatique', 'ok');
+}
+
+function saveInvestPayMode(mode, val) {
+  const key = mode === 'cb' ? 'invest_paid_if_cb' : 'invest_paid_if_cash';
+  setPref(key, val);
+  renderInvestments();
+  _schedPrefSave();
+  const label = mode === 'cb' ? 'CB' : 'Espèces';
+  toast(val ? '✓ ' + label + ' → considéré comme soldé' : label + ' → ne plus forcer soldé', 'ok');
+}
+
+/* ── Sauvegarde auto des réglages sur Drive ── */
+let _prefSaveTimer = null;
+function _schedPrefSave() {
+  if (!driveConnected) return;
+  clearTimeout(_prefSaveTimer);
+  _prefSaveTimer = setTimeout(saveDrive, 3000);
+}
+
+function _gatherAllPrefs() {
+  const prefs = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith('covo_pref_')) prefs[k] = localStorage.getItem(k);
+  }
+  return prefs;
 }
 
 function detectInvestFields() {
@@ -5829,360 +6239,4 @@ function loadCatalogueData() {
         unitType: 'unit',
         _fromTickets: true
       });
-      st.keys.forEach(k => known.add(k));
-    }
-  });
-
-  catalogueProducts = raw;
-
-  // ── Catégories (pour le filtre) ──────────────
-  const cats = window._covoCategories || [];
-  const catSel = document.getElementById('cat-category-filter');
-  if (catSel) {
-    catSel.innerHTML = '<option value="">Toutes catégories</option>' +
-      cats.map(cat => {
-        const name = typeof cat === 'string' ? cat : (cat.name || cat.label || '');
-        return `<option value="${name}">${name}</option>`;
-      }).join('');
-  }
-
-  // KPIs catalogue
-  const total = raw.length;
-  const withCost = raw.filter(p => p.costPrice > 0).length;
-  const totalCA = raw.reduce((a,p) => a + parseFloat(p.price||0), 0);
-  const totalBenef = raw.filter(p=>p.costPrice>0).reduce((a,p)=>a+(parseFloat(p.price||0)-parseFloat(p.costPrice||0)),0);
-  const totalSoldQty = salesStats.top.reduce((a,s) => a + s.qty, 0);
-  const totalReceived = salesStats.top.reduce((a,s) => a + s.amount, 0);
-
-  document.getElementById('cat-kpis').innerHTML = `
-    <div class="kpi-card purple"><div class="kpi-label">Articles</div><div class="kpi-value">${total}</div><div class="kpi-meta">${withCost} avec prix d'achat</div><div class="kpi-icon">📦</div></div>
-    <div class="kpi-card green"><div class="kpi-label">Quantité vendue</div><div class="kpi-value">${fmtQty(totalSoldQty)}</div><div class="kpi-meta">Total articles sortis</div><div class="kpi-icon">🛒</div></div>
-    <div class="kpi-card red"><div class="kpi-label">Montant reçu</div><div class="kpi-value">${fmtCA(totalReceived)}</div><div class="kpi-meta">CA articles vendus</div><div class="kpi-icon">💳</div></div>
-  `;
-}
-
-function setCatFilter(f, btn) {
-  _catFilter = f;
-  document.querySelectorAll('.cat-filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderCatalogue();
-}
-
-function renderCatalogue() {
-  const search = (document.getElementById('cat-search')?.value || '').toLowerCase();
-  let list = catalogueProducts;
-  const salesStats = buildCatalogueSalesStats();
-  renderCatalogueTopSales(salesStats.top);
-
-  if (!list.length) {
-    const board = document.getElementById('cat-sales-board');
-    if (board) board.innerHTML = '';
-    document.getElementById('cat-grid').innerHTML = `<div style="grid-column:1/-1;padding:60px 0;text-align:center;color:#555">
-      <div style="font-size:40px;margin-bottom:12px">📦</div>
-      <div style="font-size:13px">Aucun article trouvé dans COVO Pro.<br>
-      <span style="font-size:11px;color:#444">Clés cherchées : products, covo_products, covo_articles</span></div>
-    </div>`;
-    document.getElementById('cat-count').textContent = '0 article';
-    return;
-  }
-
-  const catFilter = document.getElementById('cat-category-filter')?.value || '';
-  if (search)     list = list.filter(p => (p.name||'').toLowerCase().includes(search) || (p.category||p.categorie||p.cat||'').toLowerCase().includes(search));
-  if (catFilter)  list = list.filter(p => (p.category||p.categorie||p.cat||'') === catFilter);
-  if (_catFilter === 'withcost')  list = list.filter(p => parseFloat(p.costPrice||p.cost||0) > 0);
-  if (_catFilter === 'nocost')    list = list.filter(p => !parseFloat(p.costPrice||p.cost||0));
-  if (_catFilter === 'lowstock')  list = list.filter(p => p.stock != null && parseFloat(p.stock) < 10);
-  list = [...list].sort((a,b) => {
-    const sa = getProductSalesStat(a, salesStats.aliases);
-    const sb = getProductSalesStat(b, salesStats.aliases);
-    return (sb?.amount || 0) - (sa?.amount || 0) || (sb?.qty || 0) - (sa?.qty || 0) || String(a.name||'').localeCompare(String(b.name||''), 'fr');
-  });
-
-  document.getElementById('cat-count').textContent = `${list.length} article${list.length>1?'s':''}`;
-
-  window._catProductModalList = list;
-  document.getElementById('cat-grid').innerHTML = list.map((p, idx) => {
-    const stat = getProductSalesStat(p, salesStats.aliases);
-    const avgSoldPrice = stat && stat.qty > 0 ? stat.amount / stat.qty : 0;
-    const price = parseFloat(p.price || p.pricePerKg || p.unitPrice || avgSoldPrice || 0);
-    const cost  = parseFloat(p.costPrice || p.cost || 0);
-    const benef = cost > 0 ? price - cost : null;
-    const marge = (benef !== null && price > 0) ? Math.round(benef/price*100) : null;
-
-    const imgSrc = p.image || p.img || p.imageUrl || p.photo || '';
-    const imgHtml = imgSrc
-      ? '<img src="' + escH(imgSrc) + '" alt="' + escH(p.name||'') + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'
-        + '<div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:36px;background:#fff">📦</div>'
-      : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:36px;background:#fff">📦</div>';
-
-    const cat = p.category || p.categorie || p.cat || p.type || '';
-    const catBadge = cat
-      ? '<span style="font-size:9px;background:rgba(142,68,173,0.15);color:#c39bd3;border:1px solid rgba(142,68,173,0.3);border-radius:20px;padding:1px 7px;margin-bottom:4px;display:inline-block">' + escH(cat) + '</span>'
-      : '';
-
-    const unitLabel = p.unitType === 'kg' ? ' /kg' : '';
-    const soldQty = stat ? stat.qty : 0;
-    const received = stat ? stat.amount : 0;
-
-    const benefHtml = benef !== null
-      ? '<span class="cat-benef ' + (benef>=0?'pos':'neg') + '">' + (benef>=0?'+':'') + fmtCA(benef) + (marge!==null?' · '+marge+'%':'') + '</span>'
-      : '<span class="cat-benef" style="background:rgba(255,255,255,0.04);color:#444;border:1px dashed #2e2e50;font-size:10px">prix achat manquant</span>';
-
-    const stkVal = parseFloat(p.stock ?? p.qty ?? '');
-    const stockHtml = !isNaN(stkVal)
-      ? '<div class="cat-stock" style="color:' + (stkVal<5?'#e74c3c':stkVal<20?'#f39c12':'#555') + '">Stock : ' + stkVal + ' ' + (p.unitType==='kg'?'kg':'u.') + '</div>'
-      : '';
-
-    return '<div class="cat-card" onclick="openCatProductModal(' + idx + ')" style="cursor:pointer">'
-      + '<div class="cat-img">' + imgHtml + '</div>'
-      + '<div class="cat-info">'
-      + (catBadge ? '<div>' + catBadge + '</div>' : '')
-      + '<div class="cat-name" title="' + escH(p.name||'') + '">' + escH(p.name||'Sans nom') + '</div>'
-      + '<div class="cat-card-price-row"><span>Prix</span><strong>' + fmtCA(price) + unitLabel + '</strong></div>'
-      + '<div class="cat-card-sales">'
-      + '<div class="cat-card-sale-stat"><div class="cat-card-sale-label">Vendu</div><div class="cat-card-sale-val">' + fmtQty(soldQty) + '</div></div>'
-      + '<div class="cat-card-sale-stat"><div class="cat-card-sale-label">Montant reçu</div><div class="cat-card-sale-val green">' + fmtCA(received) + '</div></div>'
-      + '</div>'
-      + '<div class="cat-cost">' + (cost>0 ? 'Achat : ' + fmtCA(cost) : '—') + '</div>'
-      + benefHtml + stockHtml
-      + '</div></div>';
-  }).join('') || '<div style="grid-column:1/-1;padding:40px;text-align:center;color:#555">Aucun résultat</div>';
-}
-
-// ═══════════════════════════════════════════════
-//  MODAL SEMAINE
-// ═══════════════════════════════════════════════
-function openWeekModal(wkKey) {
-  const wSales = (window._weekSalesMap || {})[wkKey];
-  if (!wSales || !wSales.length) return;
-
-  const valid     = wSales.filter(s => !s.cancelled);
-  const ca        = valid.reduce((a, s) => a + parseFloat(s.total || 0), 0);
-  const benef     = wSales.reduce((a, s) => a + getTicketBenef(s), 0);
-  const caCard    = valid.filter(isCardPayment).reduce((a, s) => a + parseFloat(s.total || 0), 0);
-  const caEsp     = valid.filter(isCashPayment).reduce((a, s) => a + parseFloat(s.total || 0), 0);
-  const avgTicket = valid.length > 0 ? ca / valid.length : 0;
-
-  // Plage de dates de la semaine
-  const dates = [...new Set(wSales.map(s => toYMD(saleDate(s))))].sort();
-  const d0 = new Date(dates[0] + 'T00:00:00');
-  const d1 = new Date(dates[dates.length - 1] + 'T00:00:00');
-  const fmtD = d => d.toLocaleDateString('fr-FR', {day:'2-digit', month:'short'});
-  const [wNum] = wkKey.split('|');
-
-  document.getElementById('wkm-title').textContent = wNum;
-  document.getElementById('wkm-sub').textContent   = fmtD(d0) + (d1 > d0 ? ' → ' + fmtD(d1) : '');
-  document.getElementById('wkm-vol').textContent   = valid.length + ' vente' + (valid.length > 1 ? 's' : '');
-  document.getElementById('wkm-ca').textContent    = fmtCA(ca);
-  document.getElementById('wkm-cb').textContent    = fmtCA(caCard);
-  document.getElementById('wkm-esp').textContent   = fmtCA(caEsp);
-  document.getElementById('wkm-benef').textContent = fmt(benef);
-  document.getElementById('wkm-avg').textContent   = fmtCA(avgTicket);
-  document.getElementById('wkm-days').textContent  = dates.length + ' j.';
-
-  buildWeekChart(wSales, dates);
-  document.getElementById('wk-modal-overlay').classList.add('open');
-}
-
-function closeWeekModal(e) {
-  if (e && e.target !== document.getElementById('wk-modal-overlay')) return;
-  document.getElementById('wk-modal-overlay').classList.remove('open');
-  if (weekModalChartInstance) { weekModalChartInstance.destroy(); weekModalChartInstance = null; }
-}
-
-function buildWeekChart(wSales, dates) {
-  const canvas = document.getElementById('wkm-chart');
-  if (!canvas) return;
-
-  // 7 jours Lun→Dim autour des dates de la semaine
-  const d0 = new Date(dates[0] + 'T00:00:00');
-  const mon = new Date(d0);
-  mon.setDate(d0.getDate() - ((d0.getDay() + 6) % 7));
-
-  const labels = [], dataCA = [], dataCard = [], dataCash = [];
-  for (let i = 0; i < 7; i++) {
-    const day = new Date(mon);
-    day.setDate(mon.getDate() + i);
-    const dk = toYMD(day);
-    labels.push(day.toLocaleDateString('fr-FR', {weekday:'short', day:'numeric'}));
-    const dSales = wSales.filter(s => toYMD(saleDate(s)) === dk && !s.cancelled);
-    const dCA    = dSales.reduce((a, s) => a + parseFloat(s.total || 0), 0);
-    const dCard  = dSales.filter(isCardPayment).reduce((a, s) => a + parseFloat(s.total || 0), 0);
-    const dCash  = dSales.filter(isCashPayment).reduce((a, s) => a + parseFloat(s.total || 0), 0);
-    dataCA.push(parseFloat(dCA.toFixed(2)));
-    dataCard.push(parseFloat(dCard.toFixed(2)));
-    dataCash.push(parseFloat(dCash.toFixed(2)));
-  }
-
-  if (weekModalChartInstance) weekModalChartInstance.destroy();
-  weekModalChartInstance = new Chart(canvas.getContext('2d'), {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [
-        { label: 'CA', data: dataCA, borderColor: '#8e44ad', backgroundColor: 'rgba(142,68,173,0.10)', borderWidth: 2, tension: 0.3, pointRadius: 3, pointBackgroundColor: '#8e44ad', fill: true },
-        { label: 'Carte', data: dataCard, borderColor: '#2980b9', backgroundColor: 'transparent', borderWidth: 1.5, tension: 0.3, pointRadius: 2, borderDash: [4,3] },
-        { label: 'Espèces', data: dataCash, borderColor: '#27ae60', backgroundColor: 'transparent', borderWidth: 1.5, tension: 0.3, pointRadius: 2, borderDash: [4,3] }
-      ]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { ticks: { color: '#666', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
-        y: { beginAtZero: true, ticks: { color: '#666', font: { size: 9 }, callback: v => v + '€' }, grid: { color: 'rgba(255,255,255,0.06)' } }
-      }
-    }
-  });
-}
-
-// ═══════════════════════════════════════════════
-//  MODAL PRODUIT CATALOGUE
-// ═══════════════════════════════════════════════
-function openCatProductModal(idx) {
-  const p = (window._catProductModalList || [])[idx];
-  if (!p) return;
-
-  const salesStats = buildCatalogueSalesStats();
-  const stat = getProductSalesStat(p, salesStats.aliases);
-  const avgSoldPrice = stat && stat.qty > 0 ? stat.amount / stat.qty : 0;
-  const price  = parseFloat(p.price || p.pricePerKg || p.unitPrice || avgSoldPrice || 0);
-  const cost   = parseFloat(p.costPrice || p.cost || 0);
-  const benef  = cost > 0 ? price - cost : null;
-  const marge  = (benef !== null && price > 0) ? Math.round(benef / price * 100) : null;
-  const soldQty  = stat ? stat.qty  : 0;
-  const received = stat ? stat.amount : 0;
-
-  // Header
-  document.getElementById('cpm-name').textContent = p.name || 'Article';
-  const catEl = document.getElementById('cpm-cat');
-  const cat = p.category || p.categorie || p.cat || p.type || '';
-  catEl.textContent = cat || ''; catEl.style.display = cat ? '' : 'none';
-
-  // Thumb
-  const thumbEl = document.getElementById('cpm-thumb');
-  const imgSrc = p.image || p.img || p.imageUrl || p.photo || '';
-  thumbEl.innerHTML = imgSrc
-    ? '<img src="' + escH(imgSrc) + '" onerror="this.parentElement.innerHTML=\'📦\'">'
-    : '📦';
-
-  // KPIs
-  document.getElementById('cpm-price').textContent = fmtCA(price);
-  document.getElementById('cpm-ca').textContent    = fmtCA(received);
-  document.getElementById('cpm-qty').textContent   = fmtQty(soldQty);
-  const benefEl = document.getElementById('cpm-benef');
-  if (benef !== null) {
-    benefEl.textContent  = (benef >= 0 ? '+' : '') + fmtCA(benef) + (marge !== null ? ' (' + marge + '%)' : '');
-    benefEl.className    = 'cpm-kpi-val ' + (benef > 0 ? 'green' : 'red');
-  } else {
-    benefEl.textContent  = '—';
-    benefEl.className    = 'cpm-kpi-val';
-  }
-
-  // Footer
-  document.getElementById('cpm-total-ca').textContent  = fmtCA(received);
-  document.getElementById('cpm-total-qty').textContent  = fmtQty(soldQty);
-  document.getElementById('cpm-avg-price').textContent  = soldQty > 0 ? fmtCA(received / soldQty) : '—';
-
-  buildCatProductChart(p);
-  document.getElementById('cpm-overlay').classList.add('open');
-}
-
-function closeCatProductModal(e) {
-  if (e && e.target !== document.getElementById('cpm-overlay')) return;
-  document.getElementById('cpm-overlay').classList.remove('open');
-  if (catProductChartInstance) { catProductChartInstance.destroy(); catProductChartInstance = null; }
-}
-
-function buildCatProductChart(p) {
-  const canvas = document.getElementById('cpm-chart');
-  if (!canvas) return;
-
-  const mNames = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
-  const now = new Date();
-  const labels = [], dataCA = [], dataQty = [];
-  const pKeys = new Set(productKeys(p));
-
-  for (let i = 11; i >= 0; i--) {
-    const d  = new Date(now.getFullYear(), now.getMonth() - i, 1);
-    const ym = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
-    labels.push(mNames[d.getMonth()] + ' ' + String(d.getFullYear()).slice(-2));
-    let mCA = 0, mQty = 0;
-    sales.filter(s => !s.cancelled && toYMD(saleDate(s)).startsWith(ym)).forEach(s => {
-      (s.items || []).forEach(it => {
-        const itKeys = [it.id, it.articleId, it.productId, it.name, it.label, it.nom]
-          .filter(Boolean).map(catKey);
-        if (!itKeys.some(k => pKeys.has(k))) return;
-        const qty = parseFloat(it.qty ?? it.quantity ?? it.qte ?? it.quantite ?? 1) || 1;
-        const unit = parseFloat(it.price ?? it.unitPrice ?? it.prix ?? it.prixVente ?? 0) || 0;
-        const lineRaw = parseFloat(it.total ?? it.amount ?? it.subtotal ?? '');
-        mCA  += !isNaN(lineRaw) ? lineRaw : unit * qty;
-        mQty += qty;
-      });
-    });
-    dataCA.push(parseFloat(mCA.toFixed(2)));
-    dataQty.push(parseFloat(mQty.toFixed(2)));
-  }
-
-  if (catProductChartInstance) catProductChartInstance.destroy();
-  catProductChartInstance = new Chart(canvas.getContext('2d'), {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [
-        {
-          label: 'CA (€)', data: dataCA,
-          borderColor: '#8e44ad', backgroundColor: 'rgba(142,68,173,0.10)',
-          borderWidth: 2, tension: 0.35, pointRadius: 3,
-          pointBackgroundColor: '#8e44ad', fill: true, yAxisID: 'yCA'
-        },
-        {
-          label: 'Qté', data: dataQty,
-          borderColor: '#2ecc71', backgroundColor: 'transparent',
-          borderWidth: 2, tension: 0.35, pointRadius: 3,
-          pointBackgroundColor: '#2ecc71', borderDash: [4, 3],
-          fill: false, yAxisID: 'yQty'
-        }
-      ]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { ticks: { color: '#666', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
-        yCA:  { position: 'left',  beginAtZero: true, ticks: { color: '#666', font: { size: 9 }, callback: v => v + '€' }, grid: { color: 'rgba(255,255,255,0.06)' } },
-        yQty: { position: 'right', beginAtZero: true, ticks: { color: '#555', font: { size: 9 } }, grid: { display: false } }
-      }
-    }
-  });
-}
-
-// Exposer pour Drive restore
-window._reloadCatalogue  = function() { if (document.getElementById('tc-catalogue')?.classList.contains('active')) initCatalogue(); };
-window._reloadWorkHours  = function() { if (document.getElementById('tc-workhours')?.classList.contains('active')) renderWorkHours(); };
-
-// Démarrage : SW d'abord (avant splash), puis app
-// SW enregistré immédiatement pour une activation plus rapide
-try { registerSW(); } catch(e) { console.warn('[SW]', e); }
-
-// Rafraîchir périodiquement le statut SW pendant les premières 30 secondes
-// (résout le cas iOS où le SW met quelques secondes à s'activer)
-let _swCheckCount = 0;
-const _swCheckInterval = setInterval(() => {
-  _swCheckCount++;
-  // Vérifier si le SW est passé en état actif
-  if (navigator.serviceWorker && (navigator.serviceWorker.controller || (window._swRegistration && window._swRegistration.active))) {
-    window._swState = 'active';
-    if (typeof refreshSwStatus === 'function') refreshSwStatus();
-    clearInterval(_swCheckInterval);
-  } else if (_swCheckCount > 30) {
-    clearInterval(_swCheckInterval);
-  }
-}, 1000);
-
-// Lancer le splash puis l'app
-runSplash(() => init());
-</script>
-
-</body>
-</html>
+      st.keys.forEach(k => known.add(
