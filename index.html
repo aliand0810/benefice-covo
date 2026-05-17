@@ -2218,11 +2218,11 @@ body {
         </div>
         <div style="display:flex;flex-direction:column;gap:8px;width:100%">
           <label style="display:flex;align-items:center;gap:10px;cursor:pointer;background:#13131f;border:1px solid #2e2e50;border-radius:8px;padding:9px 12px">
-            <input type="checkbox" id="sp-invest-paid-cb" onchange="saveInvestPayMode('cb',this.checked)" style="accent-color:#8e44ad;width:15px;height:15px;flex-shrink:0">
+            <input type="checkbox" id="sp-invest-paid-cb" onchange="saveInvestPayMode('cb',this.checked)" style="accent-color:#8e44ad;width:15px;height:15px;flex-shrink:0" checked>
             <span style="font-size:12px;color:#ccc">💳 Carte Bancaire (CB)</span>
           </label>
           <label style="display:flex;align-items:center;gap:10px;cursor:pointer;background:#13131f;border:1px solid #2e2e50;border-radius:8px;padding:9px 12px">
-            <input type="checkbox" id="sp-invest-paid-cash" onchange="saveInvestPayMode('cash',this.checked)" style="accent-color:#8e44ad;width:15px;height:15px;flex-shrink:0">
+            <input type="checkbox" id="sp-invest-paid-cash" onchange="saveInvestPayMode('cash',this.checked)" style="accent-color:#8e44ad;width:15px;height:15px;flex-shrink:0" checked>
             <span style="font-size:12px;color:#ccc">💵 Espèces / Comptant</span>
           </label>
         </div>
@@ -3033,8 +3033,8 @@ function normalizeInvestment(inv, idx) {
   if (manualStatus !== 'credit') {
     const rawMode = String(_invCI(inv, ['paymentMode','modePaiement','payment','mode','modeReglement','paiement','reglement','typePaiement','modeDepaiement','modePay'], '')).toLowerCase().trim();
     if (rawMode) {
-      const paidIfCB   = getPref('invest_paid_if_cb',   false);
-      const paidIfCash = getPref('invest_paid_if_cash', false);
+      const paidIfCB   = getPref('invest_paid_if_cb',   true);
+      const paidIfCash = getPref('invest_paid_if_cash', true);
       const isModeCB   = rawMode.includes('cb') || rawMode.includes('carte') || rawMode.includes('card') || rawMode.includes('visa') || rawMode.includes('master') || rawMode.includes('tpe') || rawMode.includes('bancontact');
       const isModeCash = rawMode.includes('esp') || rawMode.includes('cash') || rawMode.includes('liquid') || rawMode.includes('comptant');
       if ((paidIfCB && isModeCB) || (paidIfCash && isModeCash)) isPaidByMode = true;
@@ -5245,8 +5245,8 @@ function loadPreferencesToToggles() {
   // Modes de paiement → soldé
   const cbEl   = document.getElementById('sp-invest-paid-cb');
   const cashEl = document.getElementById('sp-invest-paid-cash');
-  if (cbEl)   cbEl.checked   = getPref('invest_paid_if_cb',   false);
-  if (cashEl) cashEl.checked = getPref('invest_paid_if_cash', false);
+  if (cbEl)   cbEl.checked   = getPref('invest_paid_if_cb',   true);
+  if (cashEl) cashEl.checked = getPref('invest_paid_if_cash', true);
 }
 
 // Toggles d'interface
