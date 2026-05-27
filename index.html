@@ -313,14 +313,16 @@ border-top: 1px solid #252540;
 /* ─── TICKET ROW ─── */
 .ticket-row {
 padding: 9px 20px 9px 68px; display: grid;
-grid-template-columns: 42px auto 1fr auto auto 80px;
+grid-template-columns: 42px auto 1fr auto auto auto auto 80px;
 gap: 12px; align-items: center;
 border-top: 1px solid #1e1e30;
 transition: background 0.1s;
 }
 .ticket-row:hover { background: #1f1f38; }
 .ticket-id { font-size: 10px; color: #555; font-family: monospace; }
-.ticket-desc { font-size: 12px; color: #ccc; }
+.ticket-desc { font-size: 12px; color: #ccc; overflow: hidden; }
+.ticket-desc-name { font-weight: 600; color: #ddd; }
+.ticket-desc-items { font-size: 10px; color: #777; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ticket-items { font-size: 10px; color: #666; }
 .ticket-benef { font-size: 13px; font-weight: 700; text-align: right; }
 .ticket-benef.pos { color: #2ecc71; }
@@ -1731,6 +1733,76 @@ body {
   .table-card { padding: 14px; }
   .table-card { padding: 0; }
 }
+
+/* ─── TABLEAU RÉCAPITULATIF INVESTISSEMENTS ─── */
+.inv-tabs { display:flex; gap:6px; margin-bottom:14px; }
+.inv-tab {
+  background:#13131f; border:1px solid #2e2e50; border-radius:8px;
+  color:#666; font-size:12px; font-weight:600; padding:7px 16px;
+  cursor:pointer; font-family:'Poppins',sans-serif; transition:all 0.2s;
+}
+.inv-tab:hover { border-color:#8e44ad; color:#c39bd3; }
+.inv-tab.active { background:rgba(142,68,173,0.18); border-color:#8e44ad; color:#fff; }
+.inv-summary-wrap { display:none; }
+.inv-summary-wrap.visible { display:block; }
+.inv-table-wrap.inv-hidden { display:none; }
+.inv-summary-section { margin-bottom:14px; border-radius:10px; overflow:hidden; border:1px solid #252540; }
+.inv-summary-head {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 16px; font-size:12px; font-weight:700; letter-spacing:0.04em;
+}
+.inv-summary-head.paid    { background:rgba(39,174,96,0.12);  color:#2ecc71; border-bottom:1px solid rgba(39,174,96,0.25); }
+.inv-summary-head.partial { background:rgba(243,156,18,0.12); color:#f39c12; border-bottom:1px solid rgba(243,156,18,0.25); }
+.inv-summary-head.credit  { background:rgba(231,76,60,0.12);  color:#e74c3c; border-bottom:1px solid rgba(231,76,60,0.25); }
+.inv-summary-head-right { display:flex; gap:14px; align-items:center; }
+.inv-summary-count { font-size:10px; font-weight:600; opacity:0.75; }
+.inv-summary-total { font-size:14px; font-weight:800; }
+.inv-sum-row {
+  display:grid; grid-template-columns:1.4fr 110px 110px 110px 90px;
+  gap:10px; align-items:center; padding:10px 16px;
+  border-bottom:1px solid #1e1e30; background:#1e1e35;
+  font-size:12px; transition:background 0.1s;
+}
+.inv-sum-row:last-child { border-bottom:none; }
+.inv-sum-row:hover { background:#252540; }
+.inv-sum-row.header {
+  background:#17172a; color:#555; font-size:9px; font-weight:800;
+  text-transform:uppercase; letter-spacing:0.06em; padding:8px 16px;
+  pointer-events:none;
+}
+.inv-sum-name { font-weight:700; color:#ddd; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.inv-sum-sub  { font-size:10px; color:#555; margin-top:2px; }
+.inv-sum-num  { font-size:12px; font-weight:800; text-align:right; color:#fff; }
+.inv-sum-num.green  { color:#2ecc71; }
+.inv-sum-num.red    { color:#e74c3c; }
+.inv-sum-num.purple { color:#c39bd3; }
+.inv-sum-pct { text-align:right; }
+.inv-sum-bar-wrap { background:#13131f; border-radius:3px; height:5px; margin-top:4px; overflow:hidden; }
+.inv-sum-bar { height:100%; border-radius:3px; }
+.inv-sum-bar.paid    { background:linear-gradient(90deg,#27ae60,#2ecc71); }
+.inv-sum-bar.partial { background:linear-gradient(90deg,#e67e22,#f39c12); }
+.inv-sum-bar.credit  { background:linear-gradient(90deg,#c0392b,#e74c3c); }
+.inv-summary-empty { padding:20px; text-align:center; color:#555; font-size:12px; background:#1e1e35; }
+.inv-sum-grand { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; padding:12px 16px; background:#17172a; border:1px solid #2e2e50; border-radius:10px; margin-top:4px; }
+.inv-sum-grand-label { font-size:11px; color:#666; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; }
+.inv-sum-grand-vals { display:flex; gap:20px; flex-wrap:wrap; }
+.inv-sum-grand-item { text-align:right; }
+.inv-sum-grand-item-label { font-size:9px; color:#444; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:2px; }
+.inv-sum-grand-item-val { font-size:14px; font-weight:800; }
+@media(max-width:600px){
+  .inv-sum-row { grid-template-columns:1fr 80px 80px 80px 60px; gap:6px; font-size:11px; }
+}
+/* ─── TYPE DE PAIEMENT + CRÉDIT RESTANT ─── */
+.t-pay-type { font-size: 10px; font-weight: 700; border-radius: 20px; padding: 2px 8px; white-space: nowrap; }
+.t-pay-type.cb      { background: rgba(41,128,185,0.15); color: #3498db; border: 1px solid rgba(41,128,185,0.3); }
+.t-pay-type.cash    { background: rgba(39,174,96,0.12);  color: #2ecc71; border: 1px solid rgba(39,174,96,0.25); }
+.t-pay-type.credit  { background: rgba(243,156,18,0.15); color: #f39c12; border: 1px solid rgba(243,156,18,0.3); }
+.t-pay-type.unknown { background: rgba(255,255,255,0.05); color: #555;   border: 1px solid #2e2e50; }
+.ticket-credit-rest { font-size: 11px; font-weight: 700; text-align: right; color: #f39c12; white-space: nowrap; }
+.ticket-credit-rest.none { color: #333; }
+@media (max-width: 640px) {
+  .t-pay-type, .ticket-credit-rest { display: none; }
+}
 </style>
 
 </head>
@@ -2396,6 +2468,13 @@ body {
       <button class="invest-bulk-btn grey"  onclick="investBulkHide()">🙈 Masquer</button>
       <button class="invest-bulk-btn clear" onclick="investClearSel()">✕ Désélectionner</button>
     </div>
+    <div class="inv-tabs">
+      <button class="inv-tab active" id="inv-tab-credits" onclick="invSwitchTab('credits')">⚠️ Crédits non payés</button>
+      <button class="inv-tab" id="inv-tab-summary" onclick="invSwitchTab('summary')">📊 Récapitulatif complet</button>
+    </div>
+    <div class="inv-summary-wrap" id="inv-summary-wrap">
+      <div id="inv-summary-content"></div>
+    </div>
     <div class="invest-table-wrap">
       <div class="invest-table" id="invest-table"></div>
     </div>
@@ -2855,6 +2934,108 @@ let weekModalChartInstance  = null;
 let hfSelectedDates = new Set();
 let hfCurrentMonth  = '';
 
+
+// ═══════════════════════════════════════════════
+//  RÉCAPITULATIF INVESTISSEMENTS PAR STATUT
+// ═══════════════════════════════════════════════
+function invSwitchTab(tab) {
+  const tabCredits = document.getElementById('inv-tab-credits');
+  const tabSummary = document.getElementById('inv-tab-summary');
+  const tableWrap  = document.querySelector('.invest-table-wrap');
+  const summaryWrap= document.getElementById('inv-summary-wrap');
+  if (!tabCredits || !tabSummary) return;
+  if (tab === 'summary') {
+    tabCredits.classList.remove('active');
+    tabSummary.classList.add('active');
+    if (tableWrap)   tableWrap.classList.add('inv-hidden');
+    if (summaryWrap) summaryWrap.classList.add('visible');
+    renderInvestSummary();
+  } else {
+    tabSummary.classList.remove('active');
+    tabCredits.classList.add('active');
+    if (tableWrap)   tableWrap.classList.remove('inv-hidden');
+    if (summaryWrap) summaryWrap.classList.remove('visible');
+  }
+}
+
+function renderInvestSummary() {
+  const el = document.getElementById('inv-summary-content');
+  if (!el) return;
+
+  const normalized = (investments || []).map(normalizeInvestment)
+    .filter(i => i.amount > 0 || i.paidAmount > 0 || i.remaining > 0);
+
+  if (!normalized.length) {
+    el.innerHTML = '<div class="inv-summary-empty">Aucun investissement trouvé. Synchronisez vos données Drive pour démarrer.</div>';
+    return;
+  }
+
+  const groups = [
+    { key: 'paid',    label: '✅ Soldés',            cls: 'paid',    items: [] },
+    { key: 'partial', label: '🟡 Paiement partiel',  cls: 'partial', items: [] },
+    { key: 'credit',  label: '🔴 Non payés',          cls: 'credit',  items: [] },
+  ];
+  normalized.forEach(i => {
+    const g = groups.find(g => g.key === i.status);
+    if (g) g.items.push(i);
+  });
+
+  const grandTotal     = normalized.reduce((s,i) => s + i.amount, 0);
+  const grandPaid      = normalized.reduce((s,i) => s + i.paidAmount, 0);
+  const grandRemaining = normalized.reduce((s,i) => s + i.remaining, 0);
+
+  let html = '';
+  groups.forEach(g => {
+    if (!g.items.length) return;
+    const gTotal     = g.items.reduce((s,i) => s + i.amount, 0);
+    const gPaid      = g.items.reduce((s,i) => s + i.paidAmount, 0);
+    const gRemaining = g.items.reduce((s,i) => s + i.remaining, 0);
+
+    html += '<div class="inv-summary-section">';
+    html += '<div class="inv-summary-head ' + g.cls + '">';
+    html += '<span>' + g.label + '</span>';
+    html += '<div class="inv-summary-head-right">';
+    html += '<span class="inv-summary-count">' + g.items.length + ' ligne' + (g.items.length > 1 ? 's' : '') + '</span>';
+    html += '<span class="inv-summary-total">' + fmtCA(gTotal) + '</span>';
+    html += '</div></div>';
+
+    // Column headers
+    html += '<div class="inv-sum-row header">';
+    html += '<div>Investissement</div><div style="text-align:right">Montant</div><div style="text-align:right">Payé</div><div style="text-align:right">Reste</div><div style="text-align:right">Avancement</div>';
+    html += '</div>';
+
+    // Rows
+    const sorted = [...g.items].sort((a,b) => b.amount - a.amount);
+    sorted.forEach(i => {
+      const date = i.date ? new Date(i.date).toLocaleDateString('fr-FR') : '';
+      const pct  = i.amount > 0 ? Math.min(100, Math.round(i.paidAmount / i.amount * 100)) : (i.paidAmount > 0 ? 100 : 0);
+      html += '<div class="inv-sum-row">';
+      html += '<div><div class="inv-sum-name">' + escH(i.name || '—') + '</div>';
+      if (date) html += '<div class="inv-sum-sub">' + date + (i.supplier ? ' · ' + escH(i.supplier) : '') + '</div>';
+      html += '</div>';
+      html += '<div class="inv-sum-num purple">' + fmtCA(i.amount) + '</div>';
+      html += '<div class="inv-sum-num green">'  + fmtCA(i.paidAmount) + '</div>';
+      html += '<div class="inv-sum-num' + (i.remaining > 0 ? ' red' : ' green') + '">' + fmtCA(i.remaining) + '</div>';
+      html += '<div class="inv-sum-pct">';
+      html += '<div style="font-size:10px;font-weight:800;color:' + (pct===100?'#2ecc71':pct>0?'#f39c12':'#e74c3c') + ';text-align:right;margin-bottom:3px">' + pct + '%</div>';
+      html += '<div class="inv-sum-bar-wrap"><div class="inv-sum-bar ' + g.cls + '" style="width:' + pct + '%"></div></div>';
+      html += '</div></div>';
+    });
+    html += '</div>';
+  });
+
+  // Grand total footer
+  html += '<div class="inv-sum-grand">';
+  html += '<span class="inv-sum-grand-label">📋 Total général — ' + normalized.length + ' investissement' + (normalized.length > 1 ? 's' : '') + '</span>';
+  html += '<div class="inv-sum-grand-vals">';
+  html += '<div class="inv-sum-grand-item"><div class="inv-sum-grand-item-label">Total investi</div><div class="inv-sum-grand-item-val" style="color:#c39bd3">' + fmtCA(grandTotal) + '</div></div>';
+  html += '<div class="inv-sum-grand-item"><div class="inv-sum-grand-item-label">Payé</div><div class="inv-sum-grand-item-val" style="color:#2ecc71">' + fmtCA(grandPaid) + '</div></div>';
+  html += '<div class="inv-sum-grand-item"><div class="inv-sum-grand-item-label">Reste à payer</div><div class="inv-sum-grand-item-val" style="color:#e74c3c">' + fmtCA(grandRemaining) + '</div></div>';
+  html += '</div></div>';
+
+  el.innerHTML = html;
+}
+
 function loadCovoData() {
   // ── Ventes COVO Pro ──────────────────────────
   try {
@@ -3092,6 +3273,44 @@ function isCardPayment(s) {
 function isCashPayment(s) {
   const m = salePaymentMode(s);
   return m.includes('esp') || m.includes('cash') || m.includes('liquid') || m.includes('cashier') || m.includes('monnaie');
+}
+
+
+function isCreditSale(s) {
+  const m = salePaymentMode(s);
+  if (isCardPayment(s) || isCashPayment(s)) return false;
+  if (m.includes('crédit') || m.includes('credit') || m.includes('dette') ||
+      m.includes('impayé') || m.includes('impaye') || m.includes('à payer') ||
+      m.includes('a payer') || m.includes('en attente') || m.includes('deferred') ||
+      m.includes('compte') || m.includes('ardoise')) return true;
+  // Also flag if there's a remaining/credit amount on the sale
+  const rem = getSaleRemainingCredit(s);
+  return rem > 0;
+}
+
+function getSaleRemainingCredit(s) {
+  const keys = ['remaining','restant','reste','creditAmount','montantCredit',
+                 'due','amountDue','solde_restant','resteAPayer','reste_a_payer',
+                 'creditRestant','solde','unpaidAmount','montantImpaye'];
+  for (const k of keys) {
+    const v = parseFloat(s[k]);
+    if (!isNaN(v) && v > 0) return v;
+  }
+  // If paidAmount is set and < total, derive remaining
+  const total = parseFloat(s.total || 0);
+  const paid  = parseFloat(s.amountPaid || s.paidAmount || s.montantPaye || s.montant_paye || 0);
+  if (paid > 0 && paid < total) return parseFloat((total - paid).toFixed(2));
+  return 0;
+}
+
+function getSalePayTypeLabel(s) {
+  if (s.cancelled) return { label: 'Annulé', cls: 'unknown' };
+  if (isCardPayment(s))  return { label: '💳 CB',       cls: 'cb'      };
+  if (isCashPayment(s))  return { label: '💵 Comptant', cls: 'cash'    };
+  if (isCreditSale(s))   return { label: '⏳ Crédit',   cls: 'credit'  };
+  const m = salePaymentMode(s);
+  if (m) return { label: '💰 ' + m.slice(0,12), cls: 'unknown' };
+  return { label: '—', cls: 'unknown' };
 }
 
 // ── FILTER ────────────────────────────────────────
@@ -3732,12 +3951,28 @@ function renderTable() {
           const itemsLabel = n > 0 ? `${n} art.` : '';
           const sidx = window._salesIndex ? window._salesIndex.get(s) : null;
           const skey = encodeURIComponent(JSON.stringify({id:sid,ts:sDate.getTime()}));
+          const _pt  = getSalePayTypeLabel(s);
+          const _cr  = getSaleRemainingCredit(s);
+          const _itemNames = (s.items||[]).map(it => {
+            const nm = it.name || it.nom || it.libelle || it.label || it.title || '';
+            const qty = parseFloat(it.qty || it.quantity || 1);
+            return qty > 1 ? `${qty}× ${nm}` : nm;
+          }).filter(Boolean);
+          const _descLine  = caissier ? '👤 '+escH(caissier) : '🧾 Ticket';
+          const _itemsLine = _itemNames.length
+            ? escH(_itemNames.slice(0,4).join(' · ') + (_itemNames.length>4?' +'+(_itemNames.length-4):''))
+            : '';
           html += `<div class="ticket-row" onclick="openTicketDetail('${escH(String(sid))}',${sDate.getTime()})" title="Cliquer pour voir le détail">
             <span class="ticket-time">${timeStr}</span>
             <span class="ticket-id">#${String(sid).slice(-6)}</span>
-            <span class="ticket-desc">${caissier ? '👤 '+escH(caissier) : '🧾 Ticket'}${itemsLabel ? ' · '+itemsLabel : ''}</span>
+            <div class="ticket-desc">
+              <div class="ticket-desc-name">${_descLine}${n>0?' <span style="font-size:10px;color:#555;font-weight:400">· '+n+' art.</span>':''}</div>
+              ${_itemsLine ? '<div class="ticket-desc-items">'+_itemsLine+'</div>' : ''}
+            </div>
             <span class="t-status ${s.cancelled?'ko':'ok'}">${s.cancelled?'Annulé':'Validé'}</span>
+            <span class="t-pay-type ${_pt.cls}">${_pt.label}</span>
             <span class="ticket-ca" style="font-size:11px;color:#888;text-align:right">${fmtCA(ca)}</span>
+            <span class="ticket-credit-rest ${_cr>0?'':'none'}">${_cr>0?'⚠ '+fmtCA(_cr):'—'}</span>
             <span class="ticket-benef ${b>=0?'pos':'neg'}">${fmt(b)}</span>
           </div>`;
         });
