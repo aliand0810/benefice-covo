@@ -1803,6 +1803,125 @@ body {
 @media (max-width: 640px) {
   .t-pay-type, .ticket-credit-rest { display: none; }
 }
+
+/* ─── INSPECTEUR STRUCTURE INVESTISSEMENT ─── */
+#inv-inspector-overlay {
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75);
+  z-index:9950; align-items:center; justify-content:center; padding:16px;
+  backdrop-filter:blur(4px);
+}
+#inv-inspector-overlay.open { display:flex; }
+#inv-inspector-modal {
+  background:#13131f; border:1px solid #8e44ad; border-radius:16px;
+  width:100%; max-width:580px; max-height:88vh; display:flex; flex-direction:column;
+  box-shadow:0 20px 70px rgba(0,0,0,0.7);
+  animation:modal-pop 0.22s cubic-bezier(.34,1.56,.64,1);
+}
+.iim-header {
+  padding:16px 20px; border-bottom:1px solid #2e2e50;
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+}
+.iim-title { font-size:14px; font-weight:700; color:#fff; }
+.iim-sub   { font-size:11px; color:#555; margin-top:2px; }
+.iim-close { background:none; border:none; color:#555; cursor:pointer; font-size:20px; padding:2px 6px; }
+.iim-close:hover { color:#ddd; }
+.iim-body  { padding:16px 20px; overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:6px; }
+.iim-record-sel {
+  width:100%; background:#1a1a2e; border:1px solid #2e2e50; border-radius:8px;
+  color:#ddd; font-size:12px; padding:8px 10px; font-family:'Poppins',sans-serif;
+  margin-bottom:10px; cursor:pointer;
+}
+.iim-record-sel:focus { outline:none; border-color:#8e44ad; }
+.iim-field {
+  display:grid; grid-template-columns:160px 1fr; gap:8px; align-items:start;
+  background:#1a1a2e; border-radius:8px; padding:8px 12px; font-size:11px;
+}
+.iim-field.highlight { background:rgba(142,68,173,0.12); border:1px solid rgba(142,68,173,0.3); }
+.iim-field.found     { background:rgba(39,174,96,0.10);  border:1px solid rgba(39,174,96,0.25); }
+.iim-field.missing   { background:rgba(231,76,60,0.08);  border:1px solid rgba(231,76,60,0.2); }
+.iim-key   { font-family:monospace; color:#8e44ad; font-weight:700; word-break:break-all; }
+.iim-val   { color:#ccc; word-break:break-all; }
+.iim-val.null-val { color:#444; font-style:italic; }
+.iim-section-title {
+  font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:0.1em;
+  color:#444; margin:8px 0 2px; padding:0 2px;
+}
+.iim-footer {
+  padding:12px 20px; border-top:1px solid #2e2e50;
+  display:flex; gap:8px; flex-wrap:wrap;
+}
+.iim-btn {
+  flex:1; padding:9px; border-radius:8px; border:none; font-size:11px;
+  font-weight:700; cursor:pointer; font-family:'Poppins',sans-serif;
+  display:flex; align-items:center; justify-content:center; gap:5px;
+}
+.iim-btn.purple { background:rgba(142,68,173,0.15); border:1px solid #8e44ad; color:#c39bd3; }
+.iim-btn.blue   { background:rgba(41,128,185,0.15);  border:1px solid #3498db; color:#3498db; }
+
+/* ─── DIAGNOSTIQUEUR DRIVE ─── */
+#drive-diag-overlay {
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,0.78);
+  z-index:9960; align-items:center; justify-content:center; padding:12px;
+  backdrop-filter:blur(4px);
+}
+#drive-diag-overlay.open { display:flex; }
+#drive-diag-modal {
+  background:#111120; border:1px solid #2e2e50; border-radius:16px;
+  width:100%; max-width:680px; max-height:92vh; display:flex; flex-direction:column;
+  box-shadow:0 24px 80px rgba(0,0,0,0.75);
+  animation:modal-pop 0.22s cubic-bezier(.34,1.56,.64,1);
+}
+.ddm-header {
+  padding:14px 20px; border-bottom:1px solid #2e2e50;
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  background:linear-gradient(135deg,#16162a,#1a1a35); border-radius:16px 16px 0 0;
+}
+.ddm-title { font-size:14px; font-weight:700; color:#fff; }
+.ddm-sub   { font-size:11px; color:#555; margin-top:2px; }
+.ddm-close { background:none; border:none; color:#555; cursor:pointer; font-size:20px; padding:2px 8px; }
+.ddm-close:hover { color:#ddd; }
+.ddm-tabs  { display:flex; border-bottom:1px solid #2e2e50; }
+.ddm-tab   { flex:1; padding:10px; font-size:11px; font-weight:700; color:#555; cursor:pointer;
+             background:none; border:none; font-family:'Poppins',sans-serif; transition:all 0.15s; }
+.ddm-tab:hover { color:#c39bd3; background:rgba(142,68,173,0.06); }
+.ddm-tab.active { color:#c39bd3; border-bottom:2px solid #8e44ad; }
+.ddm-body  { padding:14px 18px; overflow-y:auto; flex:1; }
+.ddm-section { margin-bottom:16px; }
+.ddm-section-title { font-size:9px; font-weight:800; text-transform:uppercase;
+  letter-spacing:0.1em; color:#444; margin-bottom:8px; padding:0 2px; }
+.ddm-key-row {
+  display:grid; grid-template-columns:180px 60px 1fr; gap:8px; align-items:start;
+  padding:7px 12px; border-radius:7px; font-size:11px; margin-bottom:3px;
+}
+.ddm-key-row.found   { background:rgba(39,174,96,0.08); border:1px solid rgba(39,174,96,0.2); }
+.ddm-key-row.missing { background:rgba(231,76,60,0.07); border:1px solid rgba(231,76,60,0.18); }
+.ddm-key-row.neutral { background:#1a1a2e; border:1px solid #252545; }
+.ddm-key   { font-family:monospace; font-weight:700; color:#8e44ad; word-break:break-all; }
+.ddm-type  { font-size:10px; color:#555; font-style:italic; text-align:center; }
+.ddm-val   { color:#999; word-break:break-all; font-size:10px; }
+.ddm-val.green { color:#2ecc71; font-weight:700; }
+.ddm-val.red   { color:#e74c3c; }
+.ddm-code {
+  background:#0d0d1a; border:1px solid #2e2e50; border-radius:8px;
+  padding:12px; font-family:monospace; font-size:10px; color:#8e9aaf;
+  white-space:pre-wrap; word-break:break-all; max-height:300px; overflow-y:auto;
+  line-height:1.6;
+}
+.ddm-badge-ok  { display:inline-flex; align-items:center; gap:4px; font-size:10px; font-weight:700;
+  background:rgba(39,174,96,0.12); color:#2ecc71; border:1px solid rgba(39,174,96,0.3);
+  border-radius:20px; padding:2px 8px; margin:2px; }
+.ddm-badge-err { display:inline-flex; align-items:center; gap:4px; font-size:10px; font-weight:700;
+  background:rgba(231,76,60,0.12); color:#e74c3c; border:1px solid rgba(231,76,60,0.3);
+  border-radius:20px; padding:2px 8px; margin:2px; }
+.ddm-footer {
+  padding:12px 18px; border-top:1px solid #2e2e50; display:flex; gap:8px; flex-wrap:wrap;
+}
+.ddm-btn { flex:1; padding:9px; border-radius:8px; border:none; font-size:11px; font-weight:700;
+  cursor:pointer; font-family:'Poppins',sans-serif;
+  display:flex; align-items:center; justify-content:center; gap:5px; }
+.ddm-btn.purple { background:rgba(142,68,173,0.15); border:1px solid #8e44ad; color:#c39bd3; }
+.ddm-btn.green  { background:rgba(39,174,96,0.12);  border:1px solid #27ae60; color:#2ecc71; }
+.ddm-btn.grey   { background:rgba(255,255,255,0.05); border:1px solid #2e2e50; color:#555; }
 </style>
 
 </head>
@@ -1931,6 +2050,7 @@ body {
     </div>
   </div>
   <div class="header-right">
+      <button onclick="openDriveDiag()" title="Diagnostiqueur Drive" style="background:rgba(41,128,185,0.15);border:1px solid rgba(41,128,185,0.35);border-radius:8px;color:#3498db;font-size:11px;font-weight:700;padding:5px 11px;cursor:pointer;font-family:'Poppins',sans-serif;display:flex;align-items:center;gap:5px;">🩺 Diag Drive</button>
     <!-- Bouton réglages unique -->
     <button class="btn-settings" id="btn-settings" onclick="openSettings()" title="Réglages">
       ⚙
@@ -2449,6 +2569,7 @@ body {
       <div>
         <div class="invest-title">Investissements</div>
         <div class="invest-sub">Seuls les crédits non payés sont remontés. Les investissements soldés ne s'affichent pas.</div>
+        <button onclick="openInvInspector()" style="margin-top:8px;background:rgba(142,68,173,0.15);border:1px solid rgba(142,68,173,0.4);border-radius:8px;color:#c39bd3;font-size:11px;font-weight:700;padding:5px 12px;cursor:pointer;font-family:'Poppins',sans-serif;display:inline-flex;align-items:center;gap:5px;">🔍 Inspecter les champs COVO Pro</button>
       </div>
       <div class="invest-signal">
         <div class="invest-signal-label">Signal prioritaire</div>
@@ -3187,14 +3308,27 @@ function normalizeInvestment(inv, idx) {
   const manualStatus = overrides[invKey0] || null;
 
   const amount = normMoney(_invCI(inv, ['amount','montant','total','price','prix','cost','cout','value'], 0));
-  let paidAmount = normMoney(_invCI(inv, ['paidAmount','amountPaid','montantPaye','montant_paye','montant_payé','montantPayé','paye','paid_value','montant_verse'], 0));
-  const rawPaid   = _invCI(inv, ['paid','isPaid','paye','payé','payee','settled','regle','réglé','solde','soldé'], null);
-  const rawCredit = _invCI(inv, ['credit','isCredit','onCredit','aCredit','enCredit','impaye','impayé'], null);
+  let paidAmount = normMoney(_invCI(inv, [
+    'paidAmount','amountPaid','montantPaye','montant_paye','montant_payé','montantPayé',
+    'paye','paid_value','montant_verse','montantVerse','versement','versements',
+    'acompte','acomptes','avance','avances','soldePaye','solde_paye','montantRegle',
+    'montant_regle','montant_réglé','montantRegle','regle','réglé','reglement',
+    'montantEncaisse','montant_encaisse','encaisse','encaissé','montantPercu',
+    'montant_percu','percu','perçu','partialAmount','partialPaid','partiel'
+  ], 0));
+  const rawPaid   = _invCI(inv, ['paid','isPaid','paye','payé','payee','settled','regle','réglé','solde','soldé','acquitte','acquitté','soldé','solder','termine','terminé','clos','closed','complet','completé','fini'], null);
+  const rawCredit = _invCI(inv, ['credit','isCredit','onCredit','aCredit','enCredit','impaye','impayé','enAttente','en_attente','nonPaye','non_paye','aRegler','a_regler','ouvert','open','pending'], null);
   const rawStatus = String(_invCI(inv, ['status','statut','etat','état','paymentStatus','payment_status','state','situation'], '')).toLowerCase().trim();
 
   if (_isTruthy(rawPaid) && !paidAmount) paidAmount = amount;
 
-  let remaining = normMoney(_invCI(inv, ['remaining','reste','restant','resteAPayer','reste_a_payer','amountDue','due','creditAmount','montantCredit','solde_restant'], ''));
+  let remaining = normMoney(_invCI(inv, [
+    'remaining','reste','restant','resteAPayer','reste_a_payer','amountDue','due',
+    'creditAmount','montantCredit','solde_restant','soldeRestant','credit_restant',
+    'creditRestant','montantDu','montant_du','montantRestant','montant_restant',
+    'resteARegler','reste_a_regler','solde','soldeCredit','solde_credit',
+    'impaye','impayé','montantImpaye','montant_impaye','dette','balance'
+  ], ''));
   if (!remaining && paidAmount > 0 && amount > paidAmount) remaining = amount - paidAmount;
 
   // Mots exacts indiquant payé — évite faux positifs ("impayé", "non payé", "à payer")
@@ -3242,7 +3376,7 @@ function normalizeInvestment(inv, idx) {
     date: firstVal(inv, ['date','createdAt','timestamp','purchaseDate','dueDate'], ''),
     amount,
     paidAmount: isPaid ? amount : paidAmount,
-    remaining: isPaid ? 0 : (remaining || Math.max(amount - paidAmount, amount)),
+    remaining: isPaid ? 0 : (remaining > 0 ? remaining : Math.max(amount - paidAmount, 0)),
     status,
     raw: inv
   };
@@ -3431,6 +3565,329 @@ function updateFilterOptions() {
   const curM = mSel.value;
   const mNames2 = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
   mSel.innerHTML = '<option value="">Tous les mois</option>' + mNames2.map((n,i)=>`<option value="${String(i+1).padStart(2,'0')}"${String(i+1).padStart(2,'0')===curM?'selected':''}>${n}</option>`).join('');
+}
+
+
+
+// ═══════════════════════════════════════════════
+//  DIAGNOSTIQUEUR DRIVE COVO PRO
+// ═══════════════════════════════════════════════
+let _ddmCurrentTab = 'structure';
+
+// Clés root importantes à vérifier
+const _DDM_ROOT_KEYS = [
+  { key: 'covo_sales_history',    label: 'Tickets de vente',    alt: ['salesHistory','sales_history','covo_sales','tickets','ventes'] },
+  { key: 'covo_investments',      label: 'Investissements',      alt: ['investments','investissements','covo_investissements','investment_history','credits','dettes','fournisseurs','achats'] },
+  { key: 'products',              label: 'Articles / Produits',  alt: ['covo_products','covo_articles','articles'] },
+  { key: 'covo_invest_payments',  label: 'Versements manuels',   alt: ['investPayments'] },
+  { key: 'covo_invest_overrides', label: 'Overrides statuts',    alt: ['investOverrides'] },
+  { key: '_version',              label: 'Version backup',       alt: ['version'] },
+  { key: '_savedAt',              label: 'Date sauvegarde',      alt: ['savedAt'] },
+];
+
+function openDriveDiag() {
+  document.getElementById('drive-diag-overlay').classList.add('open');
+  _ddmCurrentTab = 'structure';
+  document.querySelectorAll('.ddm-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('ddm-tab-structure').classList.add('active');
+  renderDriveDiag();
+}
+
+function closeDriveDiag() {
+  document.getElementById('drive-diag-overlay').classList.remove('open');
+}
+
+function ddmSwitchTab(tab, btn) {
+  _ddmCurrentTab = tab;
+  document.querySelectorAll('.ddm-tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderDriveDiag();
+}
+
+function renderDriveDiag() {
+  const raw = (window._lastDriveRaw || [])[0];
+  const body = document.getElementById('ddm-body');
+  const fileLabel = document.getElementById('ddm-file-label');
+  if (fileLabel) fileLabel.textContent = window._lastDriveFileName
+    ? ('Fichier : ' + window._lastDriveFileName + ' · ' + (window._lastDriveRaw||[]).length + ' fichier(s) chargé(s)')
+    : 'Après synchronisation Drive, la structure s\'affichera ici';
+
+  if (!raw) {
+    body.innerHTML = '<div style="padding:24px;text-align:center;color:#555;font-size:12px">Aucune donnée Drive chargée.<br><br>Cliquez sur <strong style="color:#c39bd3">🔄 Synchroniser</strong> dans le header, puis rouvrez ce diagnostiqueur.</div>';
+    return;
+  }
+
+  if (_ddmCurrentTab === 'structure') renderDdmStructure(raw, body);
+  else if (_ddmCurrentTab === 'invest') renderDdmInvest(raw, body);
+  else renderDdmRaw(raw, body);
+}
+
+function _ddmFindKey(obj, keys) {
+  for (const k of keys) {
+    if (obj[k] !== undefined && obj[k] !== null) return { key: k, val: obj[k] };
+  }
+  return null;
+}
+
+function renderDdmStructure(raw, body) {
+  const allKeys = Object.keys(raw);
+  let html = '<div class="ddm-section">';
+  html += '<div class="ddm-section-title">✅ Clés COVO Pro reconnues</div>';
+
+  _DDM_ROOT_KEYS.forEach(({ key, label, alt }) => {
+    const found = _ddmFindKey(raw, [key, ...alt]);
+    const cls   = found ? 'found' : 'missing';
+    let preview = '—';
+    if (found) {
+      const v = found.val;
+      if (Array.isArray(v))            preview = v.length + ' enregistrement(s)';
+      else if (typeof v === 'object')  preview = '{' + Object.keys(v).length + ' clés}';
+      else                             preview = String(v).slice(0, 60);
+    }
+    html += `<div class="ddm-key-row ${cls}">
+      <span class="ddm-key">${found ? found.key : key}</span>
+      <span class="ddm-type">${found ? (Array.isArray(found.val) ? 'array' : typeof found.val) : '—'}</span>
+      <span class="ddm-val ${found ? 'green' : 'red'}">${found ? preview : '⚠ Absent'}</span>
+    </div>`;
+  });
+
+  html += '</div><div class="ddm-section">';
+  html += '<div class="ddm-section-title">📦 Toutes les clés racine (' + allKeys.length + ')</div>';
+  allKeys.sort().forEach(k => {
+    const v = raw[k];
+    const type = Array.isArray(v) ? 'array[' + v.length + ']' : typeof v;
+    const preview = Array.isArray(v) ? v.length + ' items' : typeof v === 'object' ? '{'+Object.keys(v||{}).length+' clés}' : String(v||'').slice(0,50);
+    const isKnown = _DDM_ROOT_KEYS.some(r => [r.key, ...r.alt].includes(k));
+    html += `<div class="ddm-key-row ${isKnown ? 'found' : 'neutral'}">
+      <span class="ddm-key">${escH(k)}${isKnown ? ' ✓' : ''}</span>
+      <span class="ddm-type">${type}</span>
+      <span class="ddm-val">${escH(preview)}</span>
+    </div>`;
+  });
+  html += '</div>';
+  body.innerHTML = html;
+}
+
+function renderDdmInvest(raw, body) {
+  // Trouver les investissements dans le raw
+  const invKeys = ['investments','covo_investments','investissements','covo_investissements',
+    'investment_history','covo_investment_history','investmentHistory','credits','dettes','fournisseurs','achats'];
+  let invArr = null, invKeyUsed = null;
+  for (const k of invKeys) {
+    if (raw[k] && Array.isArray(raw[k]) && raw[k].length) { invArr = raw[k]; invKeyUsed = k; break; }
+  }
+
+  let html = '';
+  if (!invArr) {
+    html += '<div style="padding:20px;text-align:center;">';
+    html += '<div style="font-size:28px;margin-bottom:12px">⚠️</div>';
+    html += '<div style="color:#e74c3c;font-weight:700;font-size:13px;margin-bottom:8px">Aucune clé d\'investissement trouvée dans ce fichier</div>';
+    html += '<div style="color:#666;font-size:11px;line-height:1.7">Clés recherchées :<br>' + invKeys.map(k => '<code style="background:#1a1a2e;padding:1px 6px;border-radius:4px;color:#8e44ad">'+k+'</code>').join(' ') + '</div>';
+    html += '<div style="margin-top:16px;color:#555;font-size:11px">👉 Regardez l\'onglet <strong>Structure racine</strong> pour identifier la bonne clé dans votre fichier Drive.</div>';
+    html += '</div>';
+  } else {
+    const sample = invArr[0];
+    const allFields = Object.keys(sample);
+    html += `<div style="margin-bottom:12px;font-size:11px;color:#555">Clé utilisée : <strong style="color:#c39bd3">${invKeyUsed}</strong> · ${invArr.length} investissement(s) · Champs par enregistrement : ${allFields.length}</div>`;
+
+    // Résumé des champs critiques
+    html += '<div class="ddm-section"><div class="ddm-section-title">🔑 Champs critiques dans le 1er enregistrement</div>';
+    const criticals = [
+      { label: 'Désignation / Nom', keys: ['name','nom','title','libelle','label','description','designation','désignation','article'] },
+      { label: 'Montant total',     keys: ['amount','montant','total','price','prix','cost','cout','value'] },
+      { label: 'Montant payé',      keys: ['paidAmount','amountPaid','montantPaye','montant_paye','versement','acompte','avance','solde_paye','montant_verse','regle','encaisse'] },
+      { label: 'Reste à payer',     keys: ['remaining','reste','restant','creditAmount','montantCredit','solde_restant','montant_du','dette','solde','balance'] },
+      { label: 'Statut paiement',   keys: ['status','statut','etat','paid','isPaid','paye','payé','settled','credit','isCredit'] },
+      { label: 'Date',              keys: ['date','createdAt','timestamp','purchaseDate','dueDate'] },
+      { label: 'Fournisseur',       keys: ['supplier','fournisseur','vendor','provider','source'] },
+    ];
+    criticals.forEach(({ label, keys }) => {
+      const found = _ddmFindKey(sample, keys);
+      const cls = found ? 'found' : 'missing';
+      const val = found ? String(found.val).slice(0, 60) : '—';
+      html += `<div class="ddm-key-row ${cls}">
+        <span class="ddm-key">${escH(label)}</span>
+        <span class="ddm-type">${found ? escH(found.key) : '?'}</span>
+        <span class="ddm-val ${found ? 'green' : 'red'}">${found ? escH(val) : '⚠ Non trouvé'}</span>
+      </div>`;
+    });
+    html += '</div>';
+
+    // Tous les champs bruts du 1er enregistrement
+    html += '<div class="ddm-section"><div class="ddm-section-title">📦 Tous les champs du 1er enregistrement</div>';
+    allFields.sort().forEach(k => {
+      const v = sample[k];
+      const type = Array.isArray(v) ? 'array' : typeof v;
+      const preview = v === null ? 'null' : Array.isArray(v) ? '['+v.length+']' : typeof v === 'object' ? '{...}' : String(v).slice(0,60);
+      html += `<div class="ddm-key-row neutral">
+        <span class="ddm-key">${escH(k)}</span>
+        <span class="ddm-type">${type}</span>
+        <span class="ddm-val">${escH(preview)}</span>
+      </div>`;
+    });
+    html += '</div>';
+  }
+  body.innerHTML = html;
+}
+
+function renderDdmRaw(raw, body) {
+  const json = JSON.stringify(raw, null, 2);
+  body.innerHTML = `<div class="ddm-code">${escH(json.slice(0, 8000))}${json.length > 8000 ? '\n\n... [tronqué — copiez pour voir tout]' : ''}</div>`;
+}
+
+function ddmCopyRaw() {
+  const raw = (window._lastDriveRaw || [])[0];
+  if (!raw) { toast('Aucune donnée à copier', 'err'); return; }
+  try {
+    navigator.clipboard.writeText(JSON.stringify(raw, null, 2))
+      .then(() => toast('✓ JSON brut copié', 'ok'));
+  } catch(e) { toast('Clipboard non disponible', 'err'); }
+}
+
+function ddmForceReload() {
+  closeDriveDiag();
+  window._lastDriveRaw = [];
+  if (typeof autoLoadLatestBackup === 'function') {
+    autoLoadLatestBackup(true).then(() => {
+      setTimeout(() => openDriveDiag(), 1200);
+    });
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  INSPECTEUR STRUCTURE INVESTISSEMENT
+// ═══════════════════════════════════════════════
+// Champs clés à mettre en avant
+const _INV_KEY_FIELDS = {
+  paidAmount: ['paidAmount','amountPaid','montantPaye','montant_paye','montant_payé','montantPayé',
+    'paye','paid_value','montant_verse','montantVerse','versement','versements',
+    'acompte','acomptes','avance','avances','soldePaye','solde_paye','montantRegle',
+    'montant_regle','montant_réglé','regle','réglé','reglement','montantEncaisse',
+    'montant_encaisse','encaisse','encaissé','montantPercu','montant_percu','percu','perçu',
+    'partialAmount','partialPaid','partiel'],
+  remaining: ['remaining','reste','restant','resteAPayer','reste_a_payer','amountDue','due',
+    'creditAmount','montantCredit','solde_restant','soldeRestant','credit_restant',
+    'creditRestant','montantDu','montant_du','montantRestant','montant_restant',
+    'resteARegler','reste_a_regler','solde','soldeCredit','solde_credit',
+    'impaye','impayé','montantImpaye','montant_impaye','dette','balance'],
+  amount:   ['amount','montant','total','price','prix','cost','cout','value'],
+  status:   ['status','statut','etat','état','paymentStatus','payment_status','state','situation'],
+  name:     ['name','nom','title','libelle','label','description'],
+  date:     ['date','createdAt','timestamp','purchaseDate','dueDate'],
+};
+
+function openInvInspector() {
+  if (!investments || !investments.length) {
+    toast("Aucune donnée investissement en mémoire — synchronisez Drive d'abord", 'err'); return;
+  }
+  const sel = document.getElementById('iim-record-sel');
+  const _lf = getStrPref('invest_label_field', '');
+  sel.innerHTML = investments.map((inv,i) => {
+    // 1. Champ configuré par l'utilisateur dans les réglages
+    let nm = _lf && inv[_lf] != null ? String(inv[_lf]).trim() : '';
+    // 2. Champs standards élargis
+    if (!nm) nm = String(firstVal(inv, [
+      'name','nom','title','libelle','label','description','designation','désignation',
+      'article','produit','product','fournisseur','supplier','reference','ref',
+      'objet','intitule','intitulé','categorie','category'
+    ], '')).trim();
+    // 3. Premier champ string non vide trouvé dans les données brutes
+    if (!nm) {
+      for (const k of Object.keys(inv)) {
+        const v = inv[k];
+        if (typeof v === 'string' && v.trim().length > 1 && v.trim().length < 60
+            && !['id','uuid','ref','date','status','statut','etat','mode','type','raw'].includes(k.toLowerCase())) {
+          nm = v.trim(); break;
+        }
+      }
+    }
+    // 4. Fallback avec montant
+    if (!nm) {
+      const amt = inv.amount || inv.montant || inv.total || inv.price || inv.prix || '';
+      nm = amt ? 'Crédit ' + amt + ' €' : ('Ligne #' + (i+1));
+    }
+    return `<option value="${i}">${String(nm).slice(0,55)}</option>`;
+  }).join('');
+  sel.value = '0';
+  document.getElementById('inv-inspector-overlay').classList.add('open');
+  renderInvInspector();
+}
+
+function closeInvInspector() {
+  document.getElementById('inv-inspector-overlay').classList.remove('open');
+}
+
+function renderInvInspector() {
+  const idx = parseInt(document.getElementById('iim-record-sel').value) || 0;
+  const raw = investments[idx];
+  if (!raw) return;
+  const norm = normalizeInvestment(raw, idx);
+  const container = document.getElementById('iim-fields');
+
+  // Flat keys only (no nested objects)
+  const allKeys = Object.keys(raw).filter(k => k !== 'raw');
+
+  // Categorize keys
+  const foundPaid    = allKeys.find(k => _INV_KEY_FIELDS.paidAmount.map(f=>f.toLowerCase()).includes(k.toLowerCase()));
+  const foundRem     = allKeys.find(k => _INV_KEY_FIELDS.remaining.map(f=>f.toLowerCase()).includes(k.toLowerCase()));
+  const foundAmount  = allKeys.find(k => _INV_KEY_FIELDS.amount.map(f=>f.toLowerCase()).includes(k.toLowerCase()));
+  const foundStatus  = allKeys.find(k => _INV_KEY_FIELDS.status.map(f=>f.toLowerCase()).includes(k.toLowerCase()));
+
+  let html = '';
+
+  // ── Résumé normalisé ──
+  html += '<div class="iim-section-title">✅ Valeurs interprétées par COVO Bénéfices</div>';
+  [
+    ['Montant total',      norm.amount,     norm.amount > 0 ? 'found' : 'missing'],
+    ['Montant payé',       norm.paidAmount, norm.paidAmount > 0 ? 'found' : 'missing'],
+    ['Reste à payer',      norm.remaining,  'found'],
+    ['Statut détecté',     norm.status,     norm.status === 'credit' && norm.paidAmount === 0 ? 'missing' : 'found'],
+    ['Nom',                norm.name,       norm.name !== 'Investissement' ? 'found' : 'highlight'],
+    ['Fournisseur',        norm.supplier,   norm.supplier ? 'found' : 'highlight'],
+  ].forEach(([k, v, cls]) => {
+    const display = typeof v === 'number' ? fmtCA(v) : String(v || '—');
+    html += `<div class="iim-field ${cls}"><span class="iim-key">${k}</span><span class="iim-val">${escH(display)}</span></div>`;
+  });
+
+  // ── Champs bruts ──
+  html += '<div class="iim-section-title" style="margin-top:12px">📦 Champs bruts reçus de COVO Pro ('+allKeys.length+' champs)</div>';
+  allKeys.sort().forEach(k => {
+    const v = raw[k];
+    const isPaidField   = _INV_KEY_FIELDS.paidAmount.map(f=>f.toLowerCase()).includes(k.toLowerCase());
+    const isRemField    = _INV_KEY_FIELDS.remaining.map(f=>f.toLowerCase()).includes(k.toLowerCase());
+    const isAmountField = _INV_KEY_FIELDS.amount.map(f=>f.toLowerCase()).includes(k.toLowerCase());
+    const isStatusField = _INV_KEY_FIELDS.status.map(f=>f.toLowerCase()).includes(k.toLowerCase());
+    const isKnown = isPaidField || isRemField || isAmountField || isStatusField;
+    const cls = isPaidField ? 'found' : isRemField ? 'found' : isAmountField ? 'highlight' : isStatusField ? 'highlight' : '';
+    const isObj = v !== null && typeof v === 'object';
+    const display = isObj ? JSON.stringify(v).slice(0,80) : String(v ?? 'null');
+    const valCls = (v === null || v === undefined || v === '') ? 'null-val' : '';
+    html += `<div class="iim-field ${cls}">
+      <span class="iim-key">${escH(k)}${isKnown ? ' <span style="font-size:9px;opacity:0.6">✓</span>' : ''}</span>
+      <span class="iim-val ${valCls}">${escH(display)}</span>
+    </div>`;
+  });
+
+  // ── Champs clés manquants ──
+  const missingPaid = !foundPaid;
+  const missingRem  = !foundRem;
+  if (missingPaid || missingRem) {
+    html += '<div class="iim-section-title" style="margin-top:12px;color:#e74c3c">⚠️ Champs introuvables dans ces données</div>';
+    if (missingPaid) html += `<div class="iim-field missing"><span class="iim-key">montant payé</span><span class="iim-val null-val">Aucun champ reconnu — vérifiez le nom exact ci-dessus</span></div>`;
+    if (missingRem)  html += `<div class="iim-field missing"><span class="iim-key">reste à payer</span><span class="iim-val null-val">Aucun champ reconnu — vérifiez le nom exact ci-dessus</span></div>`;
+  }
+
+  container.innerHTML = html;
+  window._currentInspectorRaw = raw;
+}
+
+function copyInvRaw() {
+  const raw = window._currentInspectorRaw;
+  if (!raw) return;
+  try {
+    const txt = JSON.stringify(raw, null, 2);
+    navigator.clipboard.writeText(txt).then(() => toast('✓ JSON copié dans le presse-papiers', 'ok'));
+  } catch(e) { toast('Clipboard non disponible', 'err'); }
 }
 
 function renderInvestments() {
@@ -4484,23 +4941,43 @@ async function fetchDriveFiles() {
 }
 
 // ── Télécharge et parse un fichier Drive ──
-async function fetchFileData(fileId) {
+async function fetchFileData(fileId, fileName) {
   const token = gapi.client.getToken().access_token;
   const resp  = await fetch(
     `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
     { headers: { 'Authorization': 'Bearer ' + token } }
   );
   if (!resp.ok) throw new Error('HTTP ' + resp.status);
-  return resp.json();
+  const data = await resp.json();
+  // Mémoriser pour le diagnostiqueur
+  if (fileName) window._lastDriveFileName = fileName;
+  return data;
 }
 
 // ── Extraction COMPLÈTE du backup COVO Pro (toutes versions) ──
 function extractCovoData(data) {
-  // Unwrap si nested dans data.data
-  const d = (data.data && typeof data.data === 'object') ? data.data : data;
+  // ── Unwrap : gérer tous les formats d'imbrication connus ──
+  let d = data;
+  // Format tableau racine : [{key:val,...}] → prendre le premier élément
+  if (Array.isArray(d) && d.length && typeof d[0] === 'object') d = d[0];
+  // Format data.data (courant dans exports COVO Pro)
+  if (d.data && typeof d.data === 'object' && !Array.isArray(d.data)) d = d.data;
+  // Format data.backup / data.export / data.store / data.content / data.payload
+  for (const wrap of ['backup','export','store','content','payload','result','response']) {
+    if (d[wrap] && typeof d[wrap] === 'object' && !Array.isArray(d[wrap])) {
+      // Heuristique : si le wrapper contient des clés COVO connues, on l'utilise
+      const v = d[wrap];
+      if (v.covo_sales_history || v.investments || v.investissements || v.covo_investments || v.sales_history) {
+        d = v; break;
+      }
+    }
+  }
+  // Sauvegarder une copie brute pour le diagnostiqueur
+  window._lastDriveRaw = window._lastDriveRaw || [];
+  window._lastDriveRaw.push(d);
   return {
     // Tickets de caisse
-    sales: d.covo_sales_history || d.salesHistory || d.sales_history || d.covo_sales || null,
+    sales: d.covo_sales_history || d.salesHistory || d.sales_history || d.covo_sales || d.tickets || d.ventes || null,
     // Produits / Articles
     products: d.products || d.covo_products || d.covo_articles || d.articles || null,
     // Utilisateurs
@@ -4522,7 +4999,7 @@ function extractCovoData(data) {
     // Marchandise
     marchandise: d.covo_marchandise || null,
     // Investissements
-    investments: d.investments || d.covo_investments || d.investissements || d.covo_investissements || d.investment_history || d.covo_investment_history || d.investmentHistory || null,
+    investments: d.investments || d.covo_investments || d.investissements || d.covo_investissements || d.investment_history || d.covo_investment_history || d.investmentHistory || d.credits || d.creditsInvestissement || d.dettes || d.fournisseurs || d.achats || null,
     // Historique connexions
     loginHistory: d.covo_login_history || null,
     // Messages
@@ -7041,5 +7518,50 @@ const _swCheckInterval = setInterval(() => {
 runSplash(() => init());
 </script>
 
+
+<!-- MODAL INSPECTEUR STRUCTURE INVESTISSEMENT -->
+<div id="inv-inspector-overlay" onclick="if(event.target===this)closeInvInspector()">
+  <div id="inv-inspector-modal">
+    <div class="iim-header">
+      <div>
+        <div class="iim-title">🔍 Inspecteur de structure COVO Pro</div>
+        <div class="iim-sub">Champs bruts reçus depuis votre sauvegarde Drive</div>
+      </div>
+      <button class="iim-close" onclick="closeInvInspector()">✕</button>
+    </div>
+    <div class="iim-body" id="iim-body">
+      <select class="iim-record-sel" id="iim-record-sel" onchange="renderInvInspector()"></select>
+      <div id="iim-fields"></div>
+    </div>
+    <div class="iim-footer">
+      <button class="iim-btn purple" onclick="copyInvRaw()">📋 Copier JSON brut</button>
+      <button class="iim-btn blue"   onclick="closeInvInspector()">✓ Fermer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DIAGNOSTIQUEUR DRIVE -->
+<div id="drive-diag-overlay" onclick="if(event.target===this)closeDriveDiag()">
+  <div id="drive-diag-modal">
+    <div class="ddm-header">
+      <div>
+        <div class="ddm-title">🩺 Diagnostiqueur Drive COVO Pro</div>
+        <div class="ddm-sub" id="ddm-file-label">Aucun fichier chargé — synchronisez d'abord</div>
+      </div>
+      <button class="ddm-close" onclick="closeDriveDiag()">✕</button>
+    </div>
+    <div class="ddm-tabs">
+      <button class="ddm-tab active" id="ddm-tab-structure" onclick="ddmSwitchTab('structure',this)">📁 Structure racine</button>
+      <button class="ddm-tab" id="ddm-tab-invest"    onclick="ddmSwitchTab('invest',this)">💼 Investissements bruts</button>
+      <button class="ddm-tab" id="ddm-tab-raw"       onclick="ddmSwitchTab('raw',this)">{ } JSON brut</button>
+    </div>
+    <div class="ddm-body" id="ddm-body"></div>
+    <div class="ddm-footer">
+      <button class="ddm-btn purple" onclick="ddmCopyRaw()">📋 Copier JSON brut</button>
+      <button class="ddm-btn green"  onclick="ddmForceReload()">🔄 Re-synchroniser Drive</button>
+      <button class="ddm-btn grey"   onclick="closeDriveDiag()">✕ Fermer</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
