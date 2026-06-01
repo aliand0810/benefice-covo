@@ -2986,9 +2986,9 @@ body {
     <div class="appro-wrap visible" id="appro-wrap">
       <div id="dette-alerts"></div>
       <div id="appro-grand"></div>
-      <div id="dette-filters" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center;">
-        <input id="dette-search" placeholder="🔍 Désignation, fournisseur, référence…"
-          style="flex:1;min-width:140px;background:#1a1a2e;border:1px solid #2e2e50;border-radius:8px;
+      <div id="dette-filters" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;align-items:center;">
+        <input id="dette-search" placeholder="🔍 Désignation, fournisseur, réf…"
+          style="flex:1;min-width:130px;background:#1a1a2e;border:1px solid #2e2e50;border-radius:8px;
                  color:#ddd;font-size:12px;padding:7px 12px;font-family:'Poppins',sans-serif;"
           oninput="renderDette()">
         <select id="dette-sort"
@@ -2998,12 +2998,40 @@ body {
           <option value="echeance">Trier : Échéance</option>
           <option value="reste">Trier : Reste ↓</option>
           <option value="fournisseur">Trier : Fournisseur A→Z</option>
-          <option value="date">Trier : Date achat</option>
+          <option value="date">Trier : Date achat ↓</option>
+          <option value="montant">Trier : Montant ↓</option>
         </select>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center;">
         <button class="at-filter-btn active" id="df-all"     onclick="setDetteFilter('all',this)">Tout</button>
         <button class="at-filter-btn"        id="df-credit"  onclick="setDetteFilter('credit',this)">🔴 Impayé</button>
         <button class="at-filter-btn"        id="df-partial" onclick="setDetteFilter('partial',this)">🟡 Partiel</button>
         <button class="at-filter-btn"        id="df-paid"    onclick="setDetteFilter('paid',this)">✅ Soldé</button>
+        <div style="width:1px;background:#2e2e50;height:24px;margin:0 4px;"></div>
+        <select id="dette-date-type"
+          style="background:#1a1a2e;border:1px solid #2e2e50;border-radius:8px;color:#aaa;
+                 font-size:11px;padding:6px 9px;font-family:'Poppins',sans-serif;cursor:pointer;"
+          onchange="detteDateTypeChange()">
+          <option value="all">📅 Toutes les dates</option>
+          <option value="month">Par mois</option>
+          <option value="range">Plage personnalisée</option>
+        </select>
+        <select id="dette-month-sel"
+          style="display:none;background:#1a1a2e;border:1px solid #2e2e50;border-radius:8px;color:#aaa;
+                 font-size:11px;padding:6px 9px;font-family:'Poppins',sans-serif;cursor:pointer;"
+          onchange="renderDette()">
+        </select>
+        <div id="dette-range-wrap" style="display:none;display:flex;gap:6px;align-items:center;">
+          <input type="date" id="dette-date-from"
+            style="background:#1a1a2e;border:1px solid #2e2e50;border-radius:8px;color:#aaa;
+                   font-size:11px;padding:6px 9px;font-family:'Poppins',sans-serif;"
+            onchange="renderDette()">
+          <span style="color:#444;font-size:11px">→</span>
+          <input type="date" id="dette-date-to"
+            style="background:#1a1a2e;border:1px solid #2e2e50;border-radius:8px;color:#aaa;
+                   font-size:11px;padding:6px 9px;font-family:'Poppins',sans-serif;"
+            onchange="renderDette()">
+        </div>
       </div>
       <div id="dette-table-container"></div>
     </div>
@@ -3720,6 +3748,63 @@ function _echLabel(days, echeance) {
   return          { label: 'Éch. ' + raw,                    cls: 'ech-ok',    urgent: false };
 }
 
+
+// ── Utilitaires dates approvisionnements ──
+function _detteParseDate(val) {
+  if (!val) return null;
+  try {
+    const s = String(val).trim();
+    // ISO: 2026-05-19 ou 2026-05-19T...
+    if (/^\d{4}-\d{2}-\d{2}/.test(s)) return new Date(s);
+    // FR: 19/05/2026 ou 19/05/26
+    const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+    if (m) {
+      const y = m[3].length===2 ? 2000+parseInt(m[3]) : parseInt(m[3]);
+      return new Date(y, parseInt(m[2])-1, parseInt(m[1]));
+    }
+    // Timestamp
+    const n = parseInt(s);
+    if (!isNaN(n) && n > 1e9) return new Date(n);
+    return new Date(s);
+  } catch(e) { return null; }
+}
+
+function _detteNormDateYM(val) {
+  const d = _detteParseDate(val);
+  if (!d || isNaN(d)) return '';
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+}
+
+function detteDateTypeChange() {
+  const v = document.getElementById('dette-date-type')?.value;
+  const mSel  = document.getElementById('dette-month-sel');
+  const range = document.getElementById('dette-range-wrap');
+  if (mSel)  mSel.style.display  = v==='month' ? '' : 'none';
+  if (range) range.style.display = v==='range' ? 'flex' : 'none';
+  if (v==='month') _dettePopulateMonths();
+  renderDette();
+}
+
+function _dettePopulateMonths() {
+  const sel = document.getElementById('dette-month-sel');
+  if (!sel) return;
+  const normalized = (investments||[]).map((inv,i)=>normalizeInvestment(inv,i));
+  const months = new Map();
+  normalized.forEach(inv => {
+    const ym = _detteNormDateYM(inv.date);
+    if (!ym) return;
+    if (!months.has(ym)) {
+      const d = _detteParseDate(inv.date);
+      const lbl = d ? d.toLocaleDateString('fr-FR',{month:'long',year:'numeric'}) : ym;
+      months.set(ym, lbl);
+    }
+  });
+  const sorted = [...months.entries()].sort((a,b) => b[0].localeCompare(a[0]));
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">— Tous les mois —</option>'
+    + sorted.map(([ym,lbl]) => `<option value="${ym}"${ym===cur?' selected':''}>${lbl}</option>`).join('');
+}
+
 function renderDette() {
   const container = document.getElementById('dette-table-container');
   const alertsEl  = document.getElementById('dette-alerts');
@@ -3745,12 +3830,35 @@ function renderDette() {
     (i.category||'').toLowerCase().includes(search)
   );
 
+  // ── Filtre par date ──
+  const dateType = document.getElementById('dette-date-type')?.value || 'all';
+  if (dateType === 'month') {
+    const mSel = document.getElementById('dette-month-sel')?.value || '';
+    if (mSel) rows = rows.filter(i => {
+      const d = i.date ? String(i.date) : '';
+      // Comparer YYYY-MM ou MM/YYYY
+      const norm = _detteNormDateYM(i.date);
+      return norm === mSel;
+    });
+  } else if (dateType === 'range') {
+    const from = document.getElementById('dette-date-from')?.value;
+    const to   = document.getElementById('dette-date-to')?.value;
+    if (from || to) rows = rows.filter(i => {
+      const d = _detteParseDate(i.date);
+      if (!d) return true;
+      if (from && d < new Date(from)) return false;
+      if (to   && d > new Date(to + 'T23:59:59')) return false;
+      return true;
+    });
+  }
+
   // Tri
   const sort = document.getElementById('dette-sort')?.value || 'echeance';
   rows.sort((a, b) => {
     if (sort === 'reste')       return b.remaining - a.remaining;
+    if (sort === 'montant')     return b.amount - a.amount;
     if (sort === 'fournisseur') return (a.supplier||'').localeCompare(b.supplier||'', 'fr');
-    if (sort === 'date')        return new Date(b.date||0) - new Date(a.date||0);
+    if (sort === 'date')        return (_detteParseDate(b.date)||0) - (_detteParseDate(a.date)||0);
     // echeance : urgents en tête, puis par jours, N/A à la fin
     const da = _echeanceDays(a.echeance), db = _echeanceDays(b.echeance);
     if (da === null && db === null) return b.remaining - a.remaining;
@@ -4194,15 +4302,23 @@ function normalizeInvestment(inv, idx) {
 
   if (_isTruthy(rawPaid) && !paidAmount) paidAmount = amount;
 
-  let remaining = normMoney(_invCI(inv, [
-    'reste','restant','resteAPayer','reste_a_payer',
-    'remaining','amountDue','due',
-    'creditAmount','montantCredit','solde_restant','soldeRestant','credit_restant',
-    'creditRestant','montantDu','montant_du','montantRestant','montant_restant',
-    'resteARegler','reste_a_regler','solde','soldeCredit','solde_credit',
-    'impaye','impayé','montantImpaye','montant_impaye','dette','balance'
-  ], ''));
-  if (!remaining && paidAmount > 0 && amount > paidAmount) remaining = amount - paidAmount;
+  // Remaining : priorité au calcul depuis l'historique réel
+  let remaining = 0;
+  if (histoPaidSum > 0 || paidAmount > 0) {
+    // On a des données de paiement → recalculer
+    remaining = Math.max(0, amount - paidAmount);
+  } else {
+    // Pas de données de paiement → lire le champ brut
+    remaining = normMoney(_invCI(inv, [
+      'reste','restant','resteAPayer','reste_a_payer',
+      'remaining','amountDue','due',
+      'creditAmount','montantCredit','solde_restant','soldeRestant','credit_restant',
+      'creditRestant','montantDu','montant_du','montantRestant','montant_restant',
+      'resteARegler','reste_a_regler',
+      'impaye','impayé','montantImpaye','montant_impaye','dette','balance'
+    ], 0));
+    if (!remaining && amount > 0) remaining = amount; // rien payé = tout reste dû
+  }
 
   // Mots exacts indiquant payé — évite faux positifs ("impayé", "non payé", "à payer")
   const PAID_EXACT = ['payé','paye','paid','settled','réglé','reglé','regle','soldé','solde','acquitté','acquitte','versé','verse','ok'];
@@ -4223,9 +4339,12 @@ function normalizeInvestment(inv, idx) {
     if (rawMode) {
       const paidIfCB   = getPref('invest_paid_if_cb',   true);
       const paidIfCash = getPref('invest_paid_if_cash', true);
-      const isModeCB   = rawMode.includes('cb') || rawMode.includes('carte') || rawMode.includes('card') || rawMode.includes('visa') || rawMode.includes('master') || rawMode.includes('tpe') || rawMode.includes('bancontact');
-      const isModeCash = rawMode.includes('esp') || rawMode.includes('cash') || rawMode.includes('liquid') || rawMode.includes('comptant');
-      if ((paidIfCB && isModeCB) || (paidIfCash && isModeCash)) isPaidByMode = true;
+      const isModeCredit = rawMode.includes('crédit') || rawMode.includes('credit') || rawMode === 'crédit' || rawMode === 'credit';
+      if (!isModeCredit) { // "Crédit" = achat à crédit → PAS soldé par le mode
+        const isModeCB   = rawMode.includes('cb') || rawMode.includes('carte') || rawMode.includes('card') || rawMode.includes('visa') || rawMode.includes('master') || rawMode.includes('tpe') || rawMode.includes('bancontact');
+        const isModeCash = rawMode.includes('esp') || rawMode.includes('cash') || rawMode.includes('liquid') || rawMode.includes('comptant') || rawMode.includes('chèque') || rawMode.includes('cheque');
+        if ((paidIfCB && isModeCB) || (paidIfCash && isModeCash)) isPaidByMode = true;
+      }
     }
   }
 
@@ -4273,7 +4392,7 @@ function normalizeInvestment(inv, idx) {
     ], ''),
     amount,
     paidAmount: isPaid ? amount : paidAmount,
-    remaining: isPaid ? 0 : (remaining > 0 ? remaining : Math.max(amount - paidAmount, 0)),
+    remaining: isPaid ? 0 : Math.max(0, remaining),
     status,
     quantite,
     prixUnitaire,
