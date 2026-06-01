@@ -1922,6 +1922,135 @@ body {
 .ddm-btn.purple { background:rgba(142,68,173,0.15); border:1px solid #8e44ad; color:#c39bd3; }
 .ddm-btn.green  { background:rgba(39,174,96,0.12);  border:1px solid #27ae60; color:#2ecc71; }
 .ddm-btn.grey   { background:rgba(255,255,255,0.05); border:1px solid #2e2e50; color:#555; }
+
+/* ═══════════════════════════════════════════════
+   APPROVISIONNEMENTS PAR FOURNISSEUR
+═══════════════════════════════════════════════ */
+.appro-wrap { display:none; }
+.appro-wrap.visible { display:block; }
+
+/* KPI bar élargie */
+.invest-kpis.five { grid-template-columns: repeat(5, minmax(110px,1fr)); }
+
+/* Carte fournisseur */
+.appro-supplier {
+  border:1px solid #252545; border-radius:12px;
+  margin-bottom:12px; overflow:hidden;
+  transition:box-shadow 0.2s;
+}
+.appro-supplier:hover { box-shadow:0 0 0 1px rgba(142,68,173,0.25); }
+.appro-sup-header {
+  display:grid; grid-template-columns:1fr auto;
+  gap:12px; padding:13px 16px;
+  background:#1c1c32; cursor:pointer;
+  transition:background 0.15s; user-select:none;
+  align-items:center;
+}
+.appro-sup-header:hover { background:#232342; }
+.appro-sup-left { display:flex; flex-direction:column; gap:4px; min-width:0; }
+.appro-sup-name {
+  font-size:13px; font-weight:800; color:#fff;
+  display:flex; align-items:center; gap:8px;
+}
+.appro-sup-name .chev { font-size:10px; color:#8e44ad; transition:transform 0.2s; }
+.appro-sup-name .chev.open { transform:rotate(90deg); }
+.appro-sup-meta { font-size:10px; color:#555; }
+
+/* Barre de progression fournisseur */
+.appro-sup-progress {
+  display:flex; align-items:center; gap:10px; margin-top:6px;
+}
+.appro-sup-track {
+  flex:1; height:6px; background:#13131f; border-radius:3px; overflow:hidden;
+}
+.appro-sup-fill {
+  height:100%; border-radius:3px;
+  transition:width 0.5s cubic-bezier(.4,0,.2,1);
+}
+.appro-sup-fill.full    { background:linear-gradient(90deg,#27ae60,#2ecc71); }
+.appro-sup-fill.partial { background:linear-gradient(90deg,#e67e22,#f39c12); }
+.appro-sup-fill.none    { background:linear-gradient(90deg,#c0392b,#e74c3c); }
+.appro-sup-pct { font-size:11px; font-weight:800; white-space:nowrap; }
+
+/* Totaux fournisseur */
+.appro-sup-totals {
+  display:flex; gap:16px; align-items:center; flex-wrap:wrap;
+  flex-shrink:0;
+}
+.appro-sup-amt { text-align:right; }
+.appro-sup-amt-label { font-size:9px; color:#444; text-transform:uppercase; letter-spacing:0.05em; }
+.appro-sup-amt-val   { font-size:13px; font-weight:800; }
+
+/* Liste des commandes */
+.appro-orders { display:none; }
+.appro-orders.open { display:block; }
+.appro-order-head {
+  display:grid;
+  grid-template-columns: 1fr 100px 100px 100px 90px 80px;
+  gap:8px; padding:7px 16px;
+  background:#17172a; font-size:9px; font-weight:800;
+  color:#444; text-transform:uppercase; letter-spacing:0.06em;
+  border-top:1px solid #252545;
+}
+.appro-order-row {
+  display:grid;
+  grid-template-columns: 1fr 100px 100px 100px 90px 80px;
+  gap:8px; padding:11px 16px; align-items:center;
+  border-top:1px solid #1e1e30; font-size:12px;
+  cursor:pointer; transition:background 0.1s;
+  background:#1a1a2e;
+}
+.appro-order-row:hover { background:#222240; }
+.appro-order-name  { font-weight:700; color:#ddd; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.appro-order-date  { font-size:10px; color:#555; margin-top:2px; }
+.appro-order-num   { text-align:right; font-weight:700; }
+.appro-order-num.purple { color:#c39bd3; }
+.appro-order-num.green  { color:#2ecc71; }
+.appro-order-num.orange { color:#f39c12; }
+.appro-order-num.red    { color:#e74c3c; }
+
+/* Mini progress bar par commande */
+.appro-order-bar-wrap { height:4px; background:#13131f; border-radius:2px; overflow:hidden; margin-top:3px; }
+.appro-order-bar { height:100%; border-radius:2px; }
+.appro-order-bar.full    { background:#2ecc71; }
+.appro-order-bar.partial { background:#f39c12; }
+.appro-order-bar.none    { background:#e74c3c; }
+
+/* Pied du bloc fournisseur */
+.appro-sup-footer {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:9px 16px; background:#15152a; border-top:1px solid #252545;
+  font-size:10px; color:#555; gap:10px; flex-wrap:wrap;
+}
+.appro-sup-footer strong { color:#c39bd3; }
+
+/* Grand total */
+.appro-grand-total {
+  display:grid; grid-template-columns:repeat(4,1fr);
+  gap:1px; background:#2e2e50;
+  border:1px solid #2e2e50; border-radius:10px;
+  overflow:hidden; margin-bottom:14px;
+}
+.appro-grand-cell {
+  background:#17172a; padding:12px 16px; text-align:center;
+}
+.appro-grand-label { font-size:9px; color:#444; text-transform:uppercase; letter-spacing:0.07em; margin-bottom:4px; }
+.appro-grand-val   { font-size:18px; font-weight:800; }
+
+@media(max-width:700px) {
+  .appro-order-head, .appro-order-row {
+    grid-template-columns: 1fr 80px 80px 80px 70px 60px;
+    font-size:11px; gap:5px; padding:9px 12px;
+  }
+  .appro-sup-totals { gap:10px; }
+  .invest-kpis.five { grid-template-columns:repeat(3,1fr); }
+}
+@media(max-width:480px) {
+  .appro-order-head { display:none; }
+  .appro-order-row  { grid-template-columns:1fr auto auto; }
+  .appro-order-row > *:nth-child(3),
+  .appro-order-row > *:nth-child(4) { display:none; }
+}
 </style>
 
 </head>
@@ -2568,7 +2697,7 @@ body {
     <div class="invest-head">
       <div>
         <div class="invest-title">Investissements</div>
-        <div class="invest-sub">Seuls les crédits non payés sont remontés. Les investissements soldés ne s'affichent pas.</div>
+        <div class="invest-sub">Suivi des approvisionnements fournisseurs — vue consolidée payé / restant.</div>
         <button onclick="openInvInspector()" style="margin-top:8px;background:rgba(142,68,173,0.15);border:1px solid rgba(142,68,173,0.4);border-radius:8px;color:#c39bd3;font-size:11px;font-weight:700;padding:5px 12px;cursor:pointer;font-family:'Poppins',sans-serif;display:inline-flex;align-items:center;gap:5px;">🔍 Inspecter les champs COVO Pro</button>
       </div>
       <div class="invest-signal">
@@ -2576,11 +2705,11 @@ body {
         <div class="invest-signal-value" id="invest-signal">—</div>
       </div>
     </div>
-    <div class="invest-kpis">
+    <div class="invest-kpis five">
       <div class="invest-kpi"><div class="invest-kpi-label">Total investi</div><div class="invest-kpi-val purple" id="inv-total">—</div></div>
       <div class="invest-kpi"><div class="invest-kpi-label">Déjà payé</div><div class="invest-kpi-val green" id="inv-paid">—</div></div>
       <div class="invest-kpi"><div class="invest-kpi-label">Crédit non payé</div><div class="invest-kpi-val red" id="inv-credit">—</div></div>
-      <div class="invest-kpi"><div class="invest-kpi-label">Lignes suivies</div><div class="invest-kpi-val" id="inv-count">—</div></div>
+      <div class="invest-kpi"><div class="invest-kpi-label">Commandes</div><div class="invest-kpi-val" id="inv-count">—</div></div><div class="invest-kpi"><div class="invest-kpi-label">Fournisseurs</div><div class="invest-kpi-val" id="inv-suppliers">—</div></div>
     </div>
     <div id="invest-alert-banner" style="display:none"></div>
     <div class="invest-bulk-bar" id="invest-bulk-bar">
@@ -2590,13 +2719,18 @@ body {
       <button class="invest-bulk-btn clear" onclick="investClearSel()">✕ Désélectionner</button>
     </div>
     <div class="inv-tabs">
-      <button class="inv-tab active" id="inv-tab-credits" onclick="invSwitchTab('credits')">⚠️ Crédits non payés</button>
-      <button class="inv-tab" id="inv-tab-summary" onclick="invSwitchTab('summary')">📊 Récapitulatif complet</button>
+      <button class="inv-tab active" id="inv-tab-appro"   onclick="invSwitchTab('appro')">🏪 Par fournisseur</button>
+      <button class="inv-tab"        id="inv-tab-credits" onclick="invSwitchTab('credits')">⚠️ Crédits en cours</button>
+      <button class="inv-tab"        id="inv-tab-summary" onclick="invSwitchTab('summary')">📊 Récapitulatif</button>
+    </div>
+    <div class="appro-wrap visible" id="appro-wrap">
+      <div id="appro-grand"></div>
+      <div id="appro-content"></div>
     </div>
     <div class="inv-summary-wrap" id="inv-summary-wrap">
       <div id="inv-summary-content"></div>
     </div>
-    <div class="invest-table-wrap">
+    <div class="invest-table-wrap inv-hidden">
       <div class="invest-table" id="invest-table"></div>
     </div>
     <div id="invest-hidden-section"></div>
@@ -3056,27 +3190,214 @@ let hfSelectedDates = new Set();
 let hfCurrentMonth  = '';
 
 
+
+// ═══════════════════════════════════════════════
+//  APPROVISIONNEMENTS PAR FOURNISSEUR
+// ═══════════════════════════════════════════════
+function renderAppro() {
+  const grandEl   = document.getElementById('appro-grand');
+  const contentEl = document.getElementById('appro-content');
+  if (!grandEl || !contentEl) return;
+
+  const normalized = (investments || []).map(normalizeInvestment)
+    .filter(i => i.amount > 0 || i.paidAmount > 0 || i.remaining > 0)
+    .filter(i => i.status !== 'hidden');
+
+  if (!normalized.length) {
+    contentEl.innerHTML = '<div style="padding:28px;text-align:center;color:#555;font-size:12px">Aucun approvisionnement trouvé.<br>Synchronisez vos données Drive pour démarrer.</div>';
+    grandEl.innerHTML = '';
+    return;
+  }
+
+  // ── Grouper par fournisseur ──
+  const groupMap = new Map();
+  normalized.forEach((inv, idx) => {
+    const sup = (inv.supplier && inv.supplier.trim()) || 'Sans fournisseur';
+    if (!groupMap.has(sup)) groupMap.set(sup, []);
+    groupMap.get(sup).push({ inv, idx });
+  });
+
+  // ── Grand total ──
+  const gTotal   = normalized.reduce((s,i) => s + i.amount,     0);
+  const gPaid    = normalized.reduce((s,i) => s + i.paidAmount, 0);
+  const gRem     = normalized.reduce((s,i) => s + i.remaining,  0);
+  const gPaidPct = gTotal > 0 ? Math.min(100, Math.round(gPaid / gTotal * 100)) : 0;
+  const nSupp    = groupMap.size;
+  const nCredit  = normalized.filter(i => i.status !== 'paid').length;
+
+  grandEl.innerHTML = `
+    <div class="appro-grand-total">
+      <div class="appro-grand-cell">
+        <div class="appro-grand-label">Total commandé</div>
+        <div class="appro-grand-val" style="color:#c39bd3">${fmtCA(gTotal)}</div>
+      </div>
+      <div class="appro-grand-cell">
+        <div class="appro-grand-label">Payé</div>
+        <div class="appro-grand-val" style="color:#2ecc71">${fmtCA(gPaid)} <span style="font-size:12px;opacity:0.7">(${gPaidPct}%)</span></div>
+      </div>
+      <div class="appro-grand-cell">
+        <div class="appro-grand-label">Reste à payer</div>
+        <div class="appro-grand-val" style="color:${gRem>0?'#e74c3c':'#2ecc71'}">${fmtCA(gRem)}</div>
+      </div>
+      <div class="appro-grand-cell">
+        <div class="appro-grand-label">Fournisseurs / Crédits</div>
+        <div class="appro-grand-val" style="color:#fff">${nSupp} <span style="font-size:12px;color:#e74c3c">(${nCredit} en cours)</span></div>
+      </div>
+    </div>`;
+
+  // ── Rendu par fournisseur ──
+  let html = '';
+  const sortedGroups = [...groupMap.entries()].sort((a, b) => {
+    const remA = a[1].reduce((s,{inv}) => s + inv.remaining, 0);
+    const remB = b[1].reduce((s,{inv}) => s + inv.remaining, 0);
+    return remB - remA; // Fournisseurs avec le plus de reste en premier
+  });
+
+  sortedGroups.forEach(([sup, entries], gi) => {
+    const supTotal   = entries.reduce((s,{inv}) => s + inv.amount,     0);
+    const supPaid    = entries.reduce((s,{inv}) => s + inv.paidAmount, 0);
+    const supRem     = entries.reduce((s,{inv}) => s + inv.remaining,  0);
+    const supPct     = supTotal > 0 ? Math.min(100, Math.round(supPaid / supTotal * 100)) : 0;
+    const fillCls    = supPct >= 100 ? 'full' : supPct > 0 ? 'partial' : 'none';
+    const pctColor   = supPct >= 100 ? '#2ecc71' : supPct > 0 ? '#f39c12' : '#e74c3c';
+    const nCreds     = entries.filter(({inv}) => inv.status !== 'paid').length;
+    const gid        = 'appro-g' + gi;
+
+    html += `<div class="appro-supplier">
+      <div class="appro-sup-header" onclick="approToggle('${gid}')">
+        <div class="appro-sup-left">
+          <div class="appro-sup-name">
+            <span class="chev" id="${gid}-chev">▶</span>
+            🏪 ${escH(sup)}
+            ${nCreds > 0 ? `<span style="font-size:9px;background:rgba(231,76,60,0.15);color:#e74c3c;border:1px solid rgba(231,76,60,0.3);border-radius:20px;padding:1px 7px;">${nCreds} crédit${nCreds>1?'s':''}</span>` : '<span style="font-size:9px;color:#2ecc71;background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.2);border-radius:20px;padding:1px 7px;">✓ Soldé</span>'}
+          </div>
+          <div class="appro-sup-meta">${entries.length} commande${entries.length>1?'s':''}</div>
+          <div class="appro-sup-progress">
+            <div class="appro-sup-track"><div class="appro-sup-fill ${fillCls}" style="width:${supPct}%"></div></div>
+            <span class="appro-sup-pct" style="color:${pctColor}">${supPct}%</span>
+          </div>
+        </div>
+        <div class="appro-sup-totals">
+          <div class="appro-sup-amt">
+            <div class="appro-sup-amt-label">Commandé</div>
+            <div class="appro-sup-amt-val" style="color:#c39bd3">${fmtCA(supTotal)}</div>
+          </div>
+          <div class="appro-sup-amt">
+            <div class="appro-sup-amt-label">Payé</div>
+            <div class="appro-sup-amt-val" style="color:#2ecc71">${fmtCA(supPaid)}</div>
+          </div>
+          <div class="appro-sup-amt">
+            <div class="appro-sup-amt-label">Reste</div>
+            <div class="appro-sup-amt-val" style="color:${supRem>0?'#e74c3c':'#2ecc71'}">${fmtCA(supRem)}</div>
+          </div>
+        </div>
+      </div>
+      <div class="appro-orders" id="${gid}">
+        <div class="appro-order-head">
+          <div>Désignation</div>
+          <div style="text-align:right">Commandé</div>
+          <div style="text-align:right">Payé</div>
+          <div style="text-align:right">Reste</div>
+          <div style="text-align:center">Statut</div>
+          <div style="text-align:right">Date</div>
+        </div>`;
+
+    // Trier les commandes : crédits en premier, puis soldés
+    const sorted = [...entries].sort((a,b) => {
+      const order = {credit:0, partial:1, paid:2};
+      return (order[a.inv.status]||0) - (order[b.inv.status]||0) || b.inv.remaining - a.inv.remaining;
+    });
+
+    sorted.forEach(({inv, idx: invIdx}) => {
+      const date    = inv.date ? new Date(inv.date).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'2-digit'}) : '—';
+      const pct     = inv.amount > 0 ? Math.min(100, Math.round(inv.paidAmount / inv.amount * 100)) : (inv.paidAmount > 0 ? 100 : 0);
+      const barCls  = pct >= 100 ? 'full' : pct > 0 ? 'partial' : 'none';
+      const stLabel = inv.status === 'paid' ? '✅ Soldé' : inv.status === 'partial' ? '🟡 Partiel' : '🔴 Impayé';
+      const stStyle = inv.status === 'paid'
+        ? 'background:rgba(39,174,96,0.12);color:#2ecc71;border:1px solid rgba(39,174,96,0.25)'
+        : inv.status === 'partial'
+        ? 'background:rgba(243,156,18,0.12);color:#f39c12;border:1px solid rgba(243,156,18,0.3)'
+        : 'background:rgba(231,76,60,0.12);color:#e74c3c;border:1px solid rgba(231,76,60,0.25)';
+
+      // Trouver l'index dans window._investRows pour openInvestmentDetail
+      const globalIdx = (window._investRows || []).findIndex(r => r.id === inv.id);
+
+      html += `<div class="appro-order-row" onclick="approOpenDetail(event, '${escH(inv.id)}')" title="Cliquer pour gérer les versements">
+        <div>
+          <div class="appro-order-name">${escH(inv.name || '—')}</div>
+          <div class="appro-order-date">${date}</div>
+          <div class="appro-order-bar-wrap"><div class="appro-order-bar ${barCls}" style="width:${pct}%"></div></div>
+        </div>
+        <div class="appro-order-num purple">${fmtCA(inv.amount)}</div>
+        <div class="appro-order-num green">${fmtCA(inv.paidAmount)}</div>
+        <div class="appro-order-num ${inv.remaining > 0 ? 'red' : 'green'}">${fmtCA(inv.remaining)}</div>
+        <div style="text-align:center"><span style="font-size:9px;font-weight:800;border-radius:20px;padding:3px 8px;${stStyle}">${stLabel}</span></div>
+        <div class="appro-order-num" style="color:#555;font-size:10px">${date}</div>
+      </div>`;
+    });
+
+    // Pied fournisseur
+    html += `<div class="appro-sup-footer">
+      <span>📦 ${entries.length} commande${entries.length>1?'s':''}
+        · <strong>${fmtCA(supPaid)}</strong> payé sur <strong>${fmtCA(supTotal)}</strong>
+        ${supRem > 0 ? '· <span style="color:#e74c3c;font-weight:700">⚠ ' + fmtCA(supRem) + ' restant</span>' : '· <span style="color:#2ecc71">✓ Tout soldé</span>'}
+      </span>
+    </div>`;
+
+    html += `</div></div>`;
+  });
+
+  contentEl.innerHTML = html;
+
+  // Ouvrir automatiquement le 1er fournisseur avec des crédits
+  const firstCred = sortedGroups.findIndex(([,entries]) => entries.some(({inv}) => inv.status !== 'paid'));
+  if (firstCred >= 0) approToggle('appro-g' + firstCred);
+}
+
+function approToggle(gid) {
+  const el   = document.getElementById(gid);
+  const chev = document.getElementById(gid + '-chev');
+  if (!el) return;
+  const open = el.classList.toggle('open');
+  if (chev) chev.classList.toggle('open', open);
+}
+
+function approOpenDetail(e, invId) {
+  e.stopPropagation();
+  const rows = window._investRows || [];
+  const idx  = rows.findIndex(r => r.id === invId);
+  if (idx >= 0) {
+    openInvestmentDetail(idx);
+  } else {
+    // Si pas dans _investRows (invest soldé), chercher dans normalized
+    const norm = (investments || []).map(normalizeInvestment).filter(i => i.status !== 'hidden');
+    const ni   = norm.findIndex(i => i.id === invId);
+    if (ni >= 0) {
+      window._investRows = norm;
+      openInvestmentDetail(ni);
+    }
+  }
+}
+
 // ═══════════════════════════════════════════════
 //  RÉCAPITULATIF INVESTISSEMENTS PAR STATUT
 // ═══════════════════════════════════════════════
 function invSwitchTab(tab) {
-  const tabCredits = document.getElementById('inv-tab-credits');
-  const tabSummary = document.getElementById('inv-tab-summary');
-  const tableWrap  = document.querySelector('.invest-table-wrap');
-  const summaryWrap= document.getElementById('inv-summary-wrap');
-  if (!tabCredits || !tabSummary) return;
-  if (tab === 'summary') {
-    tabCredits.classList.remove('active');
-    tabSummary.classList.add('active');
-    if (tableWrap)   tableWrap.classList.add('inv-hidden');
-    if (summaryWrap) summaryWrap.classList.add('visible');
-    renderInvestSummary();
-  } else {
-    tabSummary.classList.remove('active');
-    tabCredits.classList.add('active');
-    if (tableWrap)   tableWrap.classList.remove('inv-hidden');
-    if (summaryWrap) summaryWrap.classList.remove('visible');
-  }
+  // Onglets
+  ['appro','credits','summary'].forEach(t => {
+    const el = document.getElementById('inv-tab-' + t);
+    if (el) el.classList.toggle('active', t === tab);
+  });
+  // Panneaux
+  const tableWrap   = document.querySelector('.invest-table-wrap');
+  const summaryWrap = document.getElementById('inv-summary-wrap');
+  const approWrap   = document.getElementById('appro-wrap');
+  if (tableWrap)   tableWrap.classList.toggle('inv-hidden', tab !== 'credits');
+  if (summaryWrap) summaryWrap.classList.toggle('visible',  tab === 'summary');
+  if (approWrap)   approWrap.classList.toggle('visible',    tab === 'appro');
+  // Rendu
+  if (tab === 'summary') renderInvestSummary();
+  if (tab === 'appro')   renderAppro();
 }
 
 function renderInvestSummary() {
@@ -3902,7 +4223,9 @@ function renderInvestments() {
   set('inv-total', fmtCA(total));
   set('inv-paid', fmtCA(paidTotal));
   set('inv-credit', fmtCA(creditTotal));
-  set('inv-count', String(credits.length));
+  set('inv-count',     String(normalized.length));
+  const supplierSet = new Set(normalized.map(i => i.supplier || i.name || 'Sans fournisseur'));
+  set('inv-suppliers', String(supplierSet.size));
 
   const signal = document.getElementById('invest-signal');
   if (signal) {
@@ -3984,6 +4307,8 @@ function renderInvestments() {
 
   _investUpdateBulkBar();
   _renderHiddenSection(normalized);
+  // Rafraîchir la vue appro si visible
+  if (document.getElementById('appro-wrap')?.classList.contains('visible')) renderAppro();
 }
 
 function _renderHiddenSection(normalized) {
