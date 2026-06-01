@@ -2051,6 +2051,131 @@ body {
   .appro-order-row > *:nth-child(3),
   .appro-order-row > *:nth-child(4) { display:none; }
 }
+
+/* ═══════════════════════════════════════════════
+   TABLEAU APPROVISIONNEMENT — REDESIGN COMPLET
+═══════════════════════════════════════════════ */
+.appro-table-wrap { overflow-x:auto; border:1px solid #252545; border-radius:12px; }
+.appro-table { min-width:820px; }
+
+/* En-tête colonnes */
+.appro-table-head {
+  display:grid;
+  grid-template-columns: 32px 2fr 90px 90px 90px 110px 90px 80px;
+  gap:8px; padding:9px 16px;
+  background:#17172a; color:#444;
+  font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:0.07em;
+  border-bottom:1px solid #252545; align-items:center;
+}
+
+/* Ligne approvisionnement */
+.appro-table-row {
+  display:grid;
+  grid-template-columns: 32px 2fr 90px 90px 90px 110px 90px 80px;
+  gap:8px; padding:11px 16px; align-items:center;
+  border-bottom:1px solid #1e1e30; background:#1a1a2e;
+  cursor:pointer; transition:background 0.1s;
+}
+.appro-table-row:last-child { border-bottom:none; }
+.appro-table-row:hover { background:#222244; }
+.appro-table-row.paid-row { opacity:0.7; }
+
+/* Cellule désignation */
+.at-design { min-width:0; }
+.at-design-name {
+  font-size:12px; font-weight:700; color:#ddd;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.at-design-sup {
+  font-size:10px; color:#8e44ad; font-weight:600; margin-top:1px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.at-design-meta {
+  display:flex; gap:6px; flex-wrap:wrap; margin-top:3px; align-items:center;
+}
+.at-ref  { font-size:9px; background:#1e1e35; color:#555; border:1px solid #2e2e50; border-radius:4px; padding:1px 5px; font-family:monospace; }
+.at-note { font-size:9px; color:#555; font-style:italic; }
+.at-mode { font-size:9px; background:rgba(142,68,173,0.1); color:#8e44ad; border:1px solid rgba(142,68,173,0.25); border-radius:4px; padding:1px 5px; }
+.at-cat  { font-size:9px; background:rgba(52,152,219,0.1); color:#3498db; border:1px solid rgba(52,152,219,0.25); border-radius:4px; padding:1px 5px; }
+
+/* Cellules numériques */
+.at-num  { font-size:12px; font-weight:700; text-align:right; }
+.at-num.purple { color:#c39bd3; }
+.at-num.green  { color:#2ecc71; }
+.at-num.red    { color:#e74c3c; }
+.at-num.grey   { color:#555; }
+.at-pu   { font-size:10px; color:#555; text-align:right; }
+
+/* Cellule progression */
+.at-prog { text-align:center; }
+.at-prog-pct { font-size:10px; font-weight:800; margin-bottom:3px; }
+.at-prog-bar-wrap { height:5px; background:#13131f; border-radius:3px; overflow:hidden; }
+.at-prog-bar { height:100%; border-radius:3px; }
+.at-prog-bar.full    { background:linear-gradient(90deg,#27ae60,#2ecc71); }
+.at-prog-bar.partial { background:linear-gradient(90deg,#e67e22,#f39c12); }
+.at-prog-bar.none    { background:linear-gradient(90deg,#c0392b,#e74c3c); }
+
+/* Badge statut */
+.at-status { font-size:9px; font-weight:800; border-radius:20px; padding:4px 8px; white-space:nowrap; text-align:center; }
+.at-status.paid    { background:rgba(39,174,96,0.12);  color:#2ecc71; border:1px solid rgba(39,174,96,0.25); }
+.at-status.partial { background:rgba(243,156,18,0.12); color:#f39c12; border:1px solid rgba(243,156,18,0.3); }
+.at-status.credit  { background:rgba(231,76,60,0.12);  color:#e74c3c; border:1px solid rgba(231,76,60,0.25); }
+
+/* Groupes de statut dans "Crédits en cours" */
+.at-group-header {
+  display:flex; align-items:center; gap:10px; padding:8px 16px;
+  background:#17172a; border-bottom:1px solid #252545;
+  font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.07em;
+}
+
+/* Filtre de recherche */
+.at-filters {
+  display:flex; gap:8px; padding:10px 16px; border-bottom:1px solid #252545;
+  background:#15152a; flex-wrap:wrap; align-items:center;
+}
+.at-search {
+  flex:1; min-width:140px; background:#1a1a2e; border:1px solid #2e2e50;
+  border-radius:8px; color:#ddd; font-size:12px; padding:6px 12px;
+  font-family:'Poppins',sans-serif;
+}
+.at-search:focus { outline:none; border-color:#8e44ad; }
+.at-search::placeholder { color:#444; }
+.at-filter-btn {
+  background:#1a1a2e; border:1px solid #2e2e50; border-radius:8px;
+  color:#666; font-size:11px; font-weight:600; padding:6px 12px;
+  cursor:pointer; font-family:'Poppins',sans-serif; transition:all 0.15s;
+}
+.at-filter-btn:hover  { border-color:#8e44ad; color:#c39bd3; }
+.at-filter-btn.active { background:rgba(142,68,173,0.18); border-color:#8e44ad; color:#fff; }
+
+/* Résumé pied de tableau */
+.at-footer {
+  display:grid; grid-template-columns:2fr 90px 90px 90px 110px 90px 80px;
+  gap:8px; padding:10px 16px 10px 56px;
+  background:#17172a; border-top:1px solid #252545;
+  font-size:11px; font-weight:800; align-items:center;
+}
+
+@media(max-width:750px){
+  .appro-table-head, .appro-table-row, .at-footer {
+    grid-template-columns: 28px 1fr 80px 80px 80px 90px;
+    gap:5px; font-size:11px; padding:9px 12px;
+  }
+  .appro-table-head > *:nth-child(4),
+  .appro-table-row > *:nth-child(4),
+  .at-footer > *:nth-child(4) { display:none; }
+}
+@media(max-width:520px){
+  .appro-table-head, .appro-table-row, .at-footer {
+    grid-template-columns: 28px 1fr 80px 90px 60px;
+  }
+  .appro-table-head > *:nth-child(3),
+  .appro-table-row > *:nth-child(3),
+  .at-footer > *:nth-child(3),
+  .appro-table-head > *:nth-child(5),
+  .appro-table-row > *:nth-child(5),
+  .at-footer > *:nth-child(5) { display:none; }
+}
 </style>
 
 </head>
@@ -2730,8 +2855,15 @@ body {
     <div class="inv-summary-wrap" id="inv-summary-wrap">
       <div id="inv-summary-content"></div>
     </div>
-    <div class="invest-table-wrap inv-hidden">
-      <div class="invest-table" id="invest-table"></div>
+    <div class="appro-table-wrap inv-hidden" id="appro-table-wrap-credits">
+      <div class="at-filters">
+        <input class="at-search" id="at-search" placeholder="🔍 Rechercher désignation, fournisseur, réf…" oninput="filterApproTable()">
+        <button class="at-filter-btn active" id="at-f-all"      onclick="setApproFilter('all',this)">Tout</button>
+        <button class="at-filter-btn"        id="at-f-credit"   onclick="setApproFilter('credit',this)">🔴 Impayé</button>
+        <button class="at-filter-btn"        id="at-f-partial"  onclick="setApproFilter('partial',this)">🟡 Partiel</button>
+        <button class="at-filter-btn"        id="at-f-paid"     onclick="setApproFilter('paid',this)">✅ Soldé</button>
+      </div>
+      <div class="appro-table" id="appro-table-credits"></div>
     </div>
     <div id="invest-hidden-section"></div>
   </div>
@@ -3393,6 +3525,7 @@ function invSwitchTab(tab) {
   const summaryWrap = document.getElementById('inv-summary-wrap');
   const approWrap   = document.getElementById('appro-wrap');
   if (tableWrap)   tableWrap.classList.toggle('inv-hidden', tab !== 'credits');
+  if (tab === 'credits') { renderInvestments(); }
   if (summaryWrap) summaryWrap.classList.toggle('visible',  tab === 'summary');
   if (approWrap)   approWrap.classList.toggle('visible',    tab === 'appro');
   // Rendu
@@ -3697,12 +3830,21 @@ function normalizeInvestment(inv, idx) {
     : isPaid ? 'paid'
     : (paidAmount > 0 && remaining > 0 ? 'partial' : 'credit');
 
+  // Champs supplémentaires approvisionnement
+  const quantite    = normMoney(_invCI(inv, ['quantite','quantité','qty','qte','quantity','qte_commandee','quantite_commandee','nb','nombre','nbre'], 0));
+  const prixUnitaire= normMoney(_invCI(inv, ['prixUnitaire','prix_unitaire','prixAchat','prix_achat','prixHT','prix_ht','prixTTC','pu','unitPrice','unitCost','tarif'], 0));
+  const reference   = String(_invCI(inv, ['reference','référence','ref','bonCommande','bon_commande','numCommande','num_commande','numeroCommande','numero_commande','numFacture','num_facture','numeroFacture','codeArticle','code_article','code'], '') || '').trim();
+  const notes       = String(_invCI(inv, ['notes','note','commentaire','comment','remarque','observation','details','détails','infos'], '') || '').trim();
+  const payMode     = String(_invCI(inv, ['paymentMode','modePaiement','payment','mode','modeReglement','paiement','reglement','typePaiement'], '') || '').trim();
+  // Lignes détaillées (si l'appro a des sous-articles)
+  const lignes      = _invCI(inv, ['lignes','lines','items','articles','produits','details'], null);
+
   return {
     id: investmentKey(inv) || String(idx),
     name: firstVal(inv, [
       'designation','désignation','designationArticle','libelle','libellé',
       'article','produit','product','objet','intitule','intitulé',
-      'name','nom','title','label','description','reference','ref',
+      'name','nom','title','label','description',
       'bonCommande','bon_commande','numeroCommande','numero_commande'
     ], 'Approvisionnement'),
     category: firstVal(inv, [
@@ -3722,6 +3864,12 @@ function normalizeInvestment(inv, idx) {
     paidAmount: isPaid ? amount : paidAmount,
     remaining: isPaid ? 0 : (remaining > 0 ? remaining : Math.max(amount - paidAmount, 0)),
     status,
+    quantite,
+    prixUnitaire,
+    reference,
+    notes,
+    payMode,
+    lignes: Array.isArray(lignes) ? lignes : null,
     raw: inv
   };
 }
@@ -4242,105 +4390,174 @@ function copyInvRaw() {
 }
 
 function renderInvestments() {
-  const table = document.getElementById('invest-table');
-  if (!table) return;
-  const normalized = (investments || []).map(normalizeInvestment).filter(i => i.amount > 0 || i.paidAmount > 0 || i.remaining > 0);
-  const paid = normalized.filter(i => i.status === 'paid');
+  const tableEl = document.getElementById('appro-table-credits');
+  if (!tableEl) return;
+
+  const normalized = (investments || []).map(normalizeInvestment)
+    .filter(i => i.amount > 0 || i.paidAmount > 0 || i.remaining > 0);
+
+  const paid    = normalized.filter(i => i.status === 'paid');
   const credits = normalized.filter(i => i.status === 'credit');
-  const total = normalized.reduce((a,i) => a + i.amount, 0);
-  const paidTotal = normalized.reduce((a,i) => a + i.paidAmount, 0);
-  const creditTotal = credits.reduce((a,i) => a + i.remaining, 0);
-  set('inv-total', fmtCA(total));
-  set('inv-paid', fmtCA(paidTotal));
-  set('inv-credit', fmtCA(creditTotal));
-  set('inv-count',     String(normalized.length));
-  const supplierSet = new Set(normalized.map(i => i.supplier || i.name || 'Sans fournisseur'));
+  const partial = normalized.filter(i => i.status === 'partial');
+  const total   = normalized.reduce((a,i) => a + i.amount,     0);
+  const paidT   = normalized.reduce((a,i) => a + i.paidAmount, 0);
+  const creditT = [...credits,...partial].reduce((a,i) => a + i.remaining, 0);
+
+  set('inv-total',   fmtCA(total));
+  set('inv-paid',    fmtCA(paidT));
+  set('inv-credit',  fmtCA(creditT));
+  set('inv-count',   String(normalized.length));
+  const supplierSet = new Set(normalized.map(i => i.supplier || 'Sans fournisseur'));
   set('inv-suppliers', String(supplierSet.size));
 
   const signal = document.getElementById('invest-signal');
   if (signal) {
-    const biggest = [...credits].sort((a,b) => b.remaining - a.remaining)[0];
+    const biggest = [...credits,...partial].sort((a,b) => b.remaining - a.remaining)[0];
     signal.textContent = biggest
       ? `${biggest.name} · ${fmtCA(biggest.remaining)} à solder`
-      : (normalized.length ? 'Tous les investissements sont soldés' : 'En attente des investissements Drive');
+      : (normalized.length ? 'Tous les approvisionnements sont soldés' : 'En attente des données Drive');
   }
 
-  if (!normalized.length) {
-    table.innerHTML = '<div class="invest-empty">Aucun investissement trouvé. À la prochaine synchronisation Drive, les clés investments / investissements seront récupérées automatiquement.</div>';
-    return;
-  }
-
-  // Bannière Attention — seulement crédits non payés
+  // Bannière alerte
   const alertEl = document.getElementById('invest-alert-banner');
   if (alertEl) {
     alertEl.style.display = '';
-    if (credits.length > 0) {
+    const nCredit = credits.length + partial.length;
+    if (nCredit > 0) {
       alertEl.className = 'invest-alert';
-      alertEl.innerHTML = '⚠️ <span><strong>Attention</strong> — ' + credits.length + ' crédit' + (credits.length > 1 ? 's' : '') + ' non payé' + (credits.length > 1 ? 's' : '') + ' · ' + fmtCA(creditTotal) + ' à solder</span>';
+      alertEl.innerHTML = '⚠️ <span><strong>' + nCredit + ' approvisionnement' + (nCredit>1?'s':'') + ' non soldé' + (nCredit>1?'s':'') + '</strong> · ' + fmtCA(creditT) + ' à régler</span>';
     } else {
       alertEl.className = 'invest-all-clear';
-      alertEl.innerHTML = '✓ <span>Tous les investissements sont soldés</span>';
+      alertEl.innerHTML = '✓ <span>Tous les approvisionnements sont soldés</span>';
     }
   }
 
-  if (!credits.length) {
-    table.innerHTML = '<div class="invest-empty">Aucun crédit non payé — tous les investissements sont soldés.</div>';
+  if (!normalized.length) {
+    tableEl.innerHTML = '<div class="invest-empty">Aucun approvisionnement trouvé. Synchronisez vos données Drive.</div>';
+    _renderHiddenSection(normalized);
+    if (document.getElementById('appro-wrap')?.classList.contains('visible')) renderAppro();
     return;
   }
 
-  // Les masqués ont status='hidden' — déjà exclus du filtre credits
-  const hiddenCount = normalized.filter(i => i.status === 'hidden').length;
-  const rows = [...credits].sort((a,b) => b.remaining - a.remaining || b.amount - a.amount);
-  window._investRows = rows;
-  if (!window._investSelected) window._investSelected = new Set();
-  // Nettoyer sélection si IDs disparus
-  window._investSelected.forEach(id => { if (!rows.find(r => r.id === id)) window._investSelected.delete(id); });
-
-  const _labelField = getStrPref('invest_label_field', '');
-  const rowsHtml = rows.map((i, idx) => {
-    const date = i.date ? new Date(i.date).toLocaleDateString('fr-FR') : '—';
-    const statusLabel = i.status === 'paid' ? 'Payé' : (i.status === 'partial' ? 'Crédit partiel' : 'Crédit non payé');
-    const statusCls = i.status === 'paid' ? 'paid' : (i.status === 'partial' ? 'partial' : 'credit');
-    const rawVal = _labelField && i.raw && i.raw[_labelField] != null && String(i.raw[_labelField]).trim() !== ''
-      ? String(i.raw[_labelField]).trim() : null;
-    const displayName = rawVal !== null ? rawVal : (_labelField ? (i.name !== 'Investissement' ? i.name : '—') : (i.name || '—'));
-    // Payment mode chip
-    const rawMode = String(_invCI(i.raw || {}, ['paymentMode','modePaiement','payment','mode','modeReglement','paiement','reglement','typePaiement','modeDepaiement','modePay'], '')).trim();
-    let payChip = '';
-    if (rawMode) {
-      const m = rawMode.toLowerCase();
-      const isCB   = m.includes('cb') || m.includes('carte') || m.includes('card') || m.includes('visa') || m.includes('master') || m.includes('tpe') || m.includes('bancontact');
-      const isCash = m.includes('esp') || m.includes('cash') || m.includes('liquid') || m.includes('comptant');
-      if (isCB)        payChip = '<span class="invest-pay-chip cb">💳 ' + escH(rawMode) + '</span>';
-      else if (isCash) payChip = '<span class="invest-pay-chip cash">💵 ' + escH(rawMode) + '</span>';
-      else             payChip = '<span class="invest-pay-chip other">' + escH(rawMode.length > 18 ? rawMode.slice(0,18) + '…' : rawMode) + '</span>';
-    }
-    const isSel = window._investSelected.has(i.id);
-    return '<div class="invest-row clickable' + (isSel ? ' selected' : '') + '" onclick="investRowClick(event,' + idx + ')" title="Cliquer pour voir les informations">' +
-      '<input type="checkbox" class="invest-cb" ' + (isSel ? 'checked' : '') + ' onclick="investToggleCb(event,\'' + escH(i.id) + '\')" title="Sélectionner">' +
-      '<div><div class="invest-name" title="' + escH(displayName) + '">' + escH(displayName) + '</div>' + payChip + '</div>' +
-      '<div class="invest-num">' + fmtCA(i.amount) + '</div>' +
-      '<div class="invest-num green">' + fmtCA(i.paidAmount) + '</div>' +
-      '<div class="invest-num red">' + fmtCA(i.remaining) + '</div>' +
-      '<span class="invest-status ' + statusCls + '">' + statusLabel + '</span>' +
-      '<div class="invest-meta" style="text-align:right">' + date + '</div>' +
-    '</div>';
-  }).join('');
-
-  const allSel = rows.length > 0 && rows.every(r => window._investSelected.has(r.id));
-  const hiddenNote = hiddenCount > 0 ? ' <span style="font-size:9px;color:#555;font-weight:400;margin-left:4px">(' + hiddenCount + ' masqué' + (hiddenCount>1?'s':'') + ')</span>' : '';
-  table.innerHTML =
-    '<div class="invest-row head">' +
-      '<input type="checkbox" class="invest-cb-all" ' + (allSel ? 'checked' : '') + ' onclick="investToggleAll(this)" title="Tout sélectionner">' +
-      '<div>Investissement' + hiddenNote + '</div><div style="text-align:right">Montant</div><div style="text-align:right">Payé</div><div style="text-align:right">Reste</div><div>Statut</div><div style="text-align:right">Date</div>' +
-    '</div>' + rowsHtml;
-
+  window._approNormalized = normalized;
+  window._approFilter     = window._approFilter || 'all';
+  renderApproTable(normalized, window._approFilter, document.getElementById('at-search')?.value || '');
   _investUpdateBulkBar();
   _renderHiddenSection(normalized);
-  // Rafraîchir la vue appro si visible
   if (document.getElementById('appro-wrap')?.classList.contains('visible')) renderAppro();
 }
 
+// ── Filtre + recherche ──
+let _approFilterState = 'all';
+function setApproFilter(f, btn) {
+  _approFilterState = f;
+  document.querySelectorAll('.at-filter-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const norm = window._approNormalized || [];
+  renderApproTable(norm, f, document.getElementById('at-search')?.value || '');
+}
+function filterApproTable() {
+  const norm = window._approNormalized || [];
+  renderApproTable(norm, _approFilterState, document.getElementById('at-search')?.value || '');
+}
+
+function renderApproTable(normalized, filter, search) {
+  const tableEl = document.getElementById('appro-table-credits');
+  if (!tableEl) return;
+
+  let rows = normalized.filter(i => i.status !== 'hidden');
+  if (filter === 'credit')  rows = rows.filter(i => i.status === 'credit');
+  if (filter === 'partial') rows = rows.filter(i => i.status === 'partial');
+  if (filter === 'paid')    rows = rows.filter(i => i.status === 'paid');
+  if (search) {
+    const q = search.toLowerCase();
+    rows = rows.filter(i =>
+      (i.name     || '').toLowerCase().includes(q) ||
+      (i.supplier || '').toLowerCase().includes(q) ||
+      (i.reference|| '').toLowerCase().includes(q) ||
+      (i.notes    || '').toLowerCase().includes(q) ||
+      (i.category || '').toLowerCase().includes(q)
+    );
+  }
+
+  // Trier : crédits → partiels → soldés, puis par reste décroissant
+  rows.sort((a,b) => {
+    const ord = {credit:0, partial:1, paid:2};
+    return (ord[a.status]||0) - (ord[b.status]||0) || b.remaining - a.remaining;
+  });
+
+  window._investRows = rows;
+  if (!window._investSelected) window._investSelected = new Set();
+  window._investSelected.forEach(id => { if (!rows.find(r => r.id === id)) window._investSelected.delete(id); });
+
+  if (!rows.length) {
+    tableEl.innerHTML = '<div class="invest-empty" style="padding:24px;text-align:center;color:#555;font-size:12px">Aucun résultat pour ce filtre.</div>';
+    return;
+  }
+
+  // Totaux filtrés
+  const fTotal = rows.reduce((s,i) => s + i.amount,     0);
+  const fPaid  = rows.reduce((s,i) => s + i.paidAmount, 0);
+  const fRem   = rows.reduce((s,i) => s + i.remaining,  0);
+  const fPct   = fTotal > 0 ? Math.min(100, Math.round(fPaid/fTotal*100)) : 0;
+
+  const allSel = rows.length > 0 && rows.every(r => window._investSelected.has(r.id));
+  const headHtml = `<div class="appro-table-head">
+    <input type="checkbox" class="invest-cb-all" ${allSel?'checked':''} onclick="investToggleAll(this)" title="Tout sélectionner" style="width:14px;height:14px;accent-color:#8e44ad">
+    <div>Désignation / Fournisseur</div>
+    <div style="text-align:right">Commandé</div>
+    <div style="text-align:right">Payé</div>
+    <div style="text-align:right">Reste</div>
+    <div style="text-align:center">Progression</div>
+    <div style="text-align:center">Statut</div>
+    <div style="text-align:right">Date</div>
+  </div>`;
+
+  const rowsHtml = rows.map((i, idx) => {
+    const date    = i.date ? new Date(i.date).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'2-digit'}) : '—';
+    const pct     = i.amount > 0 ? Math.min(100,Math.round(i.paidAmount/i.amount*100)) : (i.paidAmount>0?100:0);
+    const barCls  = pct>=100?'full':pct>0?'partial':'none';
+    const pctCol  = pct>=100?'#2ecc71':pct>0?'#f39c12':'#e74c3c';
+    const stLbl   = i.status==='paid'?'✅ Soldé':i.status==='partial'?'🟡 Partiel':'🔴 Impayé';
+    const isSel   = window._investSelected.has(i.id);
+    const puLabel = i.prixUnitaire > 0 ? (i.quantite > 0 ? `${i.quantite}×${fmtCA(i.prixUnitaire)}` : fmtCA(i.prixUnitaire)+'/u') : (i.quantite > 0 ? `Qté ${i.quantite}` : '');
+
+    return `<div class="appro-table-row${i.status==='paid'?' paid-row':''}" onclick="investRowClick(event,${idx})" title="Cliquer pour gérer les versements">
+      <input type="checkbox" class="invest-cb" ${isSel?'checked':''} onclick="investToggleCb(event,'${escH(i.id)}')" style="width:14px;height:14px;accent-color:#8e44ad">
+      <div class="at-design">
+        <div class="at-design-name">${escH(i.name||'—')}</div>
+        ${i.supplier ? `<div class="at-design-sup">🏪 ${escH(i.supplier)}</div>` : ''}
+        <div class="at-design-meta">
+          ${i.reference ? `<span class="at-ref">#${escH(i.reference)}</span>` : ''}
+          ${i.category && i.category!=='Général' ? `<span class="at-cat">${escH(i.category)}</span>` : ''}
+          ${i.payMode   ? `<span class="at-mode">${escH(i.payMode)}</span>` : ''}
+          ${i.notes     ? `<span class="at-note">${escH(i.notes.slice(0,40))}${i.notes.length>40?'…':''}</span>` : ''}
+        </div>
+      </div>
+      <div class="at-num purple">${fmtCA(i.amount)}</div>
+      <div class="at-num green">${fmtCA(i.paidAmount)}</div>
+      <div class="at-num ${i.remaining>0?'red':'green'}">${fmtCA(i.remaining)}</div>
+      <div class="at-prog">
+        <div class="at-prog-pct" style="color:${pctCol}">${pct}%</div>
+        <div class="at-prog-bar-wrap"><div class="at-prog-bar ${barCls}" style="width:${pct}%"></div></div>
+        ${puLabel ? `<div class="at-pu">${escH(puLabel)}</div>` : ''}
+      </div>
+      <div><span class="at-status ${i.status}">${stLbl}</span></div>
+      <div class="at-num grey">${date}</div>
+    </div>`;
+  }).join('');
+
+  const footerHtml = `<div class="at-footer">
+    <div style="color:#666;font-size:10px">${rows.length} ligne${rows.length>1?'s':''} · ${fPct}% payé</div>
+    <div class="at-num purple">${fmtCA(fTotal)}</div>
+    <div class="at-num green">${fmtCA(fPaid)}</div>
+    <div class="at-num ${fRem>0?'red':'green'}">${fmtCA(fRem)}</div>
+    <div></div><div></div><div></div>
+  </div>`;
+
+  tableEl.innerHTML = headHtml + rowsHtml + footerHtml;
+  _investUpdateBulkBar();
+}
 function _renderHiddenSection(normalized) {
   const sec = document.getElementById('invest-hidden-section');
   if (!sec) return;
