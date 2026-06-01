@@ -3972,21 +3972,44 @@ function renderDette() {
       </div>
       <div class="dette-status"><span class="dette-badge ${stBadge}">${stLabel}</span></div>
     </div>
-    <div class="dette-histo-wrap" id="${hid}">
-      ${nHisto > 0
-        ? `<div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:#444;margin-bottom:6px">📋 Historique des versements</div>`
-          + inv.histoPay.map(p => {
-              const pDate = p.date || p.createdAt || p.timestamp || '';
-              const pAmt  = parseFloat(p.montant || p.amount || p.valeur || 0);
-              const pNote = p.note || p.commentaire || p.comment || '';
-              return `<div class="dette-histo-row">
-                <span class="h-date">${escH(String(pDate).slice(0,20))}</span>
-                ${pNote ? `<span style="color:#666;font-style:italic">${escH(pNote.slice(0,40))}</span>` : '<span></span>'}
-                <span class="h-amt">+${fmtCA(pAmt)}</span>
-              </div>`;
-            }).join('')
-        : `<div style="color:#555;font-size:11px">Aucun versement enregistré — <span style="color:#c39bd3;cursor:pointer" onclick="detteToggleHisto('${hid}','${rid}');investRowClick({stopPropagation:()=>{}},${idx})">Ajouter un paiement</span></div>`
-      }
+    <div class="dette-histo-wrap${nHisto > 0 ? ' open' : ''}" id="${hid}">
+      ${nHisto > 0 ? `
+        <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:#444;margin-bottom:8px">
+          📋 Historique des versements (${nHisto})
+        </div>
+        <div style="display:grid;grid-template-columns:160px 1fr auto;gap:6px;margin-bottom:4px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:#333;padding:0 4px">
+          <span>Date</span><span>Note</span><span style="text-align:right">Montant</span>
+        </div>
+        ${inv.histoPay.map((p,pi) => {
+          const pAmt  = typeof p === 'number' ? p :
+            parseFloat(p.montant ?? p.amount ?? p.valeur ?? p.value ?? p.paiement ?? p.somme ?? 0);
+          const pDate = typeof p === 'object' ?
+            (p.date || p.createdAt || p.timestamp || p.dateHeure || p.datePaiement || p.heure || '') : '';
+          const pNote = typeof p === 'object' ?
+            (p.note || p.commentaire || p.comment || p.description || p.motif || '') : '';
+          return `<div class="dette-histo-row">
+            <span class="h-date">${escH(String(pDate).slice(0,22)||'—')}</span>
+            <span style="color:#666;font-style:italic;font-size:10px">${pNote ? escH(pNote.slice(0,50)) : '—'}</span>
+            <span class="h-amt">+${fmtCA(pAmt)}</span>
+          </div>`;
+        }).join('')}
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding-top:6px;border-top:1px solid #1e1e30">
+          <span style="font-size:10px;color:#555">Total versé</span>
+          <span style="font-size:12px;font-weight:800;color:#2ecc71">${fmtCA(inv.paidAmount)}</span>
+          <span style="font-size:10px;color:#555">Reste</span>
+          <span style="font-size:12px;font-weight:800;color:${inv.remaining>0?'#e74c3c':'#2ecc71'}">${fmtCA(inv.remaining)}</span>
+          <button onclick="event.stopPropagation();investRowClick({stopPropagation:()=>{}},${idx})"
+            style="background:rgba(142,68,173,0.15);border:1px solid #8e44ad;border-radius:6px;
+                   color:#c39bd3;font-size:10px;font-weight:700;padding:4px 10px;cursor:pointer;
+                   font-family:'Poppins',sans-serif;">+ Paiement</button>
+        </div>` 
+      : `<div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+          <span style="color:#555;font-size:11px">Aucun versement enregistré</span>
+          <button onclick="event.stopPropagation();investRowClick({stopPropagation:()=>{}},${idx})"
+            style="background:rgba(142,68,173,0.15);border:1px solid #8e44ad;border-radius:6px;
+                   color:#c39bd3;font-size:10px;font-weight:700;padding:4px 10px;cursor:pointer;
+                   font-family:'Poppins',sans-serif;">+ Paiement</button>
+        </div>`}
     </div>
     </div>`;
   }).join('');
@@ -4275,12 +4298,34 @@ function normalizeInvestment(inv, idx) {
 
   const amount = normMoney(_invCI(inv, ['amount','montant','total','price','prix','cost','cout','value','montantTotal','montant_total','montantCommande','montant_commande','prixTotal','prix_total','montantHT','montantTTC','totalAchat','total_achat'], 0));
   // Historique paiements COVO Pro : sommer historiquesPaiements si présent
-  const histoPay = _invCI(inv, ['historiquesPaiements','historiquePaiements','historique_paiements',
-    'paymentHistory','payment_history','versements','paiements','payments'], null);
+  const histoPay = _invCI(inv, [
+    'historiquesPaiements','historiquePaiements','historique_paiements','historiqueDePaiements',
+    'historiquePaiement','paiements','listePaiements','liste_paiements',
+    'paymentHistory','payment_history','paymentRecords','payment_records',
+    'versements','listeVersements','liste_versements',
+    'payments','transactions','reglementsPartiel','reglements_partiel',
+    'reglements','règlements','acomptes','listeAcomptes',
+    'creditPayments','creditHistory','historique'
+  ], null);
+  // Certaines versions COVO stockent l'historique dans un objet {items:[...]} ou {list:[...]}
+  let histoPayArr = histoPay;
+  if (histoPay && !Array.isArray(histoPay) && typeof histoPay === 'object') {
+    histoPayArr = histoPay.items || histoPay.list || histoPay.data || histoPay.records || null;
+  }
+  if (Array.isArray(histoPayArr)) {
+    // Remplacer histoPay par le tableau extrait
+  } else {
+    histoPayArr = null;
+  }
+  const histoPayFinal = histoPayArr || (Array.isArray(histoPay) ? histoPay : []);
   let histoPaidSum = 0;
-  if (Array.isArray(histoPay) && histoPay.length) {
-    histoPaidSum = histoPay.reduce((s, p) => {
-      const v = parseFloat(p.montant || p.amount || p.valeur || p.value || p.paiement || 0);
+  if (histoPayFinal.length) {
+    histoPaidSum = histoPayFinal.reduce((s, p) => {
+      if (typeof p === 'number') return s + p;
+      const v = parseFloat(
+        p.montant ?? p.amount ?? p.valeur ?? p.value ?? p.paiement ??
+        p.somme ?? p.sum ?? p.prix ?? p.total ?? 0
+      );
       return s + (isNaN(v) ? 0 : v);
     }, 0);
   }
@@ -4402,7 +4447,7 @@ function normalizeInvestment(inv, idx) {
     payMode,
     echeance:  firstVal(inv, ['echeance','échéance','echeancePaiement','dateEcheance','date_echeance','dueDate','dateLimite','deadline','dateExpiration'], ''),
     dlc:       firstVal(inv, ['dlc','dluo','dateExpiration','datePeremption','date_peremption','bestBefore','expiryDate'], ''),
-    histoPay:  Array.isArray(histoPay) ? histoPay : [],
+    histoPay:  histoPayFinal,
     lignes:    Array.isArray(lignes) ? lignes : null,
     raw: inv
   };
