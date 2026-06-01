@@ -2696,7 +2696,7 @@ body {
   <div class="invest-card" id="invest-card">
     <div class="invest-head">
       <div>
-        <div class="invest-title">Investissements</div>
+        <div class="invest-title">Approvisionnements fournisseurs</div>
         <div class="invest-sub">Suivi des approvisionnements fournisseurs — vue consolidée payé / restant.</div>
         <button onclick="openInvInspector()" style="margin-top:8px;background:rgba(142,68,173,0.15);border:1px solid rgba(142,68,173,0.4);border-radius:8px;color:#c39bd3;font-size:11px;font-weight:700;padding:5px 12px;cursor:pointer;font-family:'Poppins',sans-serif;display:inline-flex;align-items:center;gap:5px;">🔍 Inspecter les champs COVO Pro</button>
       </div>
@@ -3511,7 +3511,15 @@ function loadCovoData() {
 
   // ── Investissements ──────────────────────────
   investments = [];
-  const invKeys = ['covo_investments','covo_investissements','investments','investissements','investment_history','covo_investment_history'];
+  const invKeys = [
+    'covo_approvisionnements','covo_approvisionnement','approvisionnements','approvisionnement',
+    'covo_appros','appros','approvisionements',
+    'covo_investments','covo_investissements','investments','investissements',
+    'investment_history','covo_investment_history',
+    'covo_achats_fournisseurs','achats_fournisseurs','achats_fourn',
+    'covo_commandes_fournisseurs','commandes_fournisseurs',
+    'credits','dettes','fournisseurs','achats'
+  ];
   for (const k of invKeys) {
     try {
       const raw = localStorage.getItem(k);
@@ -3628,7 +3636,7 @@ function normalizeInvestment(inv, idx) {
   const overrides = JSON.parse(localStorage.getItem('covo_invest_overrides') || '{}');
   const manualStatus = overrides[invKey0] || null;
 
-  const amount = normMoney(_invCI(inv, ['amount','montant','total','price','prix','cost','cout','value'], 0));
+  const amount = normMoney(_invCI(inv, ['amount','montant','total','price','prix','cost','cout','value','montantTotal','montant_total','montantCommande','montant_commande','prixTotal','prix_total','montantHT','montantTTC','totalAchat','total_achat'], 0));
   let paidAmount = normMoney(_invCI(inv, [
     'paidAmount','amountPaid','montantPaye','montant_paye','montant_payé','montantPayé',
     'paye','paid_value','montant_verse','montantVerse','versement','versements',
@@ -3691,10 +3699,25 @@ function normalizeInvestment(inv, idx) {
 
   return {
     id: investmentKey(inv) || String(idx),
-    name: firstVal(inv, ['name','nom','title','libelle','label','description'], 'Investissement'),
-    category: firstVal(inv, ['category','categorie','cat','type'], 'Général'),
-    supplier: firstVal(inv, ['supplier','fournisseur','vendor','provider','source'], ''),
-    date: firstVal(inv, ['date','createdAt','timestamp','purchaseDate','dueDate'], ''),
+    name: firstVal(inv, [
+      'designation','désignation','designationArticle','libelle','libellé',
+      'article','produit','product','objet','intitule','intitulé',
+      'name','nom','title','label','description','reference','ref',
+      'bonCommande','bon_commande','numeroCommande','numero_commande'
+    ], 'Approvisionnement'),
+    category: firstVal(inv, [
+      'categorie','catégorie','famille','familleArticle','famille_article',
+      'category','cat','type','rayon','sousFamille','sous_famille'
+    ], 'Général'),
+    supplier: firstVal(inv, [
+      'fournisseur','nomFournisseur','nom_fournisseur','raisonSociale','raison_sociale',
+      'supplier','vendor','provider','source','societe','société','partenaire'
+    ], ''),
+    date: firstVal(inv, [
+      'dateCommande','date_commande','dateLivraison','date_livraison',
+      'dateAchat','date_achat','dateFacture','date_facture',
+      'date','createdAt','timestamp','purchaseDate','dueDate','dateCreation'
+    ], ''),
     amount,
     paidAmount: isPaid ? amount : paidAmount,
     remaining: isPaid ? 0 : (remaining > 0 ? remaining : Math.max(amount - paidAmount, 0)),
@@ -3898,7 +3921,7 @@ let _ddmCurrentTab = 'structure';
 // Clés root importantes à vérifier
 const _DDM_ROOT_KEYS = [
   { key: 'covo_sales_history',    label: 'Tickets de vente',    alt: ['salesHistory','sales_history','covo_sales','tickets','ventes'] },
-  { key: 'covo_investments',      label: 'Investissements',      alt: ['investments','investissements','covo_investissements','investment_history','credits','dettes','fournisseurs','achats'] },
+  { key: 'covo_approvisionnements', label: 'Approvisionnements / Investissements', alt: ['approvisionnements','approvisionnement','covo_approvisionnement','appros','covo_appros','investments','covo_investments','investissements','covo_investissements','investment_history','achats_fournisseurs','commandes_fournisseurs','credits','dettes','fournisseurs','achats'] },
   { key: 'products',              label: 'Articles / Produits',  alt: ['covo_products','covo_articles','articles'] },
   { key: 'covo_invest_payments',  label: 'Versements manuels',   alt: ['investPayments'] },
   { key: 'covo_invest_overrides', label: 'Overrides statuts',    alt: ['investOverrides'] },
@@ -3991,8 +4014,15 @@ function renderDdmStructure(raw, body) {
 
 function renderDdmInvest(raw, body) {
   // Trouver les investissements dans le raw
-  const invKeys = ['investments','covo_investments','investissements','covo_investissements',
-    'investment_history','covo_investment_history','investmentHistory','credits','dettes','fournisseurs','achats'];
+  const invKeys = [
+    'covo_approvisionnements','covo_approvisionnement','approvisionnements','approvisionnement',
+    'covo_appros','appros','approvisionements',
+    'achats_fournisseurs','covo_achats_fournisseurs',
+    'commandes_fournisseurs','covo_commandes_fournisseurs',
+    'investments','covo_investments','investissements','covo_investissements',
+    'investment_history','covo_investment_history','investmentHistory',
+    'credits','dettes','fournisseurs','achats'
+  ];
   let invArr = null, invKeyUsed = null;
   for (const k of invKeys) {
     if (raw[k] && Array.isArray(raw[k]) && raw[k].length) { invArr = raw[k]; invKeyUsed = k; break; }
@@ -5324,7 +5354,19 @@ function extractCovoData(data) {
     // Marchandise
     marchandise: d.covo_marchandise || null,
     // Investissements
-    investments: d.investments || d.covo_investments || d.investissements || d.covo_investissements || d.investment_history || d.covo_investment_history || d.investmentHistory || d.credits || d.creditsInvestissement || d.dettes || d.fournisseurs || d.achats || null,
+    investments:
+      d.covo_approvisionnements || d.covo_approvisionnement ||
+      d.approvisionnements      || d.approvisionnement      ||
+      d.covo_appros             || d.appros                 ||
+      d.approvisionements       ||
+      d.covo_achats_fournisseurs|| d.achats_fournisseurs    ||
+      d.covo_commandes_fournisseurs || d.commandes_fournisseurs ||
+      d.investments             || d.covo_investments       ||
+      d.investissements         || d.covo_investissements   ||
+      d.investment_history      || d.covo_investment_history||
+      d.investmentHistory       || d.credits                ||
+      d.creditsInvestissement   || d.dettes                 ||
+      d.fournisseurs            || d.achats                 || null,
     // Historique connexions
     loginHistory: d.covo_login_history || null,
     // Messages
