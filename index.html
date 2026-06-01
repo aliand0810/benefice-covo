@@ -2176,6 +2176,141 @@ body {
   .appro-table-row > *:nth-child(5),
   .at-footer > *:nth-child(5) { display:none; }
 }
+
+/* ═══════════════════════════════════════════════
+   DASHBOARD DETTES & APPROVISIONNEMENTS
+═══════════════════════════════════════════════ */
+
+/* Alertes échéance */
+.ech-urgent  { color:#e74c3c!important; }
+.ech-soon    { color:#f39c12!important; }
+.ech-ok      { color:#2ecc71!important; }
+.ech-na      { color:#555!important; }
+
+/* Bandeau alertes */
+.dette-alerts {
+  display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;
+}
+.dette-alert-chip {
+  display:flex; align-items:center; gap:6px;
+  padding:8px 14px; border-radius:10px; font-size:11px; font-weight:700;
+}
+.dette-alert-chip.red    { background:rgba(231,76,60,0.12); color:#e74c3c; border:1px solid rgba(231,76,60,0.3); }
+.dette-alert-chip.orange { background:rgba(243,156,18,0.12); color:#f39c12; border:1px solid rgba(243,156,18,0.3); }
+.dette-alert-chip.green  { background:rgba(39,174,96,0.10);  color:#2ecc71; border:1px solid rgba(39,174,96,0.25); }
+.dette-alert-chip .chip-val { font-size:16px; font-weight:800; }
+
+/* Tableau dettes */
+.dette-table-wrap { border:1px solid #252545; border-radius:12px; overflow:hidden; }
+.dette-head {
+  display:grid;
+  grid-template-columns: 180px 1fr 80px 110px 110px 110px 100px 90px;
+  gap:0; background:#17172a;
+  font-size:9px; font-weight:800; text-transform:uppercase;
+  letter-spacing:0.07em; color:#444;
+  border-bottom:2px solid #252545;
+}
+.dette-head > div, .dette-row > div {
+  padding:9px 12px; border-right:1px solid #1e1e30;
+}
+.dette-head > div:last-child, .dette-row > div:last-child { border-right:none; }
+
+.dette-row {
+  display:grid;
+  grid-template-columns: 180px 1fr 80px 110px 110px 110px 100px 90px;
+  gap:0; border-bottom:1px solid #1a1a2e;
+  cursor:pointer; transition:background 0.1s;
+  font-size:12px;
+}
+.dette-row:last-child  { border-bottom:none; }
+.dette-row:hover       { background:#222244; }
+.dette-row.overdue     { border-left:3px solid #e74c3c; }
+.dette-row.due-soon    { border-left:3px solid #f39c12; }
+.dette-row.paid-full   { opacity:0.55; border-left:3px solid #27ae60; }
+
+/* Cellule échéance */
+.dette-ech { font-weight:800; font-size:11px; }
+.dette-ech-sub { font-size:9px; color:#555; margin-top:2px; }
+
+/* Cellule désignation */
+.dette-name { font-weight:700; color:#ddd; }
+.dette-sup  { font-size:10px; color:#8e44ad; font-weight:600; margin-top:2px; }
+.dette-chips { display:flex; gap:4px; flex-wrap:wrap; margin-top:3px; }
+.dette-chip  { font-size:9px; border-radius:4px; padding:1px 6px; font-weight:600; }
+.dette-chip.ref   { background:#1e1e35; color:#555; border:1px solid #2e2e50; font-family:monospace; }
+.dette-chip.mode  { background:rgba(142,68,173,0.1); color:#8e44ad; border:1px solid rgba(142,68,173,0.25); }
+.dette-chip.cat   { background:rgba(52,152,219,0.1);  color:#3498db; border:1px solid rgba(52,152,219,0.25); }
+.dette-chip.note  { background:rgba(255,255,255,0.03); color:#555; border:1px solid #2e2e50; font-style:italic; }
+.dette-chip.dlc   { background:rgba(231,76,60,0.08);  color:#e74c3c; border:1px solid rgba(231,76,60,0.2); }
+
+/* Cellule Qté */
+.dette-qty { text-align:center; font-weight:700; color:#ddd; }
+.dette-qty-unit { font-size:9px; color:#555; }
+
+/* Cellules montants */
+.dette-num { text-align:right; font-weight:700; }
+.dette-num.purple { color:#c39bd3; }
+.dette-num.green  { color:#2ecc71; }
+.dette-num.red    { color:#e74c3c; }
+.dette-num.grey   { color:#555; }
+
+/* Progression */
+.dette-prog { display:flex; flex-direction:column; justify-content:center; gap:3px; }
+.dette-prog-pct { font-size:11px; font-weight:800; text-align:right; }
+.dette-prog-track { height:6px; background:#13131f; border-radius:3px; overflow:hidden; }
+.dette-prog-fill { height:100%; border-radius:3px; }
+.dette-prog-fill.full    { background:linear-gradient(90deg,#27ae60,#2ecc71); }
+.dette-prog-fill.partial { background:linear-gradient(90deg,#e67e22,#f39c12); }
+.dette-prog-fill.none    { background:linear-gradient(90deg,#c0392b,#e74c3c); }
+.dette-prog-histo { font-size:9px; color:#555; text-align:right; margin-top:2px; }
+
+/* Statut */
+.dette-status { display:flex; align-items:center; justify-content:center; }
+.dette-badge  { font-size:9px; font-weight:800; border-radius:20px; padding:3px 9px; white-space:nowrap; }
+.dette-badge.paid    { background:rgba(39,174,96,0.12);  color:#2ecc71; border:1px solid rgba(39,174,96,0.25); }
+.dette-badge.partial { background:rgba(243,156,18,0.12); color:#f39c12; border:1px solid rgba(243,156,18,0.3); }
+.dette-badge.credit  { background:rgba(231,76,60,0.12);  color:#e74c3c; border:1px solid rgba(231,76,60,0.25); }
+
+/* Pied de tableau */
+.dette-footer {
+  display:grid;
+  grid-template-columns: 180px 1fr 80px 110px 110px 110px 100px 90px;
+  gap:0; background:#17172a;
+  border-top:2px solid #252545;
+  font-size:11px; font-weight:800;
+}
+.dette-footer > div { padding:10px 12px; border-right:1px solid #1e1e30; }
+.dette-footer > div:last-child { border-right:none; }
+
+/* Section historique versements (expandable) */
+.dette-histo-wrap {
+  display:none; background:#111120;
+  border-top:1px solid #1e1e30;
+  padding:10px 16px; font-size:11px;
+}
+.dette-histo-wrap.open { display:block; }
+.dette-histo-row {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:6px 0; border-bottom:1px solid #1a1a2e;
+  color:#888;
+}
+.dette-histo-row:last-child { border-bottom:none; }
+.dette-histo-row .h-date { color:#555; }
+.dette-histo-row .h-amt  { color:#2ecc71; font-weight:700; }
+
+@media(max-width:900px){
+  .dette-head, .dette-row, .dette-footer {
+    grid-template-columns: 120px 1fr 70px 90px 90px 90px 80px 70px;
+    font-size:11px;
+  }
+}
+@media(max-width:640px){
+  .dette-head  { display:none; }
+  .dette-row   { grid-template-columns: 1fr auto; grid-auto-rows:auto; }
+  .dette-row > div:nth-child(n+3) { display:none; }
+  .dette-footer{ grid-template-columns:1fr auto auto auto; }
+  .dette-footer > div:nth-child(n+5) { display:none; }
+}
 </style>
 
 </head>
@@ -2849,8 +2984,28 @@ body {
       <button class="inv-tab"        id="inv-tab-summary" onclick="invSwitchTab('summary')">📊 Récapitulatif</button>
     </div>
     <div class="appro-wrap visible" id="appro-wrap">
+      <div id="dette-alerts"></div>
       <div id="appro-grand"></div>
-      <div id="appro-content"></div>
+      <div id="dette-filters" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center;">
+        <input id="dette-search" placeholder="🔍 Désignation, fournisseur, référence…"
+          style="flex:1;min-width:140px;background:#1a1a2e;border:1px solid #2e2e50;border-radius:8px;
+                 color:#ddd;font-size:12px;padding:7px 12px;font-family:'Poppins',sans-serif;"
+          oninput="renderDette()">
+        <select id="dette-sort"
+          style="background:#1a1a2e;border:1px solid #2e2e50;border-radius:8px;color:#aaa;
+                 font-size:12px;padding:7px 10px;font-family:'Poppins',sans-serif;cursor:pointer;"
+          onchange="renderDette()">
+          <option value="echeance">Trier : Échéance</option>
+          <option value="reste">Trier : Reste ↓</option>
+          <option value="fournisseur">Trier : Fournisseur A→Z</option>
+          <option value="date">Trier : Date achat</option>
+        </select>
+        <button class="at-filter-btn active" id="df-all"     onclick="setDetteFilter('all',this)">Tout</button>
+        <button class="at-filter-btn"        id="df-credit"  onclick="setDetteFilter('credit',this)">🔴 Impayé</button>
+        <button class="at-filter-btn"        id="df-partial" onclick="setDetteFilter('partial',this)">🟡 Partiel</button>
+        <button class="at-filter-btn"        id="df-paid"    onclick="setDetteFilter('paid',this)">✅ Soldé</button>
+      </div>
+      <div id="dette-table-container"></div>
     </div>
     <div class="inv-summary-wrap" id="inv-summary-wrap">
       <div id="inv-summary-content"></div>
@@ -3511,6 +3666,247 @@ function approOpenDetail(e, invId) {
   }
 }
 
+
+// ═══════════════════════════════════════════════
+//  DASHBOARD DETTES & APPROVISIONNEMENTS
+// ═══════════════════════════════════════════════
+let _detteFilter = 'all';
+
+function setDetteFilter(f, btn) {
+  _detteFilter = f;
+  document.querySelectorAll('#dette-filters .at-filter-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderDette();
+}
+
+function _echeanceDays(echeance) {
+  if (!echeance) return null;
+  try {
+    // Formats: "30 juin", "30/06/2026", "2026-06-30", "30 juin 2026"
+    let d = null;
+    const now = new Date(); now.setHours(0,0,0,0);
+    const fr = {'janvier':0,'février':1,'fevrier':1,'mars':2,'avril':3,'mai':4,'juin':5,
+                'juillet':6,'août':7,'aout':7,'septembre':8,'octobre':9,'novembre':10,'décembre':11,'decembre':11};
+    const s = String(echeance).trim().toLowerCase();
+    // "30 juin" ou "30 juin 2026"
+    const m1 = s.match(/^(\d{1,2})\s+([a-zéû]+)(?:\s+(\d{4}))?$/);
+    if (m1) {
+      const y = m1[3] ? parseInt(m1[3]) : now.getFullYear();
+      const mo = fr[m1[2]];
+      if (mo !== undefined) d = new Date(y, mo, parseInt(m1[1]));
+    }
+    // "30/06/2026" ou "30/06/26"
+    if (!d) {
+      const m2 = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+      if (m2) {
+        const y = m2[3].length === 2 ? 2000 + parseInt(m2[3]) : parseInt(m2[3]);
+        d = new Date(y, parseInt(m2[2])-1, parseInt(m2[1]));
+      }
+    }
+    // ISO "2026-06-30"
+    if (!d && /^\d{4}-\d{2}-\d{2}/.test(s)) d = new Date(s);
+    if (!d) return null;
+    d.setHours(0,0,0,0);
+    return Math.round((d - now) / 86400000);
+  } catch(e) { return null; }
+}
+
+function _echLabel(days, echeance) {
+  if (days === null) return { label: 'Éch. N/A', cls: 'ech-na', urgent: false };
+  const raw = echeance ? String(echeance).trim() : '';
+  if (days < 0)  return { label: 'Éch. ' + raw + ' ⚠', cls: 'ech-urgent', urgent: true  };
+  if (days === 0) return { label: 'Éch. aujourd\'hui !',     cls: 'ech-urgent', urgent: true  };
+  if (days <= 7)  return { label: 'Éch. ' + raw + ' (' + days + 'j)',  cls: 'ech-soon',   urgent: false };
+  return          { label: 'Éch. ' + raw,                    cls: 'ech-ok',    urgent: false };
+}
+
+function renderDette() {
+  const container = document.getElementById('dette-table-container');
+  const alertsEl  = document.getElementById('dette-alerts');
+  const grandEl   = document.getElementById('appro-grand');
+  if (!container) return;
+
+  const normalized = (investments || []).map(normalizeInvestment)
+    .filter(i => i.amount > 0 || i.paidAmount > 0 || i.remaining > 0)
+    .filter(i => i.status !== 'hidden');
+
+  // Filtres
+  let rows = [...normalized];
+  if (_detteFilter === 'credit')  rows = rows.filter(i => i.status === 'credit');
+  if (_detteFilter === 'partial') rows = rows.filter(i => i.status === 'partial');
+  if (_detteFilter === 'paid')    rows = rows.filter(i => i.status === 'paid');
+
+  const search = (document.getElementById('dette-search')?.value || '').toLowerCase();
+  if (search) rows = rows.filter(i =>
+    (i.name||'').toLowerCase().includes(search) ||
+    (i.supplier||'').toLowerCase().includes(search) ||
+    (i.reference||'').toLowerCase().includes(search) ||
+    (i.notes||'').toLowerCase().includes(search) ||
+    (i.category||'').toLowerCase().includes(search)
+  );
+
+  // Tri
+  const sort = document.getElementById('dette-sort')?.value || 'echeance';
+  rows.sort((a, b) => {
+    if (sort === 'reste')       return b.remaining - a.remaining;
+    if (sort === 'fournisseur') return (a.supplier||'').localeCompare(b.supplier||'', 'fr');
+    if (sort === 'date')        return new Date(b.date||0) - new Date(a.date||0);
+    // echeance : urgents en tête, puis par jours, N/A à la fin
+    const da = _echeanceDays(a.echeance), db = _echeanceDays(b.echeance);
+    if (da === null && db === null) return b.remaining - a.remaining;
+    if (da === null) return 1;
+    if (db === null) return -1;
+    return da - db;
+  });
+
+  // ── KPIs et alertes ──
+  const gTotal   = normalized.reduce((s,i) => s + i.amount,     0);
+  const gPaid    = normalized.reduce((s,i) => s + i.paidAmount, 0);
+  const gRem     = normalized.filter(i => i.status!=='paid').reduce((s,i) => s + i.remaining, 0);
+  const gPct     = gTotal > 0 ? Math.min(100,Math.round(gPaid/gTotal*100)) : 0;
+  const nSupp    = new Set(normalized.map(i=>i.supplier||'?')).size;
+  const overdue  = normalized.filter(i => i.status!=='paid' && (_echeanceDays(i.echeance)||1) < 0);
+  const dueSoon  = normalized.filter(i => i.status!=='paid' && (_echeanceDays(i.echeance)||999) >= 0 && (_echeanceDays(i.echeance)||999) <= 7);
+
+  if (grandEl) grandEl.innerHTML = `
+    <div class="appro-grand-total" style="margin-bottom:12px">
+      <div class="appro-grand-cell">
+        <div class="appro-grand-label">Total commandé</div>
+        <div class="appro-grand-val" style="color:#c39bd3">${fmtCA(gTotal)}</div>
+      </div>
+      <div class="appro-grand-cell">
+        <div class="appro-grand-label">Payé (${gPct}%)</div>
+        <div class="appro-grand-val" style="color:#2ecc71">${fmtCA(gPaid)}</div>
+      </div>
+      <div class="appro-grand-cell">
+        <div class="appro-grand-label">Reste à payer</div>
+        <div class="appro-grand-val" style="color:${gRem>0?'#e74c3c':'#2ecc71'}">${fmtCA(gRem)}</div>
+      </div>
+      <div class="appro-grand-cell">
+        <div class="appro-grand-label">Fournisseurs</div>
+        <div class="appro-grand-val" style="color:#fff">${nSupp}</div>
+      </div>
+    </div>`;
+
+  if (alertsEl) {
+    const remOverdue = overdue.reduce((s,i)=>s+i.remaining,0);
+    const remSoon    = dueSoon.reduce((s,i)=>s+i.remaining,0);
+    alertsEl.innerHTML = [
+      overdue.length  ? `<div class="dette-alert-chip red">⛔ <span><span class="chip-val">${overdue.length}</span> échéance${overdue.length>1?'s':''} dépassée${overdue.length>1?'s':''} · <strong>${fmtCA(remOverdue)}</strong></span></div>` : '',
+      dueSoon.length  ? `<div class="dette-alert-chip orange">⚡ <span><span class="chip-val">${dueSoon.length}</span> échéance${dueSoon.length>1?'s':''} dans 7 jours · <strong>${fmtCA(remSoon)}</strong></span></div>` : '',
+      (!overdue.length && !dueSoon.length && normalized.filter(i=>i.status!=='paid').length === 0)
+        ? `<div class="dette-alert-chip green">✅ <span>Tous les approvisionnements sont soldés</span></div>` : ''
+    ].join('');
+  }
+
+  if (!rows.length) {
+    container.innerHTML = '<div style="padding:28px;text-align:center;color:#555;font-size:12px">Aucun résultat.</div>';
+    return;
+  }
+
+  // ── En-tête ──
+  const head = `<div class="dette-table-wrap">
+  <div class="dette-head">
+    <div>Échéance</div>
+    <div>Désignation / Fournisseur</div>
+    <div style="text-align:center">Qté</div>
+    <div style="text-align:right">Commandé</div>
+    <div style="text-align:right">Payé</div>
+    <div style="text-align:right">Reste</div>
+    <div style="text-align:center">Progression</div>
+    <div style="text-align:center">Statut</div>
+  </div>`;
+
+  // ── Lignes ──
+  const rowsHtml = rows.map((inv, idx) => {
+    const days   = _echeanceDays(inv.echeance);
+    const ech    = _echLabel(days, inv.echeance);
+    const pct    = inv.amount > 0 ? Math.min(100,Math.round(inv.paidAmount/inv.amount*100)) : (inv.paidAmount>0?100:0);
+    const barCls = pct>=100?'full':pct>0?'partial':'none';
+    const pctCol = pct>=100?'#2ecc71':pct>0?'#f39c12':'#e74c3c';
+    const rowCls = inv.status==='paid' ? 'paid-full' : (days!==null && days<0 ? 'overdue' : (days!==null && days<=7 ? 'due-soon' : ''));
+    const stBadge = inv.status==='paid' ? 'paid' : inv.status==='partial' ? 'partial' : 'credit';
+    const stLabel = inv.status==='paid' ? '✅ Soldé' : inv.status==='partial' ? '🟡 Partiel' : '🔴 Impayé';
+    const dateStr = inv.date ? new Date(inv.date).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'2-digit'}) : '—';
+    const qtyLabel = inv.quantite > 0 ? (inv.quantite + (inv.unite ? ' '+inv.unite : '')) : '—';
+    const nHisto   = inv.histoPay ? inv.histoPay.length : 0;
+    const rid = 'dette-row-' + idx;
+    const hid = 'dette-histo-' + idx;
+
+    return `<div>
+    <div class="dette-row ${rowCls}" id="${rid}" onclick="detteToggleHisto('${hid}','${rid}')">
+      <div>
+        <div class="dette-ech ${ech.cls}">${escH(ech.label)}</div>
+        <div class="dette-ech-sub">${dateStr !== '—' ? 'Achat : '+dateStr : ''}</div>
+      </div>
+      <div>
+        <div class="dette-name">${escH(inv.name||'—')}</div>
+        ${inv.supplier ? `<div class="dette-sup">🏪 ${escH(inv.supplier)}</div>` : ''}
+        <div class="dette-chips">
+          ${inv.reference ? `<span class="dette-chip ref">#${escH(inv.reference)}</span>` : ''}
+          ${inv.payMode   ? `<span class="dette-chip mode">${escH(inv.payMode)}</span>` : ''}
+          ${inv.category && inv.category!=='Général' ? `<span class="dette-chip cat">${escH(inv.category)}</span>` : ''}
+          ${inv.dlc       ? `<span class="dette-chip dlc">DLC ${escH(inv.dlc)}</span>` : ''}
+          ${inv.notes     ? `<span class="dette-chip note">${escH(inv.notes.slice(0,50))}${inv.notes.length>50?'…':''}</span>` : ''}
+        </div>
+      </div>
+      <div class="dette-qty">
+        <div>${escH(qtyLabel)}</div>
+        ${inv.prixUnitaire > 0 ? `<div class="dette-qty-unit">${fmtCA(inv.prixUnitaire)}/u</div>` : ''}
+      </div>
+      <div class="dette-num purple">${fmtCA(inv.amount)}</div>
+      <div class="dette-num green">${fmtCA(inv.paidAmount)}</div>
+      <div class="dette-num ${inv.remaining>0?'red':'green'}">${fmtCA(inv.remaining)}</div>
+      <div class="dette-prog">
+        <div class="dette-prog-pct" style="color:${pctCol}">${pct}%</div>
+        <div class="dette-prog-track"><div class="dette-prog-fill ${barCls}" style="width:${pct}%"></div></div>
+        ${nHisto > 0 ? `<div class="dette-prog-histo">${nHisto} versement${nHisto>1?'s':''}</div>` : ''}
+      </div>
+      <div class="dette-status"><span class="dette-badge ${stBadge}">${stLabel}</span></div>
+    </div>
+    <div class="dette-histo-wrap" id="${hid}">
+      ${nHisto > 0
+        ? `<div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:#444;margin-bottom:6px">📋 Historique des versements</div>`
+          + inv.histoPay.map(p => {
+              const pDate = p.date || p.createdAt || p.timestamp || '';
+              const pAmt  = parseFloat(p.montant || p.amount || p.valeur || 0);
+              const pNote = p.note || p.commentaire || p.comment || '';
+              return `<div class="dette-histo-row">
+                <span class="h-date">${escH(String(pDate).slice(0,20))}</span>
+                ${pNote ? `<span style="color:#666;font-style:italic">${escH(pNote.slice(0,40))}</span>` : '<span></span>'}
+                <span class="h-amt">+${fmtCA(pAmt)}</span>
+              </div>`;
+            }).join('')
+        : `<div style="color:#555;font-size:11px">Aucun versement enregistré — <span style="color:#c39bd3;cursor:pointer" onclick="detteToggleHisto('${hid}','${rid}');investRowClick({stopPropagation:()=>{}},${idx})">Ajouter un paiement</span></div>`
+      }
+    </div>
+    </div>`;
+  }).join('');
+
+  // ── Pied ──
+  const fTotal = rows.reduce((s,i)=>s+i.amount,     0);
+  const fPaid  = rows.reduce((s,i)=>s+i.paidAmount, 0);
+  const fRem   = rows.reduce((s,i)=>s+i.remaining,  0);
+  const footer = `<div class="dette-footer">
+    <div style="color:#666;font-size:10px">${rows.length} ligne${rows.length>1?'s':''}</div>
+    <div></div><div></div>
+    <div class="dette-num purple">${fmtCA(fTotal)}</div>
+    <div class="dette-num green">${fmtCA(fPaid)}</div>
+    <div class="dette-num ${fRem>0?'red':'green'}">${fmtCA(fRem)}</div>
+    <div></div><div></div>
+  </div>`;
+
+  container.innerHTML = head + rowsHtml + footer + '</div>';
+  window._investRows = rows;
+}
+
+function detteToggleHisto(hid, rid) {
+  const hEl = document.getElementById(hid);
+  if (hEl) hEl.classList.toggle('open');
+}
+
+function renderAppro() { renderDette(); }
+
 // ═══════════════════════════════════════════════
 //  RÉCAPITULATIF INVESTISSEMENTS PAR STATUT
 // ═══════════════════════════════════════════════
@@ -3530,7 +3926,7 @@ function invSwitchTab(tab) {
   if (approWrap)   approWrap.classList.toggle('visible',    tab === 'appro');
   // Rendu
   if (tab === 'summary') renderInvestSummary();
-  if (tab === 'appro')   renderAppro();
+  if (tab === 'appro')   renderDette();
 }
 
 function renderInvestSummary() {
@@ -3770,14 +4166,28 @@ function normalizeInvestment(inv, idx) {
   const manualStatus = overrides[invKey0] || null;
 
   const amount = normMoney(_invCI(inv, ['amount','montant','total','price','prix','cost','cout','value','montantTotal','montant_total','montantCommande','montant_commande','prixTotal','prix_total','montantHT','montantTTC','totalAchat','total_achat'], 0));
+  // Historique paiements COVO Pro : sommer historiquesPaiements si présent
+  const histoPay = _invCI(inv, ['historiquesPaiements','historiquePaiements','historique_paiements',
+    'paymentHistory','payment_history','versements','paiements','payments'], null);
+  let histoPaidSum = 0;
+  if (Array.isArray(histoPay) && histoPay.length) {
+    histoPaidSum = histoPay.reduce((s, p) => {
+      const v = parseFloat(p.montant || p.amount || p.valeur || p.value || p.paiement || 0);
+      return s + (isNaN(v) ? 0 : v);
+    }, 0);
+  }
   let paidAmount = normMoney(_invCI(inv, [
-    'paidAmount','amountPaid','montantPaye','montant_paye','montant_payé','montantPayé',
-    'paye','paid_value','montant_verse','montantVerse','versement','versements',
-    'acompte','acomptes','avance','avances','soldePaye','solde_paye','montantRegle',
-    'montant_regle','montant_réglé','montantRegle','regle','réglé','reglement',
-    'montantEncaisse','montant_encaisse','encaisse','encaissé','montantPercu',
-    'montant_percu','percu','perçu','partialAmount','partialPaid','partiel'
+    'montantPaye','montant_paye','montant_payé','montantPayé',
+    'paidAmount','amountPaid',
+    'acompte','acomptes','avance','avances',
+    'versement','versements','montantVerse','montant_verse',
+    'soldePaye','solde_paye','montantRegle','montant_regle','montant_réglé',
+    'encaisse','encaissé','montantEncaisse','montant_encaisse',
+    'percu','perçu','montantPercu','montant_percu',
+    'partialAmount','partialPaid','partiel','paid_value','paye','regle','réglé'
   ], 0));
+  // Priorité : somme historique > champ atomique
+  if (histoPaidSum > paidAmount) paidAmount = histoPaidSum;
   const rawPaid   = _invCI(inv, ['paid','isPaid','paye','payé','payee','settled','regle','réglé','solde','soldé','acquitte','acquitté','soldé','solder','termine','terminé','clos','closed','complet','completé','fini'], null);
   const rawCredit = _invCI(inv, ['credit','isCredit','onCredit','aCredit','enCredit','impaye','impayé','enAttente','en_attente','nonPaye','non_paye','aRegler','a_regler','ouvert','open','pending'], null);
   const rawStatus = String(_invCI(inv, ['status','statut','etat','état','paymentStatus','payment_status','state','situation'], '')).toLowerCase().trim();
@@ -3785,7 +4195,8 @@ function normalizeInvestment(inv, idx) {
   if (_isTruthy(rawPaid) && !paidAmount) paidAmount = amount;
 
   let remaining = normMoney(_invCI(inv, [
-    'remaining','reste','restant','resteAPayer','reste_a_payer','amountDue','due',
+    'reste','restant','resteAPayer','reste_a_payer',
+    'remaining','amountDue','due',
     'creditAmount','montantCredit','solde_restant','soldeRestant','credit_restant',
     'creditRestant','montantDu','montant_du','montantRestant','montant_restant',
     'resteARegler','reste_a_regler','solde','soldeCredit','solde_credit',
@@ -3866,10 +4277,14 @@ function normalizeInvestment(inv, idx) {
     status,
     quantite,
     prixUnitaire,
+    unite:     String(_invCI(inv, ['unite','unité','unit','uniteMesure','unite_mesure','typeUnite','type_unite','uom'], '') || '').trim(),
     reference,
     notes,
     payMode,
-    lignes: Array.isArray(lignes) ? lignes : null,
+    echeance:  firstVal(inv, ['echeance','échéance','echeancePaiement','dateEcheance','date_echeance','dueDate','dateLimite','deadline','dateExpiration'], ''),
+    dlc:       firstVal(inv, ['dlc','dluo','dateExpiration','datePeremption','date_peremption','bestBefore','expiryDate'], ''),
+    histoPay:  Array.isArray(histoPay) ? histoPay : [],
+    lignes:    Array.isArray(lignes) ? lignes : null,
     raw: inv
   };
 }
@@ -4435,7 +4850,7 @@ function renderInvestments() {
   if (!normalized.length) {
     tableEl.innerHTML = '<div class="invest-empty">Aucun approvisionnement trouvé. Synchronisez vos données Drive.</div>';
     _renderHiddenSection(normalized);
-    if (document.getElementById('appro-wrap')?.classList.contains('visible')) renderAppro();
+    if (document.getElementById('appro-wrap')?.classList.contains('visible')) renderDette();
     return;
   }
 
