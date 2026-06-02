@@ -2555,6 +2555,254 @@ body { background: var(--vx-bg); color: var(--vx-text); }
 .ticket-row.pinned-row .ticket-time::before {
   content:'📌'; font-size:9px; margin-right:3px;
 }
+
+/* ═══════════════════════════════════════════════
+   APPROVISIONNEMENTS — VX PALETTE UNIFIÉE
+═══════════════════════════════════════════════ */
+
+/* Carte principale */
+.invest-card {
+  background: var(--vx-card);
+  border: 1px solid var(--vx-border);
+  border-radius: var(--vx-radius);
+  padding: 20px;
+}
+.invest-title { color: var(--vx-text); font-size: 16px; font-weight: 800; }
+.invest-sub   { color: var(--vx-text3); font-size: 11px; margin-top: 3px; }
+.invest-signal { background: var(--vx-card2); border: 1px solid var(--vx-border); border-radius: 10px; padding: 10px 14px; }
+.invest-signal-label { color: var(--vx-text3); font-size: 9px; text-transform: uppercase; letter-spacing: 0.07em; }
+.invest-signal-value { color: var(--vx-warning); font-size: 13px; font-weight: 800; }
+
+/* KPIs */
+.invest-kpis.five { grid-template-columns: repeat(5,minmax(100px,1fr)); gap: 10px; }
+.invest-kpi { background: var(--vx-card2); border: 1px solid var(--vx-border2); border-radius: 10px; }
+.invest-kpi-label { color: var(--vx-text3); font-size: 9px; }
+.invest-kpi-val        { color: var(--vx-text); font-size: 18px; font-weight: 800; }
+.invest-kpi-val.purple { color: var(--vx-primary2); }
+.invest-kpi-val.green  { color: var(--vx-success); }
+.invest-kpi-val.red    { color: var(--vx-danger); }
+
+/* Toolbar approvisionnements */
+.ap-toolbar {
+  display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+  padding: 12px 0; border-bottom: 1px solid var(--vx-border2); margin-bottom: 14px;
+}
+.ap-search {
+  flex: 1; min-width: 140px;
+  background: var(--vx-card2); border: 1px solid var(--vx-border);
+  border-radius: var(--vx-radius-sm); color: var(--vx-text);
+  font-size: 12px; padding: 7px 12px; font-family: 'Poppins',sans-serif;
+}
+.ap-search:focus { outline: none; border-color: var(--vx-primary); }
+.ap-search::placeholder { color: var(--vx-text3); }
+.ap-select {
+  background: var(--vx-card2); border: 1px solid var(--vx-border);
+  border-radius: var(--vx-radius-sm); color: var(--vx-text2);
+  font-size: 11px; padding: 7px 10px; font-family: 'Poppins',sans-serif; cursor: pointer;
+}
+.ap-select:focus { outline: none; border-color: var(--vx-primary); }
+.ap-btn {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--vx-card2); border: 1px solid var(--vx-border);
+  border-radius: var(--vx-radius-sm); color: var(--vx-text2);
+  font-size: 11px; font-weight: 600; padding: 6px 12px;
+  cursor: pointer; font-family: 'Poppins',sans-serif; white-space: nowrap;
+  transition: all 0.15s;
+}
+.ap-btn:hover  { border-color: var(--vx-primary); color: var(--vx-primary2); }
+.ap-btn.active { background: var(--vx-primary-bg); border-color: var(--vx-primary); color: var(--vx-text); }
+.ap-btn.danger { border-color: rgba(255,71,87,0.4); color: var(--vx-danger); }
+.ap-sep { width: 1px; height: 22px; background: var(--vx-border); margin: 0 2px; flex-shrink: 0; }
+
+/* Alertes */
+.ap-alert-strip {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;
+}
+.ap-alert-chip {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border-radius: 10px;
+  font-size: 11px; font-weight: 700;
+}
+.ap-alert-chip.red    { background: var(--vx-danger-bg);  color: var(--vx-danger);  border: 1px solid rgba(255,71,87,0.3); }
+.ap-alert-chip.orange { background: var(--vx-warning-bg); color: var(--vx-warning); border: 1px solid rgba(255,190,11,0.3); }
+.ap-alert-chip.green  { background: var(--vx-success-bg); color: var(--vx-success); border: 1px solid rgba(0,200,150,0.25); }
+.ap-alert-chip .chip-val { font-size: 15px; font-weight: 900; }
+
+/* Grand total */
+.ap-grand {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 1px; background: var(--vx-border); border: 1px solid var(--vx-border);
+  border-radius: 10px; overflow: hidden; margin-bottom: 14px;
+}
+.ap-grand-cell { background: var(--vx-card2); padding: 12px 16px; text-align: center; }
+.ap-grand-label { font-size: 9px; color: var(--vx-text3); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; }
+.ap-grand-val   { font-size: 18px; font-weight: 900; }
+
+/* BLOCS FOURNISSEUR */
+.ap-supplier {
+  border: 1px solid var(--vx-border);
+  border-radius: 12px; margin-bottom: 10px; overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.ap-supplier:hover { box-shadow: 0 0 0 1px rgba(124,106,247,0.25); }
+
+.ap-sup-head {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 16px; cursor: pointer;
+  background: linear-gradient(135deg, var(--vx-card2) 0%, var(--vx-card3) 100%);
+  transition: background 0.15s; user-select: none;
+}
+.ap-sup-head:hover { background: linear-gradient(135deg,#1c1c38,#222248); }
+.ap-sup-head.overdue-head { border-left: 4px solid var(--vx-danger); }
+.ap-sup-head.soon-head    { border-left: 4px solid var(--vx-warning); }
+.ap-sup-head.paid-head    { border-left: 4px solid var(--vx-success); opacity: 0.75; }
+
+.ap-sup-chev { color: var(--vx-primary2); font-size: 11px; flex-shrink: 0; transition: transform 0.2s; }
+.ap-sup-chev.open { transform: rotate(90deg); }
+
+.ap-sup-info { flex: 1; min-width: 0; }
+.ap-sup-name { font-size: 13px; font-weight: 800; color: var(--vx-text); display: flex; align-items: center; gap: 8px; }
+.ap-sup-sub  { font-size: 10px; color: var(--vx-text3); margin-top: 3px; }
+
+.ap-sup-badge {
+  font-size: 9px; font-weight: 800; border-radius: 20px; padding: 2px 8px;
+  white-space: nowrap;
+}
+.ap-sup-badge.red    { background: var(--vx-danger-bg);  color: var(--vx-danger);  border: 1px solid rgba(255,71,87,0.3); }
+.ap-sup-badge.orange { background: var(--vx-warning-bg); color: var(--vx-warning); border: 1px solid rgba(255,190,11,0.3); }
+.ap-sup-badge.green  { background: var(--vx-success-bg); color: var(--vx-success); border: 1px solid rgba(0,200,150,0.25); }
+
+.ap-sup-bar-wrap { flex: 1; max-width: 100px; }
+.ap-sup-bar-track { height: 6px; background: var(--vx-border2); border-radius: 3px; overflow: hidden; }
+.ap-sup-bar-fill  { height: 100%; border-radius: 3px; }
+.ap-sup-bar-fill.full    { background: linear-gradient(90deg,#00c896,#00e5ab); }
+.ap-sup-bar-fill.partial { background: linear-gradient(90deg,#e67e22,#ffbe0b); }
+.ap-sup-bar-fill.none    { background: linear-gradient(90deg,#ff4757,#ff6b7a); }
+.ap-sup-bar-pct { font-size: 10px; font-weight: 800; text-align: right; margin-top: 3px; }
+
+.ap-sup-amounts { display: flex; gap: 14px; flex-shrink: 0; }
+.ap-sup-amt { text-align: right; }
+.ap-sup-amt-lbl { font-size: 9px; color: var(--vx-text3); text-transform: uppercase; letter-spacing: 0.05em; }
+.ap-sup-amt-val { font-size: 12px; font-weight: 800; }
+
+/* LIGNES APPRO */
+.ap-orders { display: none; }
+.ap-orders.open { display: block; }
+
+.ap-order-head {
+  display: grid;
+  grid-template-columns: 1fr 90px 90px 90px 80px 75px;
+  gap: 6px; padding: 7px 16px;
+  background: var(--vx-bg); color: var(--vx-text3);
+  font-size: 9px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.06em; border-top: 1px solid var(--vx-border2);
+}
+
+.ap-order-row {
+  display: grid;
+  grid-template-columns: 1fr 90px 90px 90px 80px 75px;
+  gap: 6px; padding: 11px 16px; align-items: center;
+  border-top: 1px solid var(--vx-border2);
+  background: var(--vx-card);
+  cursor: pointer; transition: background 0.1s;
+  border-left: 3px solid transparent;
+}
+.ap-order-row:hover { background: var(--vx-card2); border-left: 3px solid var(--vx-primary); }
+.ap-order-row.overdue { border-left: 3px solid var(--vx-danger); }
+.ap-order-row.due-soon { border-left: 3px solid var(--vx-warning); }
+
+.ap-order-name { font-size: 12px; font-weight: 700; color: var(--vx-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ap-order-ech  { font-size: 9px; margin-top: 2px; }
+.ap-order-chips { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 3px; }
+.ap-chip { font-size: 9px; border-radius: 4px; padding: 1px 6px; font-weight: 600; }
+.ap-chip.ref  { background: var(--vx-card3); color: var(--vx-text3); border: 1px solid var(--vx-border); font-family: monospace; }
+.ap-chip.mode { background: var(--vx-primary-bg); color: var(--vx-primary2); border: 1px solid rgba(124,106,247,0.3); }
+.ap-chip.cat  { background: var(--vx-blue-bg);    color: var(--vx-blue);    border: 1px solid rgba(61,156,240,0.3); }
+.ap-chip.dlc  { background: var(--vx-danger-bg);  color: var(--vx-danger);  border: 1px solid rgba(255,71,87,0.2); }
+.ap-chip.note { background: var(--vx-card3); color: var(--vx-text3); border: 1px solid var(--vx-border); font-style: italic; }
+
+.ap-num { text-align: right; font-size: 12px; font-weight: 700; }
+.ap-num.purple { color: var(--vx-primary2); }
+.ap-num.green  { color: var(--vx-success); }
+.ap-num.red    { color: var(--vx-danger); }
+.ap-num.orange { color: var(--vx-warning); }
+.ap-num.grey   { color: var(--vx-text3); }
+
+.ap-prog { text-align: center; }
+.ap-prog-pct { font-size: 10px; font-weight: 800; }
+.ap-prog-track { height: 5px; background: var(--vx-border2); border-radius: 3px; overflow: hidden; margin-top: 3px; }
+.ap-prog-fill { height: 100%; border-radius: 3px; }
+.ap-prog-fill.full    { background: linear-gradient(90deg,#00c896,#00e5ab); }
+.ap-prog-fill.partial { background: linear-gradient(90deg,#e67e22,#ffbe0b); }
+.ap-prog-fill.none    { background: linear-gradient(90deg,#ff4757,#ff6b7a); }
+.ap-prog-histo { font-size: 9px; color: var(--vx-text3); margin-top: 2px; }
+
+.ap-status { text-align: center; }
+.ap-badge { font-size: 9px; font-weight: 800; border-radius: 20px; padding: 3px 9px; white-space: nowrap; }
+.ap-badge.paid    { background: var(--vx-success-bg); color: var(--vx-success); border: 1px solid rgba(0,200,150,0.25); }
+.ap-badge.partial { background: var(--vx-warning-bg); color: var(--vx-warning); border: 1px solid rgba(255,190,11,0.3); }
+.ap-badge.credit  { background: var(--vx-danger-bg);  color: var(--vx-danger);  border: 1px solid rgba(255,71,87,0.25); }
+
+/* HISTORIQUE INLINE PAR APPRO */
+.ap-histo-wrap {
+  padding: 10px 16px 12px;
+  background: var(--vx-bg);
+  border-top: 1px solid var(--vx-border2);
+}
+.ap-histo-title { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--vx-text3); margin-bottom: 8px; }
+.ap-histo-header {
+  display: grid; grid-template-columns: 160px 1fr auto;
+  gap: 8px; font-size: 9px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--vx-text3); margin-bottom: 5px; padding: 0 2px;
+}
+.ap-histo-row {
+  display: grid; grid-template-columns: 160px 1fr auto;
+  gap: 8px; padding: 6px 8px; border-radius: 6px;
+  font-size: 11px; background: var(--vx-card2);
+  margin-bottom: 3px; align-items: center;
+}
+.ap-histo-date { color: var(--vx-text2); font-weight: 600; }
+.ap-histo-note { color: var(--vx-text3); font-style: italic; }
+.ap-histo-amt  { color: var(--vx-success); font-weight: 800; text-align: right; }
+.ap-histo-subtotal {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 8px 0; margin-top: 6px; border-top: 1px solid var(--vx-border2);
+  font-size: 11px;
+}
+.ap-histo-subtotal-item { display: flex; flex-direction: column; gap: 2px; }
+.ap-histo-subtotal-label { font-size: 9px; color: var(--vx-text3); text-transform: uppercase; letter-spacing: 0.06em; }
+.ap-histo-subtotal-val   { font-size: 13px; font-weight: 800; }
+.ap-btn-pay {
+  background: var(--vx-primary-bg); border: 1px solid var(--vx-primary);
+  border-radius: var(--vx-radius-sm); color: var(--vx-primary2);
+  font-size: 10px; font-weight: 700; padding: 5px 12px;
+  cursor: pointer; font-family: 'Poppins',sans-serif;
+  transition: all 0.15s;
+}
+.ap-btn-pay:hover { background: var(--vx-primary); color: #fff; }
+
+/* Pied fournisseur */
+.ap-sup-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 8px;
+  padding: 9px 16px; background: var(--vx-bg);
+  border-top: 1px solid var(--vx-border2);
+  font-size: 10px; color: var(--vx-text3);
+}
+
+@media(max-width:700px) {
+  .ap-order-head, .ap-order-row { grid-template-columns: 1fr 80px 80px 80px 60px; gap:4px; font-size:11px; }
+  .ap-order-head > *:nth-child(5),
+  .ap-order-row  > *:nth-child(5) { display:none; }
+  .ap-grand { grid-template-columns: repeat(2,1fr); }
+  .invest-kpis.five { grid-template-columns: repeat(3,1fr); }
+}
+@media(max-width:480px) {
+  .ap-order-row { grid-template-columns: 1fr auto auto; }
+  .ap-order-head { display: none; }
+  .ap-order-row > *:nth-child(n+4) { display: none; }
+}
 </style>
 
 </head>
@@ -3200,102 +3448,57 @@ body { background: var(--vx-bg); color: var(--vx-text); }
   <div class="invest-card" id="invest-card">
     <div class="invest-head">
       <div>
-        <div class="invest-title">Approvisionnements fournisseurs</div>
-        <div class="invest-sub">Suivi des approvisionnements fournisseurs — vue consolidée payé / restant.</div>
-        <button onclick="openInvInspector()" style="margin-top:8px;background:rgba(142,68,173,0.15);border:1px solid rgba(142,68,173,0.4);border-radius:8px;color:#c39bd3;font-size:11px;font-weight:700;padding:5px 12px;cursor:pointer;font-family:'Poppins',sans-serif;display:inline-flex;align-items:center;gap:5px;">🔍 Inspecter les champs COVO Pro</button>
+        <div class="invest-title">📦 Approvisionnements &amp; Dettes fournisseurs</div>
+        <div class="invest-sub">Vue unifiée — gérez vos crédits et suivez les paiements par fournisseur</div>
       </div>
       <div class="invest-signal">
-        <div class="invest-signal-label">Signal prioritaire</div>
+        <div class="invest-signal-label">⚠ Priorité</div>
         <div class="invest-signal-value" id="invest-signal">—</div>
       </div>
     </div>
-    <div class="invest-kpis five">
-      <div class="invest-kpi"><div class="invest-kpi-label">Total investi</div><div class="invest-kpi-val purple" id="inv-total">—</div></div>
+
+    <!-- KPIs -->
+    <div class="invest-kpis five" style="margin-bottom:16px">
+      <div class="invest-kpi"><div class="invest-kpi-label">Total commandé</div><div class="invest-kpi-val purple" id="inv-total">—</div></div>
       <div class="invest-kpi"><div class="invest-kpi-label">Déjà payé</div><div class="invest-kpi-val green" id="inv-paid">—</div></div>
-      <div class="invest-kpi"><div class="invest-kpi-label">Crédit non payé</div><div class="invest-kpi-val red" id="inv-credit">—</div></div>
-      <div class="invest-kpi"><div class="invest-kpi-label">Commandes</div><div class="invest-kpi-val" id="inv-count">—</div></div><div class="invest-kpi"><div class="invest-kpi-label">Fournisseurs</div><div class="invest-kpi-val" id="inv-suppliers">—</div></div>
+      <div class="invest-kpi"><div class="invest-kpi-label">Reste à payer</div><div class="invest-kpi-val red" id="inv-credit">—</div></div>
+      <div class="invest-kpi"><div class="invest-kpi-label">Commandes</div><div class="invest-kpi-val" id="inv-count">—</div></div>
+      <div class="invest-kpi"><div class="invest-kpi-label">Fournisseurs</div><div class="invest-kpi-val" id="inv-suppliers">—</div></div>
     </div>
+
+    <!-- Alertes -->
+    <div id="ap-alerts" class="ap-alert-strip"></div>
     <div id="invest-alert-banner" style="display:none"></div>
-    <div class="invest-bulk-bar" id="invest-bulk-bar">
-      <span class="invest-bulk-count" id="invest-bulk-count">0 sélectionné</span>
-      <button class="invest-bulk-btn green" onclick="investBulkPaid()">✓ Marquer soldé</button>
-      <button class="invest-bulk-btn grey"  onclick="investBulkHide()">🙈 Masquer</button>
-      <button class="invest-bulk-btn clear" onclick="investClearSel()">✕ Désélectionner</button>
+
+    <!-- Toolbar -->
+    <div class="ap-toolbar">
+      <input class="ap-search" id="ap-search-main" placeholder="🔍 Désignation, fournisseur, référence…" oninput="renderAppro()">
+      <select class="ap-select" id="ap-sort-main" onchange="renderAppro()">
+        <option value="echeance">Trier : Échéance</option>
+        <option value="reste">Trier : Reste ↓</option>
+        <option value="fournisseur">Trier : Fournisseur A→Z</option>
+        <option value="montant">Trier : Montant ↓</option>
+        <option value="date">Trier : Date ↓</option>
+      </select>
+      <div class="ap-sep"></div>
+      <button class="ap-btn active" id="apf-all"     onclick="apSetFilter('all',this)">Tout</button>
+      <button class="ap-btn"        id="apf-credit"  onclick="apSetFilter('credit',this)">🔴 Impayé</button>
+      <button class="ap-btn"        id="apf-partial" onclick="apSetFilter('partial',this)">🟡 Partiel</button>
+      <button class="ap-btn"        id="apf-paid"    onclick="apSetFilter('paid',this)">✅ Soldé</button>
+      <div class="ap-sep"></div>
+      <button class="ap-btn" onclick="apCollapseAll()" title="Réduire tous les fournisseurs">⊟ Réduire</button>
+      <button class="ap-btn" onclick="apExpandAll()"   title="Déployer tous les fournisseurs">⊞ Déployer</button>
+      <button class="ap-btn" onclick="openInvInspector()" style="margin-left:auto" title="Diagnostiquer les données">🔍 Inspect</button>
     </div>
-    <div class="inv-tabs">
-      <button class="inv-tab active" id="inv-tab-appro"   onclick="invSwitchTab('appro')">🏪 Par fournisseur</button>
-      <button class="inv-tab"        id="inv-tab-credits" onclick="invSwitchTab('credits')">⚠️ Crédits en cours</button>
-      <button class="inv-tab"        id="inv-tab-summary" onclick="invSwitchTab('summary')">📊 Récapitulatif</button>
-    </div>
-    <div class="appro-wrap visible" id="appro-wrap">
-      <div id="dette-alerts"></div>
-      <div id="appro-grand"></div>
-      <div id="dette-filters" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;align-items:center;">
-        <input id="dette-search" placeholder="🔍 Désignation, fournisseur, réf…"
-          style="flex:1;min-width:130px;background:#1a1a2e;border:1px solid #2e2e50;border-radius:8px;
-                 color:#ddd;font-size:12px;padding:7px 12px;font-family:'Poppins',sans-serif;"
-          oninput="renderDette()">
-        <select id="dette-sort"
-          style="background:#1a1a2e;border:1px solid #2e2e50;border-radius:8px;color:#aaa;
-                 font-size:12px;padding:7px 10px;font-family:'Poppins',sans-serif;cursor:pointer;"
-          onchange="renderDette()">
-          <option value="echeance">Trier : Échéance</option>
-          <option value="reste">Trier : Reste ↓</option>
-          <option value="fournisseur">Trier : Fournisseur A→Z</option>
-          <option value="date">Trier : Date achat ↓</option>
-          <option value="montant">Trier : Montant ↓</option>
-        </select>
-      </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center;">
-        <button class="at-filter-btn active" id="df-all"     onclick="setDetteFilter('all',this)">Tout</button>
-        <button class="at-filter-btn"        id="df-credit"  onclick="setDetteFilter('credit',this)">🔴 Impayé</button>
-        <button class="at-filter-btn"        id="df-partial" onclick="setDetteFilter('partial',this)">🟡 Partiel</button>
-        <button class="at-filter-btn"        id="df-paid"    onclick="setDetteFilter('paid',this)">✅ Soldé</button>
-        <div style="width:1px;background:#2e2e50;height:24px;margin:0 4px;"></div>
-        <select id="dette-date-type"
-          style="background:#1a1a2e;border:1px solid #2e2e50;border-radius:8px;color:#aaa;
-                 font-size:11px;padding:6px 9px;font-family:'Poppins',sans-serif;cursor:pointer;"
-          onchange="detteDateTypeChange()">
-          <option value="all">📅 Toutes les dates</option>
-          <option value="month">Par mois</option>
-          <option value="range">Plage personnalisée</option>
-        </select>
-        <select id="dette-month-sel"
-          style="display:none;background:#1a1a2e;border:1px solid #2e2e50;border-radius:8px;color:#aaa;
-                 font-size:11px;padding:6px 9px;font-family:'Poppins',sans-serif;cursor:pointer;"
-          onchange="renderDette()">
-        </select>
-        <div id="dette-range-wrap" style="display:none;display:flex;gap:6px;align-items:center;">
-          <input type="date" id="dette-date-from"
-            style="background:#1a1a2e;border:1px solid #2e2e50;border-radius:8px;color:#aaa;
-                   font-size:11px;padding:6px 9px;font-family:'Poppins',sans-serif;"
-            onchange="renderDette()">
-          <span style="color:#444;font-size:11px">→</span>
-          <input type="date" id="dette-date-to"
-            style="background:#1a1a2e;border:1px solid #2e2e50;border-radius:8px;color:#aaa;
-                   font-size:11px;padding:6px 9px;font-family:'Poppins',sans-serif;"
-            onchange="renderDette()">
-        </div>
-      </div>
-      <div id="dette-table-container"></div>
-    </div>
-    <div class="inv-summary-wrap" id="inv-summary-wrap">
-      <div id="inv-summary-content"></div>
-    </div>
-    <div class="appro-table-wrap inv-hidden" id="appro-table-wrap-credits">
-      <div class="at-filters">
-        <input class="at-search" id="at-search" placeholder="🔍 Rechercher désignation, fournisseur, réf…" oninput="filterApproTable()">
-        <button class="at-filter-btn active" id="at-f-all"      onclick="setApproFilter('all',this)">Tout</button>
-        <button class="at-filter-btn"        id="at-f-credit"   onclick="setApproFilter('credit',this)">🔴 Impayé</button>
-        <button class="at-filter-btn"        id="at-f-partial"  onclick="setApproFilter('partial',this)">🟡 Partiel</button>
-        <button class="at-filter-btn"        id="at-f-paid"     onclick="setApproFilter('paid',this)">✅ Soldé</button>
-      </div>
-      <div class="appro-table" id="appro-table-credits"></div>
-    </div>
+
+    <!-- Contenu principal -->
+    <div id="ap-main-content"></div>
+
+    <!-- Section masqués (conservée pour compatibilité) -->
     <div id="invest-hidden-section"></div>
   </div>
 
-  <!-- CHART -->
+    <!-- CHART -->
 
   <div class="chart-card">
     <div class="section-row" style="margin-bottom:14px">
@@ -5359,6 +5562,260 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!_vxColCred) document.getElementById('vx-col-credit')?.classList.remove('active');
 });
 
+
+// ═══════════════════════════════════════════════
+//  APPROVISIONNEMENTS — VUE UNIFIÉE PAR FOURNISSEUR
+// ═══════════════════════════════════════════════
+let _apFilter = 'all';
+let _apCollapsed = JSON.parse(localStorage.getItem('ap_collapsed') || '{}');
+
+function apSetFilter(f, btn) {
+  _apFilter = f;
+  document.querySelectorAll('#ap-search-main,.ap-toolbar .ap-btn[id^="apf-"]').forEach(()=>{});
+  document.querySelectorAll('.ap-toolbar .ap-btn[id^="apf-"]').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderAppro();
+}
+
+function apCollapseAll() {
+  document.querySelectorAll('.ap-orders').forEach(el => el.classList.remove('open'));
+  document.querySelectorAll('.ap-sup-chev').forEach(c => c.classList.remove('open'));
+  _apCollapsed = {'__all__': true};
+  localStorage.setItem('ap_collapsed', JSON.stringify(_apCollapsed));
+}
+
+function apExpandAll() {
+  document.querySelectorAll('.ap-orders').forEach(el => el.classList.add('open'));
+  document.querySelectorAll('.ap-sup-chev').forEach(c => c.classList.add('open'));
+  _apCollapsed = {};
+  localStorage.setItem('ap_collapsed', JSON.stringify(_apCollapsed));
+}
+
+function apToggleSupplier(supId) {
+  const body = document.getElementById('ap-body-' + supId);
+  const chev = document.getElementById('ap-chev-' + supId);
+  if (!body) return;
+  const open = body.classList.toggle('open');
+  if (chev) chev.classList.toggle('open', open);
+  if (open) {
+    delete _apCollapsed[supId];
+    if (_apCollapsed['__all__']) delete _apCollapsed['__all__'];
+  } else {
+    _apCollapsed[supId] = true;
+  }
+  localStorage.setItem('ap_collapsed', JSON.stringify(_apCollapsed));
+}
+
+function apToggleHisto(histoId, e) {
+  e && e.stopPropagation();
+  const el = document.getElementById(histoId);
+  if (el) el.classList.toggle('open');
+}
+
+function renderAppro() {
+  const container = document.getElementById('ap-main-content');
+  const alertsEl  = document.getElementById('ap-alerts');
+  if (!container) return;
+
+  const normalized = (investments || []).map(normalizeInvestment)
+    .filter(i => (i.amount > 0 || i.paidAmount > 0 || i.remaining > 0) && i.status !== 'hidden');
+
+  // Mettre à jour KPIs
+  const gTotal   = normalized.reduce((s,i) => s + i.amount,     0);
+  const gPaid    = normalized.reduce((s,i) => s + i.paidAmount, 0);
+  const gRem     = normalized.filter(i=>i.status!=='paid').reduce((s,i) => s + i.remaining, 0);
+  const supplierSet = new Set(normalized.map(i => i.supplier || 'Sans fournisseur'));
+  set('inv-total',     fmtCA(gTotal));
+  set('inv-paid',      fmtCA(gPaid));
+  set('inv-credit',    fmtCA(gRem));
+  set('inv-count',     String(normalized.length));
+  set('inv-suppliers', String(supplierSet.size));
+
+  const signal = document.getElementById('invest-signal');
+  if (signal) {
+    const urgent = normalized.filter(i=>i.status!=='paid').sort((a,b)=>b.remaining-a.remaining)[0];
+    signal.textContent = urgent ? `${urgent.name} · ${fmtCA(urgent.remaining)}` : '✓ Tout soldé';
+  }
+
+  // Alertes
+  const overdue = normalized.filter(i=>i.status!=='paid' && (_echeanceDays(i.echeance)??1) < 0);
+  const soon    = normalized.filter(i=>i.status!=='paid' && (_echeanceDays(i.echeance)??999)>=0 && (_echeanceDays(i.echeance)??999)<=7);
+  if (alertsEl) {
+    alertsEl.innerHTML = [
+      overdue.length ? `<div class="ap-alert-chip red">⛔ <span><span class="chip-val">${overdue.length}</span> échéance${overdue.length>1?'s':''} dépassée${overdue.length>1?'s':''} · <strong>${fmtCA(overdue.reduce((s,i)=>s+i.remaining,0))}</strong></span></div>` : '',
+      soon.length    ? `<div class="ap-alert-chip orange">⚡ <span><span class="chip-val">${soon.length}</span> dans 7 j. · <strong>${fmtCA(soon.reduce((s,i)=>s+i.remaining,0))}</strong></span></div>` : '',
+      (!overdue.length && !soon.length && normalized.filter(i=>i.status!=='paid').length===0) ? `<div class="ap-alert-chip green">✅ <span>Tous les approvisionnements sont soldés</span></div>` : ''
+    ].join('');
+  }
+
+  if (!normalized.length) {
+    container.innerHTML = '<div style="padding:28px;text-align:center;color:var(--vx-text3);font-size:12px">Aucun approvisionnement — synchronisez Drive.</div>';
+    return;
+  }
+
+  // Filtres
+  const search = (document.getElementById('ap-search-main')?.value||'').toLowerCase();
+  const sort   = document.getElementById('ap-sort-main')?.value || 'echeance';
+  let rows = normalized.filter(i => {
+    if (_apFilter==='credit'  && i.status!=='credit')  return false;
+    if (_apFilter==='partial' && i.status!=='partial') return false;
+    if (_apFilter==='paid'    && i.status!=='paid')    return false;
+    if (search) {
+      const hay = [(i.name||''),(i.supplier||''),(i.reference||''),(i.notes||''),(i.category||'')].join(' ').toLowerCase();
+      if (!hay.includes(search)) return false;
+    }
+    return true;
+  });
+
+  // Grouper par fournisseur
+  const groupMap = new Map();
+  rows.forEach(inv => {
+    const sup = (inv.supplier && inv.supplier.trim()) || 'Sans fournisseur';
+    if (!groupMap.has(sup)) groupMap.set(sup, []);
+    groupMap.get(sup).push(inv);
+  });
+
+  // Trier les fournisseurs selon critère
+  const sortedGroups = [...groupMap.entries()].sort((a,b) => {
+    if (sort==='fournisseur') return a[0].localeCompare(b[0],'fr');
+    const remA = a[1].reduce((s,i)=>s+i.remaining,0);
+    const remB = b[1].reduce((s,i)=>s+i.remaining,0);
+    if (sort==='reste') return remB - remA;
+    const tA = a[1].reduce((s,i)=>s+i.amount,0);
+    const tB = b[1].reduce((s,i)=>s+i.amount,0);
+    if (sort==='montant') return tB - tA;
+    // écheance : urgents en tête
+    const dA = Math.min(...a[1].map(i=>_echeanceDays(i.echeance)??9999));
+    const dB = Math.min(...b[1].map(i=>_echeanceDays(i.echeance)??9999));
+    return dA - dB;
+  });
+
+  let html = '';
+  sortedGroups.forEach(([sup, entries], gi) => {
+    const supId   = 'ap-' + gi;
+    const sTotal  = entries.reduce((s,i)=>s+i.amount,     0);
+    const sPaid   = entries.reduce((s,i)=>s+i.paidAmount, 0);
+    const sRem    = entries.reduce((s,i)=>s+i.remaining,  0);
+    const sPct    = sTotal > 0 ? Math.min(100,Math.round(sPaid/sTotal*100)) : 0;
+    const barCls  = sPct>=100?'full':sPct>0?'partial':'none';
+    const pctCol  = sPct>=100?'var(--vx-success)':sPct>0?'var(--vx-warning)':'var(--vx-danger)';
+    const nCred   = entries.filter(i=>i.status!=='paid').length;
+    const hasOverdue = entries.some(i=>i.status!=='paid'&&(_echeanceDays(i.echeance)??1)<0);
+    const hasSoon    = entries.some(i=>i.status!=='paid'&&(_echeanceDays(i.echeance)??999)>=0&&(_echeanceDays(i.echeance)??999)<=7);
+    const headCls = hasOverdue?'overdue-head':hasSoon?'soon-head':nCred===0?'paid-head':'';
+    const badgeCls= nCred>0?(hasOverdue?'red':hasSoon?'orange':'red'):'green';
+    const badgeTxt= nCred>0?`${nCred} crédit${nCred>1?'s':''}`:'✓ Soldé';
+
+    // État ouvert/fermé persisté
+    const isOpen = !_apCollapsed[supId] && !_apCollapsed['__all__'];
+
+    // Trier les appros dans le groupe
+    const sortedEntries = [...entries].sort((a,b) => {
+      if (sort==='date')    return (_detteParseDate(b.date)||0)-(_detteParseDate(a.date)||0);
+      if (sort==='montant') return b.amount - a.amount;
+      const da = _echeanceDays(a.echeance), db = _echeanceDays(b.echeance);
+      if (da===null&&db===null) return b.remaining-a.remaining;
+      if (da===null) return 1; if (db===null) return -1;
+      return da - db;
+    });
+
+    html += `<div class="ap-supplier">
+    <div class="ap-sup-head ${headCls}" onclick="apToggleSupplier('${supId}')">
+      <span class="ap-sup-chev ${isOpen?'open':''}" id="ap-chev-${supId}">▶</span>
+      <div class="ap-sup-info">
+        <div class="ap-sup-name">🏪 ${escH(sup)} <span class="ap-sup-badge ${badgeCls}">${badgeTxt}</span></div>
+        <div class="ap-sup-sub">${entries.length} commande${entries.length>1?'s':''}</div>
+      </div>
+      <div class="ap-sup-bar-wrap">
+        <div class="ap-sup-bar-track"><div class="ap-sup-bar-fill ${barCls}" style="width:${sPct}%"></div></div>
+        <div class="ap-sup-bar-pct" style="color:${pctCol}">${sPct}%</div>
+      </div>
+      <div class="ap-sup-amounts">
+        <div class="ap-sup-amt"><div class="ap-sup-amt-lbl">Commandé</div><div class="ap-sup-amt-val" style="color:var(--vx-primary2)">${fmtCA(sTotal)}</div></div>
+        <div class="ap-sup-amt"><div class="ap-sup-amt-lbl">Payé</div><div class="ap-sup-amt-val" style="color:var(--vx-success)">${fmtCA(sPaid)}</div></div>
+        <div class="ap-sup-amt"><div class="ap-sup-amt-lbl">Reste</div><div class="ap-sup-amt-val" style="color:${sRem>0?'var(--vx-danger)':'var(--vx-success)'}">${fmtCA(sRem)}</div></div>
+      </div>
+    </div>
+    <div class="ap-orders ${isOpen?'open':''}" id="ap-body-${supId}">
+      <div class="ap-order-head">
+        <div>Désignation</div><div style="text-align:right">Commandé</div>
+        <div style="text-align:right">Payé</div><div style="text-align:right">Reste</div>
+        <div style="text-align:center">Avancement</div><div style="text-align:center">Statut</div>
+      </div>`;
+
+    sortedEntries.forEach((inv, oi) => {
+      const days   = _echeanceDays(inv.echeance);
+      const ech    = _echLabel(days, inv.echeance);
+      const pct    = inv.amount>0?Math.min(100,Math.round(inv.paidAmount/inv.amount*100)):(inv.paidAmount>0?100:0);
+      const pFill  = pct>=100?'full':pct>0?'partial':'none';
+      const pColor = pct>=100?'var(--vx-success)':pct>0?'var(--vx-warning)':'var(--vx-danger)';
+      const rowCls = inv.status==='paid'?'':days!==null&&days<0?'overdue':days!==null&&days<=7?'due-soon':'';
+      const stCls  = inv.status==='paid'?'paid':inv.status==='partial'?'partial':'credit';
+      const stLbl  = inv.status==='paid'?'✅ Soldé':inv.status==='partial'?'🟡 Partiel':'🔴 Impayé';
+      const qtyLbl = inv.quantite>0?`${inv.quantite}${inv.unite?' '+inv.unite:''}`:' ';
+      const nH     = inv.histoPay ? inv.histoPay.length : 0;
+      const hid    = `ap-h-${supId}-${oi}`;
+
+      // Chercher idx dans _investRows pour modal
+      const globalIdx = (window._investRows||[]).findIndex(r=>r.id===inv.id);
+
+      html += `<div>
+        <div class="ap-order-row ${rowCls}" onclick="apToggleHisto('${hid}',event)" title="Cliquer pour voir l'historique des paiements">
+          <div>
+            <div class="ap-order-name">${escH(inv.name||'—')}</div>
+            ${ech.label !== 'Éch. N/A' ? `<div class="ap-order-ech" style="color:${ech.cls==='ech-urgent'?'var(--vx-danger)':ech.cls==='ech-soon'?'var(--vx-warning)':'var(--vx-text3)'}">${escH(ech.label)}</div>` : ''}
+            <div class="ap-order-chips">
+              ${inv.reference?`<span class="ap-chip ref">#${escH(inv.reference)}</span>`:''}
+              ${inv.payMode  ?`<span class="ap-chip mode">${escH(inv.payMode)}</span>`:''}
+              ${inv.category && inv.category!=='Général'?`<span class="ap-chip cat">${escH(inv.category)}</span>`:''}
+              ${inv.dlc      ?`<span class="ap-chip dlc">DLC ${escH(inv.dlc)}</span>`:''}
+              ${inv.notes    ?`<span class="ap-chip note">${escH(inv.notes.slice(0,40))}</span>`:''}
+              ${qtyLbl.trim() ?`<span class="ap-chip ref">${escH(qtyLbl.trim())}</span>`:''}
+            </div>
+          </div>
+          <div class="ap-num purple">${fmtCA(inv.amount)}</div>
+          <div class="ap-num green">${fmtCA(inv.paidAmount)}</div>
+          <div class="ap-num ${inv.remaining>0?'red':'green'}">${fmtCA(inv.remaining)}</div>
+          <div class="ap-prog">
+            <div class="ap-prog-pct" style="color:${pColor}">${pct}%</div>
+            <div class="ap-prog-track"><div class="ap-prog-fill ${pFill}" style="width:${pct}%"></div></div>
+            ${nH>0?`<div class="ap-prog-histo">${nH} versement${nH>1?'s':''}</div>`:''}
+          </div>
+          <div class="ap-status"><span class="ap-badge ${stCls}">${stLbl}</span></div>
+        </div>
+        <div class="ap-histo-wrap ${nH>0?'open':''}" id="${hid}">
+          ${nH>0 ? `
+          <div class="ap-histo-title">📋 Historique des versements</div>
+          <div class="ap-histo-header"><span>Date</span><span>Note</span><span>Montant</span></div>
+          ${inv.histoPay.map(p => {
+            const pA = typeof p==='number'?p:parseFloat(p.montant??p.amount??p.valeur??0);
+            const pD = typeof p==='object'?(p.date||p.createdAt||p.timestamp||p.dateHeure||''):'';
+            const pN = typeof p==='object'?(p.note||p.commentaire||p.comment||''):'';
+            return `<div class="ap-histo-row"><span class="ap-histo-date">${escH(String(pD).slice(0,22)||'—')}</span><span class="ap-histo-note">${pN?escH(pN.slice(0,45)):'—'}</span><span class="ap-histo-amt">+${fmtCA(pA)}</span></div>`;
+          }).join('')}
+          <div class="ap-histo-subtotal">
+            <div class="ap-histo-subtotal-item"><span class="ap-histo-subtotal-label">Payé</span><span class="ap-histo-subtotal-val" style="color:var(--vx-success)">${fmtCA(inv.paidAmount)}</span></div>
+            <div class="ap-histo-subtotal-item"><span class="ap-histo-subtotal-label">Reste</span><span class="ap-histo-subtotal-val" style="color:${inv.remaining>0?'var(--vx-danger)':'var(--vx-success)'}">${fmtCA(inv.remaining)}</span></div>
+            <button class="ap-btn-pay" onclick="event.stopPropagation();${globalIdx>=0?`openInvestmentDetail(${globalIdx})`:`investRowClick({stopPropagation:()=>{}},${oi})`}">+ Paiement</button>
+          </div>` :
+          `<div style="display:flex;align-items:center;justify-content:space-between"><span style="color:var(--vx-text3);font-size:11px">Aucun versement</span><button class="ap-btn-pay" onclick="event.stopPropagation();${globalIdx>=0?`openInvestmentDetail(${globalIdx})`:`investRowClick({stopPropagation:()=>{}},${oi})`}">+ Paiement</button></div>`}
+        </div>
+      </div>`;
+    });
+
+    html += `<div class="ap-sup-footer">
+      <span>${entries.length} commande${entries.length>1?'s':''} · <strong style="color:var(--vx-success)">${fmtCA(sPaid)}</strong> payé${sRem>0?` · <strong style="color:var(--vx-danger)">⚠ ${fmtCA(sRem)} restant</strong>`:' · <strong style="color:var(--vx-success)">✓ Tout soldé</strong>'}</span>
+      ${nCred>0?`<span style="font-size:10px;color:var(--vx-warning)">${nCred} crédit${nCred>1?'s':''} en attente</span>`:''}
+    </div></div></div>`;
+  });
+
+  container.innerHTML = html || '<div style="padding:24px;text-align:center;color:var(--vx-text3);font-size:12px">Aucun résultat pour ce filtre.</div>';
+  window._investRows = rows;
+}
+
+// renderDette = alias de renderAppro
+function renderDette() { renderAppro(); }
+
 function renderInvestments() {
   const tableEl = document.getElementById('appro-table-credits');
   if (!tableEl) return;
@@ -5405,7 +5862,7 @@ function renderInvestments() {
   if (!normalized.length) {
     tableEl.innerHTML = '<div class="invest-empty">Aucun approvisionnement trouvé. Synchronisez vos données Drive.</div>';
     _renderHiddenSection(normalized);
-    if (document.getElementById('appro-wrap')?.classList.contains('visible')) renderDette();
+    renderAppro(); // Vue unifiée toujours active
     return;
   }
 
