@@ -2311,6 +2311,250 @@ body {
   .dette-footer{ grid-template-columns:1fr auto auto auto; }
   .dette-footer > div:nth-child(n+5) { display:none; }
 }
+
+/* ═══════════════════════════════════════════════
+   PALETTE AGRÉABLE — VIOLET INDIGO / ÉMERAUDE
+═══════════════════════════════════════════════ */
+:root {
+  --vx-bg:        #0c0c1b;
+  --vx-card:      #13132a;
+  --vx-card2:     #1a1a35;
+  --vx-card3:     #20203e;
+  --vx-border:    #2a2a50;
+  --vx-border2:   #1e1e3a;
+  --vx-primary:   #7c6af7;
+  --vx-primary2:  #a89cf8;
+  --vx-primary-bg:rgba(124,106,247,0.12);
+  --vx-success:   #00c896;
+  --vx-success-bg:rgba(0,200,150,0.10);
+  --vx-warning:   #ffbe0b;
+  --vx-warning-bg:rgba(255,190,11,0.10);
+  --vx-danger:    #ff4757;
+  --vx-danger-bg: rgba(255,71,87,0.10);
+  --vx-blue:      #3d9cf0;
+  --vx-blue-bg:   rgba(61,156,240,0.10);
+  --vx-text:      #e8e4ff;
+  --vx-text2:     #9995c0;
+  --vx-text3:     #5a567a;
+  --vx-gold:      #f9c74f;
+  --vx-gold-bg:   rgba(249,199,79,0.10);
+  --vx-cb:        #3d9cf0;
+  --vx-cash:      #00c896;
+  --vx-credit:    #ffbe0b;
+  --vx-shadow:    0 4px 24px rgba(0,0,0,0.4);
+  --vx-radius:    14px;
+  --vx-radius-sm: 8px;
+}
+
+/* Override couleurs globales */
+body { background: var(--vx-bg); color: var(--vx-text); }
+
+/* KPI CARDS — redesign */
+.kpi-card {
+  background: var(--vx-card);
+  border: 1px solid var(--vx-border);
+  border-radius: var(--vx-radius);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.kpi-card:hover { transform: translateY(-2px); box-shadow: var(--vx-shadow); }
+.kpi-card.purple::before { background: linear-gradient(90deg,#7c6af7,#a89cf8); }
+.kpi-card.green::before  { background: linear-gradient(90deg,#00c896,#00e5ab); }
+.kpi-card.blue::before   { background: linear-gradient(90deg,#3d9cf0,#74bfff); }
+.kpi-card.red::before    { background: linear-gradient(90deg,#ff4757,#ff6b7a); }
+.kpi-card.gold::before   { background: linear-gradient(90deg,#f9c74f,#ffd97a); }
+.kpi-value { color: var(--vx-text); font-size: 24px; }
+.kpi-value.green { color: var(--vx-success) !important; }
+.kpi-value.red   { color: var(--vx-danger)  !important; }
+.kpi-label { color: var(--vx-text3); font-size: 9px; }
+.kpi-icon  { opacity: 0.10; }
+
+/* TABLE CARD */
+.table-card {
+  background: var(--vx-card);
+  border: 1px solid var(--vx-border);
+  border-radius: var(--vx-radius);
+}
+.table-top { border-bottom: 1px solid var(--vx-border2); padding: 16px 20px; }
+.table-top-title { color: var(--vx-text); font-size: 14px; font-weight: 700; }
+
+/* TOOLBAR BÉNÉFICES */
+.vx-toolbar {
+  display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+  padding: 10px 20px; border-bottom: 1px solid var(--vx-border2);
+  background: var(--vx-card2);
+}
+.vx-tool-btn {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--vx-card3); border: 1px solid var(--vx-border);
+  border-radius: var(--vx-radius-sm); color: var(--vx-text2);
+  font-size: 11px; font-weight: 600; padding: 5px 12px;
+  cursor: pointer; font-family: 'Poppins', sans-serif;
+  transition: all 0.15s; white-space: nowrap;
+}
+.vx-tool-btn:hover  { border-color: var(--vx-primary); color: var(--vx-primary2); }
+.vx-tool-btn.active { background: var(--vx-primary-bg); border-color: var(--vx-primary); color: var(--vx-text); }
+.vx-tool-sep  { width: 1px; background: var(--vx-border); height: 22px; margin: 0 4px; }
+.vx-tool-label{ font-size: 10px; color: var(--vx-text3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* MOIS — redesign */
+.month-header {
+  background: linear-gradient(135deg, var(--vx-card2) 0%, var(--vx-card3) 100%);
+  border-bottom: 1px solid var(--vx-border);
+  padding: 14px 20px;
+  transition: background 0.15s;
+}
+.month-header:hover { background: linear-gradient(135deg,#1e1e38,#252548); }
+.month-name { font-size: 14px; font-weight: 800; color: var(--vx-text); letter-spacing: 0.02em; }
+.month-total { color: var(--vx-success); font-size: 16px; font-weight: 800; }
+.month-ca    { font-size: 12px; color: var(--vx-text3); }
+.badge-purple { background: var(--vx-primary-bg); color: var(--vx-primary2); border: 1px solid rgba(124,106,247,0.3); }
+.badge-red    { background: var(--vx-danger-bg);  color: var(--vx-danger);   border: 1px solid rgba(255,71,87,0.3); }
+.month-chev   { color: var(--vx-primary); }
+
+/* KPIs inline mois */
+.vx-month-kpis {
+  display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
+  margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--vx-border2);
+}
+.vx-month-kpi { display: flex; flex-direction: column; gap: 1px; }
+.vx-month-kpi-label { font-size: 9px; color: var(--vx-text3); text-transform: uppercase; letter-spacing: 0.07em; }
+.vx-month-kpi-val   { font-size: 12px; font-weight: 700; }
+.vx-month-progress  { flex: 1; min-width: 80px; }
+.vx-mp-track { height: 4px; background: var(--vx-border2); border-radius: 2px; overflow: hidden; margin-top: 4px; }
+.vx-mp-fill  { height: 100%; border-radius: 2px; background: linear-gradient(90deg,#7c6af7,#00c896); }
+
+/* SEMAINE */
+.week-header {
+  background: var(--vx-card2); border-top: 1px solid var(--vx-border2);
+  padding: 8px 20px 8px 36px;
+}
+.week-header:hover { background: #1c1c38; }
+.week-name   { color: var(--vx-primary2); font-size: 11px; font-weight: 700; }
+.week-total  { color: var(--vx-success); font-size: 12px; font-weight: 800; }
+
+/* JOUR */
+.day-header {
+  background: var(--vx-bg); padding: 6px 20px 6px 52px;
+  border-top: 1px solid var(--vx-border2);
+}
+.day-label { color: var(--vx-text3); font-size: 11px; font-weight: 600; }
+.day-total { color: var(--vx-success); font-size: 11px; font-weight: 700; }
+
+/* TICKET ROW — redesign */
+.ticket-row {
+  padding: 10px 16px 10px 68px;
+  grid-template-columns: 42px auto 1fr auto auto auto auto 80px;
+  border-top: 1px solid var(--vx-border2);
+  background: var(--vx-card);
+  transition: background 0.1s, border-left 0.1s;
+  border-left: 3px solid transparent;
+}
+.ticket-row:hover { background: var(--vx-card2) !important; border-left: 3px solid var(--vx-primary); }
+.ticket-row.cancelled-row { opacity: 0.45; }
+.ticket-row.hidden-row    { display: none; }
+.ticket-row.pinned-row    { border-left: 3px solid var(--vx-gold) !important; }
+.ticket-time  { color: var(--vx-primary2); font-size: 10px; font-weight: 700; }
+.ticket-id    { color: var(--vx-text3); font-size: 10px; }
+.ticket-benef.pos { color: var(--vx-success); }
+.ticket-benef.neg { color: var(--vx-danger); }
+.t-status.ok  { background: var(--vx-success-bg); color: var(--vx-success); border: 1px solid rgba(0,200,150,0.3); }
+.t-status.ko  { background: var(--vx-danger-bg);  color: var(--vx-danger);  border: 1px solid rgba(255,71,87,0.3); }
+.t-pay-type.cb     { background: var(--vx-blue-bg);    color: var(--vx-cb);     border-color: rgba(61,156,240,0.3); }
+.t-pay-type.cash   { background: var(--vx-success-bg); color: var(--vx-cash);   border-color: rgba(0,200,150,0.25); }
+.t-pay-type.credit { background: var(--vx-warning-bg); color: var(--vx-credit); border-color: rgba(255,190,11,0.3); }
+
+/* ACTIONS PAR TICKET */
+.vx-ticket-actions {
+  display: none; gap: 4px; justify-content: flex-end; align-items: center;
+}
+.ticket-row:hover .vx-ticket-actions { display: flex; }
+.vx-act-btn {
+  width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--vx-border);
+  background: var(--vx-card3); color: var(--vx-text3);
+  cursor: pointer; font-size: 12px; display: flex; align-items: center;
+  justify-content: center; transition: all 0.15s; flex-shrink: 0;
+}
+.vx-act-btn:hover { border-color: var(--vx-primary); color: var(--vx-primary2); background: var(--vx-primary-bg); }
+.vx-act-btn.pin:hover   { border-color: var(--vx-gold);    color: var(--vx-gold); }
+.vx-act-btn.hide:hover  { border-color: var(--vx-danger);  color: var(--vx-danger); }
+
+/* PANEL MASQUÉS */
+.vx-hidden-banner {
+  display: none; align-items: center; gap: 8px;
+  padding: 8px 20px; background: var(--vx-danger-bg);
+  border-top: 1px solid rgba(255,71,87,0.2);
+  font-size: 11px; font-weight: 600; color: var(--vx-danger);
+}
+.vx-hidden-banner.show { display: flex; }
+.vx-hidden-restore {
+  background: none; border: 1px solid var(--vx-danger); border-radius: 6px;
+  color: var(--vx-danger); font-size: 10px; font-weight: 700; padding: 3px 8px;
+  cursor: pointer; font-family: 'Poppins',sans-serif; margin-left: auto;
+}
+.vx-hidden-restore:hover { background: var(--vx-danger-bg); }
+
+/* EXPAND TICKET DÉTAIL */
+.vx-ticket-detail {
+  display: none; padding: 10px 68px 10px 68px;
+  background: var(--vx-bg); border-top: 1px solid var(--vx-border2);
+  font-size: 11px; animation: slideDown 0.18s ease;
+}
+.vx-ticket-detail.open { display: grid; grid-template-columns: repeat(auto-fill,minmax(160px,1fr)); gap: 8px; }
+.vx-td-item { background: var(--vx-card2); border-radius: 8px; padding: 8px 12px; }
+.vx-td-label { font-size: 9px; color: var(--vx-text3); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 3px; }
+.vx-td-val   { font-size: 12px; font-weight: 600; color: var(--vx-text); }
+@keyframes slideDown { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
+
+/* TOTAUX CARD */
+.totaux-card { background: var(--vx-card); border: 1px solid var(--vx-border); border-radius: var(--vx-radius); }
+.totaux-value { font-size: 16px !important; }
+
+/* FILTRES */
+.filters-bar { gap: 8px; }
+.f-btn {
+  background: var(--vx-card); border: 1px solid var(--vx-border);
+  border-radius: var(--vx-radius-sm); color: var(--vx-text2);
+  transition: all 0.15s;
+}
+.f-btn:hover   { border-color: var(--vx-primary); color: var(--vx-primary2); }
+.f-btn.active  { background: var(--vx-primary-bg); border-color: var(--vx-primary); color: var(--vx-text); font-weight: 700; }
+.f-select { background: var(--vx-card); border: 1px solid var(--vx-border); color: var(--vx-text2); border-radius: var(--vx-radius-sm); }
+.search-box { background: var(--vx-card); border: 1px solid var(--vx-border); color: var(--vx-text); border-radius: var(--vx-radius-sm); }
+.search-box::placeholder { color: var(--vx-text3); }
+
+/* HEADER */
+.header {
+  background: linear-gradient(135deg, #0c0c1b 0%, #141430 100%);
+  border-bottom: 2px solid var(--vx-primary);
+}
+.logo-text span { color: var(--vx-danger); }
+.logo-badge { background: var(--vx-primary); }
+
+/* Invest card amélioré */
+.invest-card { background: var(--vx-card); border: 1px solid var(--vx-border); border-radius: var(--vx-radius); }
+.invest-kpi  { background: var(--vx-bg); border: 1px solid var(--vx-border2); }
+
+@media(max-width:480px){
+  .vx-month-kpis { display: none; }
+  .vx-ticket-actions { display: none !important; }
+}
+
+/* ── Vues & colonnes dynamiques ── */
+.vx-compact .ticket-row { padding-top:5px; padding-bottom:5px; }
+.vx-compact .ticket-desc-items { display:none; }
+.vx-compact .vx-ticket-detail  { display:none!important; }
+
+.vx-detail .ticket-row { padding-top:12px; padding-bottom:12px; }
+
+.vx-hide-ca     .ticket-ca,
+.vx-hide-ca     .vx-td-ca       { display:none; }
+.vx-hide-type   .t-pay-type     { display:none; }
+.vx-hide-credit .ticket-credit-rest { display:none; }
+
+/* Ticket épinglé */
+.ticket-row.pinned-row .ticket-time::before {
+  content:'📌'; font-size:9px; margin-right:3px;
+}
 </style>
 
 </head>
@@ -3136,7 +3380,28 @@ body {
   <div class="table-card">
     <div class="table-top">
       <span class="table-top-title">Tickets COVO Pro</span>
-      <span style="font-size:11px;color:#666" id="filtered-count">—</span>
+      <span style="font-size:11px;color:var(--vx-text3)" id="filtered-count">—</span>
+    </div>
+    <!-- TOOLBAR -->
+    <div class="vx-toolbar">
+      <span class="vx-tool-label">Vue</span>
+      <button class="vx-tool-btn active" id="vx-view-std"     onclick="vxSetView('standard',this)" title="Vue standard">⊞ Standard</button>
+      <button class="vx-tool-btn"        id="vx-view-compact" onclick="vxSetView('compact',this)"  title="Vue compacte">≡ Compact</button>
+      <button class="vx-tool-btn"        id="vx-view-detail"  onclick="vxSetView('detail',this)"   title="Vue étendue">⊟ Étendu</button>
+      <div class="vx-tool-sep"></div>
+      <span class="vx-tool-label">Colonnes</span>
+      <button class="vx-tool-btn active" id="vx-col-ca"       onclick="vxToggleCol('ca',this)"     title="CA">CA</button>
+      <button class="vx-tool-btn active" id="vx-col-type"     onclick="vxToggleCol('type',this)"   title="Type paiement">Type</button>
+      <button class="vx-tool-btn active" id="vx-col-credit"   onclick="vxToggleCol('credit',this)" title="Crédit restant">Crédit</button>
+      <div class="vx-tool-sep"></div>
+      <button class="vx-tool-btn"        id="vx-btn-colexp"   onclick="vxCollapseAll()"   title="Tout réduire">⊟ Réduire tout</button>
+      <button class="vx-tool-btn"        id="vx-btn-expand"   onclick="vxExpandAll()"     title="Tout déployer">⊞ Déployer tout</button>
+      <div class="vx-tool-sep"></div>
+      <button class="vx-tool-btn" id="vx-btn-hidden" onclick="vxShowHiddenPanel()" title="Tickets masqués" style="display:none">👁 Masqués (<span id="vx-hidden-count">0</span>)</button>
+    </div>
+    <div id="vx-hidden-banner" class="vx-hidden-banner">
+      <span>🙈 <span id="vx-hidden-msg">0 ticket masqué</span></span>
+      <button class="vx-hidden-restore" onclick="vxRestoreAll()">↩ Tout restaurer</button>
     </div>
     <div id="table-body"></div>
   </div>
@@ -4979,6 +5244,121 @@ function copyInvRaw() {
   } catch(e) { toast('Clipboard non disponible', 'err'); }
 }
 
+
+// ═══════════════════════════════════════════════
+//  TOOLBAR BÉNÉFICES
+// ═══════════════════════════════════════════════
+let _vxView    = localStorage.getItem('vx_view')    || 'standard';
+let _vxColCA   = localStorage.getItem('vx_col_ca')  !== 'off';
+let _vxColType = localStorage.getItem('vx_col_type')!== 'off';
+let _vxColCred = localStorage.getItem('vx_col_cred')!== 'off';
+let _vxHidden  = JSON.parse(localStorage.getItem('vx_hidden_tickets') || '{}');
+window._vxPinned = JSON.parse(localStorage.getItem('vx_pinned_tickets') || '{}');
+
+function _vxApplyBodyClass() {
+  document.body.classList.toggle('vx-compact', _vxView === 'compact');
+  document.body.classList.toggle('vx-detail',  _vxView === 'detail');
+  document.body.classList.toggle('vx-hide-ca',    !_vxColCA);
+  document.body.classList.toggle('vx-hide-type',  !_vxColType);
+  document.body.classList.toggle('vx-hide-credit',!_vxColCred);
+}
+
+function vxSetView(v, btn) {
+  _vxView = v; localStorage.setItem('vx_view', v);
+  document.querySelectorAll('#vx-view-std,#vx-view-compact,#vx-view-detail').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  _vxApplyBodyClass();
+}
+
+function vxToggleCol(col, btn) {
+  if (col==='ca')     { _vxColCA   = !_vxColCA;   localStorage.setItem('vx_col_ca',   _vxColCA   ?'on':'off'); }
+  if (col==='type')   { _vxColType = !_vxColType; localStorage.setItem('vx_col_type', _vxColType ?'on':'off'); }
+  if (col==='credit') { _vxColCred = !_vxColCred; localStorage.setItem('vx_col_cred', _vxColCred ?'on':'off'); }
+  if (btn) btn.classList.toggle('active');
+  _vxApplyBodyClass();
+}
+
+function vxCollapseAll() {
+  document.querySelectorAll('.month-group [id^="mg"]').forEach(el => {
+    if (!el.id.endsWith('c') && el.tagName === 'DIV') el.style.display = 'none';
+  });
+  document.querySelectorAll('.month-chev').forEach(c => c.classList.remove('open'));
+}
+
+function vxExpandAll() {
+  document.querySelectorAll('.month-group [id^="mg"]').forEach(el => {
+    if (!el.id.endsWith('c')) el.style.display = '';
+  });
+  document.querySelectorAll('.month-chev').forEach(c => c.classList.add('open'));
+}
+
+function vxHideTicket(sid, e) {
+  e && e.stopPropagation();
+  _vxHidden[sid] = true;
+  localStorage.setItem('vx_hidden_tickets', JSON.stringify(_vxHidden));
+  const row  = document.getElementById('vx-row-' + sid);
+  const det  = document.getElementById('vx-det-' + sid);
+  if (row) row.classList.add('hidden-row');
+  if (det) det.classList.remove('open');
+  _vxUpdateHiddenBadge();
+}
+
+function vxPinTicket(sid, e) {
+  e && e.stopPropagation();
+  if (window._vxPinned[sid]) {
+    delete window._vxPinned[sid];
+  } else {
+    window._vxPinned[sid] = true;
+  }
+  localStorage.setItem('vx_pinned_tickets', JSON.stringify(window._vxPinned));
+  const row = document.getElementById('vx-row-' + sid);
+  if (row) row.classList.toggle('pinned-row', !!window._vxPinned[sid]);
+}
+
+function vxExpandDetail(sid, e) {
+  e && e.stopPropagation();
+  const det = document.getElementById('vx-det-' + sid);
+  if (det) det.classList.toggle('open');
+}
+
+function vxRestoreAll() {
+  _vxHidden = {}; localStorage.removeItem('vx_hidden_tickets');
+  document.querySelectorAll('.hidden-row').forEach(r => r.classList.remove('hidden-row'));
+  _vxUpdateHiddenBadge();
+}
+
+function _vxUpdateHiddenBadge() {
+  const n = Object.keys(_vxHidden).length;
+  const btn = document.getElementById('vx-btn-hidden');
+  const banner = document.getElementById('vx-hidden-banner');
+  const msg    = document.getElementById('vx-hidden-msg');
+  const cnt    = document.getElementById('vx-hidden-count');
+  if (btn) btn.style.display = n > 0 ? '' : 'none';
+  if (banner) banner.classList.toggle('show', n > 0);
+  if (msg) msg.textContent = n + ' ticket' + (n > 1 ? 's' : '') + ' masqué' + (n > 1 ? 's' : '');
+  if (cnt) cnt.textContent = n;
+}
+
+function vxShowHiddenPanel() {
+  // Restauration interactive
+  if (!confirm(Object.keys(_vxHidden).length + ' tickets masqués. Voulez-vous les restaurer ?')) return;
+  vxRestoreAll();
+}
+
+// Init toolbar state
+document.addEventListener('DOMContentLoaded', () => {
+  _vxApplyBodyClass();
+  _vxUpdateHiddenBadge();
+  // Activer les bons boutons
+  const viewMap = {standard:'#vx-view-std', compact:'#vx-view-compact', detail:'#vx-view-detail'};
+  document.querySelectorAll('#vx-view-std,#vx-view-compact,#vx-view-detail').forEach(b=>b.classList.remove('active'));
+  const vbtn = document.querySelector(viewMap[_vxView]);
+  if (vbtn) vbtn.classList.add('active');
+  if (!_vxColCA)   document.getElementById('vx-col-ca')    ?.classList.remove('active');
+  if (!_vxColType) document.getElementById('vx-col-type')  ?.classList.remove('active');
+  if (!_vxColCred) document.getElementById('vx-col-credit')?.classList.remove('active');
+});
+
 function renderInvestments() {
   const tableEl = document.getElementById('appro-table-credits');
   if (!tableEl) return;
@@ -5519,17 +5899,46 @@ function renderTable() {
     const mCA    = mSales.filter(s=>!s.cancelled).reduce((a,s) => a+parseFloat(s.total||0), 0);
     const mCancelled = mSales.filter(s=>s.cancelled).length;
     const mId = 'mg' + mk.replace('-','');
+    const mMargin = mCA > 0 ? Math.round(mBenef/mCA*100) : 0;
+    const mPaid   = mSales.filter(s=>!s.cancelled&&isCardPayment(s)).reduce((a,s)=>a+parseFloat(s.total||0),0);
+    const mCash   = mSales.filter(s=>!s.cancelled&&isCashPayment(s)).reduce((a,s)=>a+parseFloat(s.total||0),0);
     html += `<div class="month-group">
       <div class="month-header" onclick="toggle('${mId}','${mId}c')">
         <div class="month-name-wrap">
           <span class="month-chev open" id="${mId}c">▶</span>
           <span class="month-name">${mNames[mo]} ${yr}</span>
-          <span class="badge badge-purple">${mSales.length} tickets</span>
+          <span class="badge badge-purple">${mSales.filter(s=>!s.cancelled).length} tickets</span>
           ${mCancelled>0?`<span class="badge badge-red">${mCancelled} annulés</span>`:''}
         </div>
         <div class="month-right">
           <span class="month-ca">CA ${fmtCA(mCA)}</span>
           <span class="month-total">${fmt(mBenef)}</span>
+        </div>
+        <div class="vx-month-kpis">
+          <div class="vx-month-kpi">
+            <span class="vx-month-kpi-label">Bénéfice</span>
+            <span class="vx-month-kpi-val" style="color:var(--vx-success)">${fmt(mBenef)}</span>
+          </div>
+          <div class="vx-month-kpi">
+            <span class="vx-month-kpi-label">CA</span>
+            <span class="vx-month-kpi-val" style="color:var(--vx-primary2)">${fmtCA(mCA)}</span>
+          </div>
+          <div class="vx-month-kpi">
+            <span class="vx-month-kpi-label">Marge</span>
+            <span class="vx-month-kpi-val" style="color:${mMargin>=20?'var(--vx-success)':mMargin>=10?'var(--vx-warning)':'var(--vx-danger)'}">${mMargin}%</span>
+          </div>
+          <div class="vx-month-kpi">
+            <span class="vx-month-kpi-label">💳 CB</span>
+            <span class="vx-month-kpi-val" style="color:var(--vx-blue)">${fmtCA(mPaid)}</span>
+          </div>
+          <div class="vx-month-kpi">
+            <span class="vx-month-kpi-label">💵 Espèces</span>
+            <span class="vx-month-kpi-val" style="color:var(--vx-cash)">${fmtCA(mCash)}</span>
+          </div>
+          <div class="vx-month-progress" style="flex:1;min-width:60px">
+            <span class="vx-month-kpi-label">Répartition CB/Esp</span>
+            <div class="vx-mp-track"><div class="vx-mp-fill" style="width:${mCA>0?Math.round(mPaid/mCA*100):0}%"></div></div>
+          </div>
         </div>
       </div>
       <div id="${mId}">`;
@@ -5582,18 +5991,39 @@ function renderTable() {
           const _itemsLine = _itemNames.length
             ? escH(_itemNames.slice(0,4).join(' · ') + (_itemNames.length>4?' +'+(_itemNames.length-4):''))
             : '';
-          html += `<div class="ticket-row" onclick="openTicketDetail('${escH(String(sid))}',${sDate.getTime()})" title="Cliquer pour voir le détail">
+          const _vxSid = escH(String(sid));
+          const _isHidden = window._vxHidden && window._vxHidden[String(sid)];
+          const _isPinned = window._vxPinned && window._vxPinned[String(sid)];
+          html += `<div class="ticket-row${_isHidden?' hidden-row':''}${_isPinned?' pinned-row':''}"
+            id="vx-row-${_vxSid}"
+            onclick="vxExpandDetail('${_vxSid}',event)"
+            title="Cliquer pour déployer le détail">
             <span class="ticket-time">${timeStr}</span>
             <span class="ticket-id">#${String(sid).slice(-6)}</span>
             <div class="ticket-desc">
-              <div class="ticket-desc-name">${_descLine}${n>0?' <span style="font-size:10px;color:#555;font-weight:400">· '+n+' art.</span>':''}</div>
+              <div class="ticket-desc-name">${_descLine}${n>0?' <span style="font-size:10px;color:var(--vx-text3);font-weight:400">· '+n+' art.</span>':''}</div>
               ${_itemsLine ? '<div class="ticket-desc-items">'+_itemsLine+'</div>' : ''}
             </div>
             <span class="t-status ${s.cancelled?'ko':'ok'}">${s.cancelled?'Annulé':'Validé'}</span>
             <span class="t-pay-type ${_pt.cls}">${_pt.label}</span>
-            <span class="ticket-ca" style="font-size:11px;color:#888;text-align:right">${fmtCA(ca)}</span>
+            <span class="ticket-ca" style="font-size:11px;color:var(--vx-text3);text-align:right">${fmtCA(ca)}</span>
             <span class="ticket-credit-rest ${_cr>0?'':'none'}">${_cr>0?'⚠ '+fmtCA(_cr):'—'}</span>
             <span class="ticket-benef ${b>=0?'pos':'neg'}">${fmt(b)}</span>
+            <div class="vx-ticket-actions">
+              <button class="vx-act-btn" onclick="openTicketDetail('${_vxSid}',${sDate.getTime()});event.stopPropagation()" title="Détail complet">🔍</button>
+              <button class="vx-act-btn pin" onclick="vxPinTicket('${_vxSid}',event)" title="${_isPinned?'Désépingler':'Épingler'}">${_isPinned?'📌':'📍'}</button>
+              <button class="vx-act-btn hide" onclick="vxHideTicket('${_vxSid}',event)" title="Masquer ce ticket">🙈</button>
+            </div>
+          </div>
+          <div class="vx-ticket-detail" id="vx-det-${_vxSid}">
+            <div class="vx-td-item"><div class="vx-td-label">Ticket ID</div><div class="vx-td-val">#${escH(String(sid))}</div></div>
+            <div class="vx-td-item"><div class="vx-td-label">Heure</div><div class="vx-td-val">${timeStr}</div></div>
+            <div class="vx-td-item"><div class="vx-td-label">CA</div><div class="vx-td-val" style="color:var(--vx-primary2)">${fmtCA(ca)}</div></div>
+            <div class="vx-td-item"><div class="vx-td-label">Bénéfice</div><div class="vx-td-val" style="color:${b>=0?'var(--vx-success)':'var(--vx-danger)'}">${fmt(b)}</div></div>
+            <div class="vx-td-item"><div class="vx-td-label">Articles</div><div class="vx-td-val">${n} article${n>1?'s':''}</div></div>
+            ${caissier?`<div class="vx-td-item"><div class="vx-td-label">Caissier</div><div class="vx-td-val">${escH(caissier)}</div></div>`:''}
+            ${_cr>0?`<div class="vx-td-item"><div class="vx-td-label">Crédit restant</div><div class="vx-td-val" style="color:var(--vx-warning)">⚠ ${fmtCA(_cr)}</div></div>`:''}
+            <div class="vx-td-item" style="grid-column:1/-1"><div class="vx-td-label">Articles détaillés</div><div class="vx-td-val" style="color:var(--vx-text2)">${_itemsLine||'—'}</div></div>
           </div>`;
         });
       });
