@@ -5495,10 +5495,11 @@ function renderTable() {
   // Group: month → week → day → tickets
   const byMonth = {};
   filtered.forEach(s => {
-    const d = saleDate(s);
-    const mk = toYMD(d).substring(0,7);
-    const wk = `S${weekNum(d)}`;
-    const dk = toYMD(d);
+    const d    = saleDate(s);
+    // Clés en heure LOCALE pour éviter tout décalage UTC
+    const mk   = toYMDLocal(d).substring(0,7);
+    const wk   = `S${weekNum(d)}`;
+    const dk   = toYMDLocal(d);
     if (!byMonth[mk]) byMonth[mk] = {};
     if (!byMonth[mk][wk]) byMonth[mk][wk] = {};
     if (!byMonth[mk][wk][dk]) byMonth[mk][wk][dk] = [];
@@ -8472,10 +8473,12 @@ function openWeekModal(wkKey) {
   const avgTicket = valid.length > 0 ? ca / valid.length : 0;
 
   // Plage de dates — heure locale pour éviter décalage UTC
-  const dates      = [...new Set(wSales.map(s => toYMD(saleDate(s))))].sort();
   const datesLocal = [...new Set(wSales.map(s => toYMDLocal(saleDate(s))))].sort();
-  const d0 = new Date((datesLocal[0] || dates[0]) + 'T00:00:00');
-  const d1 = new Date((datesLocal[datesLocal.length-1] || dates[dates.length-1]) + 'T00:00:00');
+  const dates = datesLocal; // Utiliser dates locales partout
+  const _p0 = (datesLocal[0]||'').split('-').map(Number);
+  const _p1 = (datesLocal[datesLocal.length-1]||datesLocal[0]||'').split('-').map(Number);
+  const d0 = _p0.length===3 ? new Date(_p0[0],_p0[1]-1,_p0[2]) : new Date();
+  const d1 = _p1.length===3 ? new Date(_p1[0],_p1[1]-1,_p1[2]) : d0;
   const fmtD = d => d.toLocaleDateString('fr-FR', {day:'2-digit', month:'short'});
   const [wNum] = wkKey.split('|');
 
@@ -8510,29 +8513,38 @@ function buildWeekChart(wSales, dates) {
   const canvas = document.getElementById('wkm-chart');
   if (!canvas) return;
 
-  // Recalculer les dates en heure locale (pas UTC) pour éviter le décalage
-  // dates[] vient de toYMD (UTC) — on reconstruit le lundi en local
-  const datesLocal = [...new Set(wSales.map(s => toYMDLocal(saleDate(s))))].sort();
-  const d0str = datesLocal[0] || dates[0];
-  const d0 = new Date(d0str + 'T00:00:00'); // minuit LOCAL
-  const mon = new Date(d0);
-  mon.setDate(d0.getDate() - ((d0.getDay() + 6) % 7)); // ramener au lundi
+  // ── Pré-groupement par date LOCALE (robuste quel que soit le fuseau) ──
+  const byDay = {};
+  wSales.forEach(s => {
+    const dk = toYMDLocal(saleDate(s));
+    if (!byDay[dk]) byDay[dk] = [];
+    byDay[dk].push(s);
+  });
+
+  // Trouver le lundi de la semaine via date locale
+  const localDates = Object.keys(byDay).sort();
+  if (!localDates.length) return;
+  // Construire le lundi avec new Date(y,m,d) → constructeur LOCAL, sans ambiguïté string
+  const ref   = localDates[0].split('-').map(Number);
+  const refD  = new Date(ref[0], ref[1]-1, ref[2], 12, 0, 0); // midi local, évite DST
+  const dow   = refD.getDay(); // 0=dim,1=lun...
+  const monD  = new Date(ref[0], ref[1]-1, ref[2] - ((dow + 6) % 7), 12, 0, 0);
 
   const labels = [], dataCA = [], dataCard = [], dataCash = [], dataBenef = [];
   for (let i = 0; i < 7; i++) {
-    const day = new Date(mon);
-    day.setDate(mon.getDate() + i);
-    const dk = toYMDLocal(day); // ← clé en heure LOCALE
-    labels.push(day.toLocaleDateString('fr-FR', {weekday:'short', day:'numeric'}));
-    // Filtrer les ventes par date locale
-    const dSales = wSales.filter(s => toYMDLocal(saleDate(s)) === dk && !s.cancelled);
-    const dCA    = dSales.reduce((a, s) => a + parseFloat(s.total || 0), 0);
-    const dCard  = dSales.filter(isCardPayment).reduce((a, s) => a + parseFloat(s.total || 0), 0);
-    const dCash  = dSales.filter(isCashPayment).reduce((a, s) => a + parseFloat(s.total || 0), 0);
-    const dBenef = dSales.reduce((a, s) => a + getTicketBenef(s), 0);
-    dataCA.push(parseFloat(dCA.toFixed(2)));
-    dataCard.push(parseFloat(dCard.toFixed(2)));
-    dataCash.push(parseFloat(dCash.toFixed(2)));
+    // Avancer d'exactement i jours en LOCAL (new Date(y,m,d+i) gère les dépassements de mois)
+    const dayD  = new Date(monD.getFullYear(), monD.getMonth(), monD.getDate() + i, 12, 0, 0);
+    const dk    = toYMDLocal(dayD);
+    const dAll  = byDay[dk] || [];
+    const dSales = dAll.filter(s => !s.cancelled);
+    const dCA   = dSales.reduce((a,s) => a + parseFloat(s.total||0), 0);
+    const dCard = dSales.filter(isCardPayment).reduce((a,s) => a + parseFloat(s.total||0), 0);
+    const dCash = dSales.filter(isCashPayment).reduce((a,s) => a + parseFloat(s.total||0), 0);
+    const dBenef= dAll.reduce((a,s) => a + getTicketBenef(s), 0);
+    labels.push(dayD.toLocaleDateString('fr-FR', {weekday:'short', day:'numeric'}));
+    dataCA.push(   parseFloat(dCA.toFixed(2)));
+    dataCard.push( parseFloat(dCard.toFixed(2)));
+    dataCash.push( parseFloat(dCash.toFixed(2)));
     dataBenef.push(parseFloat(dBenef.toFixed(2)));
   }
 
